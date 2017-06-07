@@ -5,12 +5,15 @@
 
 .App > * {
     flex: 1;
-    border: 1px solid black;
     margin: 0;
 }
 
 
 .App > #mocha {
     overflow: auto;
-    padding: 8px;
+}
+
+.CodeMirror {
+    height: 100% !important;
+    border-right: 1px solid #ccc;
 }

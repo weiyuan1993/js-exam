@@ -14,59 +14,51 @@ const { expect } = Chai;
 
 function runCode(code) {
   const sandbox = {
-    logs: [],
-    console: {
-      log: (s) => {
-        context.logs.push(s);
-      }
-    },
+    console,
     expect,
     Mocha,
     mocha,
     describe,
     it
   };
+  mocha.suite.suites = [];
   const script = new vm.Script(code);
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
+  mocha.run();
 }
-
 class App extends Component {
-  render () {
-    let mochaRef;
-    if(mochaRef) {
-      console.log('should clean');
-      mochaRef.innerHTML = '';
-    }
-    const props = this.props;
-    runCode(props.code);
+  constructor(props) {
+    super(props);
+    this.mochaRef = null;
+  }
 
-    return (
-      <div className="App">
-        <div className="editor">
-          <CodeMirror
-            onChange={(newCode) => {
-              try {
-                const { code } = transform(newCode);
-                props.actions.changeCode(code);
-              } catch(e) {
-              }
-            }}
-            options={{
-              mode: 'javascript',
-              lineNumbers: true,
-              autoCloseBrackets: true,
-            }} />
-        </div>
-        <div id='mocha' ref={ref => {
-          console.log('ref');
-          mochaRef = ref;
-        }}/>
-      </div>
-    );
+  render() {
+    const props = this.props;
+
+    if(this.mochaRef) {
+      this.mochaRef.innerHTML = '';
+      runCode(props.code);
+    }
+
+    return (<div className="App">
+      <CodeMirror
+        onChange={(newCode) => {
+          try {
+            const { code } = transform(newCode);
+            props.actions.changeCode(code);
+          } catch(e) {
+          }
+        }}
+        options={{
+          mode: 'javascript',
+          lineNumbers: true,
+          autoCloseBrackets: true,
+        }} />
+      <div id='mocha' ref={ref => this.mochaRef = ref} />
+    </div>);
   }
 }
-
 
 export default connect(state => {
   return {
