@@ -6,6 +6,11 @@
 .App > * {
     flex: 1;
     border: 1px solid black;
-    align-self: stretch;
+    margin: 0;
 }
 
+
+.App > #mocha {
+    overflow: auto;
+    padding: 8px;
+}
