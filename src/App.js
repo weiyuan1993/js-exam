@@ -15,6 +15,7 @@ let App = (props) => {
           options={{
             mode: 'javascript',
             lineNumbers: true,
+            autoCloseBrackets: true,
           }} />
       </div>
       <div className="result" />

@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
+
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/lib/codemirror.css';
 
 import { Provider } from 'react-redux';
