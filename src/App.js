@@ -7,6 +7,7 @@ import CodeMirror from 'react-codemirror';
 
 import { changeCode } from './actions/code';
 import './App.css';
+import questionList from './utils/questions';
 
 function runCode(code) {
   delete require.cache[require.resolve('tape')]
@@ -36,6 +37,7 @@ class App extends Component {
 
     return (<div className="App">
       <CodeMirror
+        defaultValue={questionList[0].content}
         onChange={(newCode) => {
           try {
             const { code } = transform(newCode);
