@@ -7,6 +7,8 @@ import CodeMirror from 'react-codemirror';
 
 import { changeCode } from './actions/code';
 import './App.css';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 import questionList from './utils/questions';
 
 function runCode(code) {
@@ -21,10 +23,44 @@ function runCode(code) {
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
 }
+const QuestionSelector = ({ handleSelected, activeIndex }) => {
+  const items = questionList.map((q, i) => {
+    return <MenuItem key={i} value={i} primaryText={q.name} />
+  })
+
+  return (
+    <DropDownMenu
+      value={activeIndex}
+      onChange={ (e, i) => handleSelected(i) }
+      style={{
+        position: 'absolute',
+        zIndex: 99,
+      }}
+    >
+      {items}
+    </DropDownMenu>
+  );
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.testsRef = null;
+
+    this.state = {
+      activeIndex: 0,
+      code: questionList[0].content
+    };
+
+    this.handleSelected = this.handleSelected.bind(this);
+  }
+
+  handleSelected(index) {
+    const code = questionList[index].content;
+    this.setState({
+      activeIndex: index,
+      code
+    });
   }
 
   render() {
@@ -36,20 +72,37 @@ class App extends Component {
     }
 
     return (<div className="App">
+      <QuestionSelector 
+        handleSelected={this.handleSelected}
+        activeIndex={this.state.activeIndex}
+      />
+      {
+        !this.state.syntaxError ? null : 
+        <div>{ this.state.syntaxError }</div>
+      }
       <CodeMirror
-        defaultValue={questionList[0].content}
         onChange={(newCode) => {
           try {
             const { code } = transform(newCode);
             props.actions.changeCode(code);
+            this.setState({
+              code: newCode,
+              syntaxError: ''
+            });
           } catch(e) {
+            const { line, column } = e.loc;
+            this.setState({
+              syntaxError: `Syntax error: line ${line}, column ${column}`
+            })
           }
         }}
         options={{
           mode: 'javascript',
           lineNumbers: true,
           autoCloseBrackets: true,
-        }} />
+        }}
+        value={this.state.code}
+      />
       <div id='tests' ref={ref => this.testsRef = ref} />
     </div>);
   }
