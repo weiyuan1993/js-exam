@@ -4,6 +4,7 @@ import vm from "vm";
 import { transform } from "buble";
 
 import CodeMirror from "react-codemirror";
+import sinon from "sinon";
 
 import { changeCode } from "./actions/code";
 import "./App.css";
@@ -17,7 +18,8 @@ function runCode(code) {
   require("tape-dom")(tape);
   const sandbox = {
     console,
-    test: tape
+    test: tape,
+    sinon
   };
   const script = new vm.Script(code);
   const context = new vm.createContext(sandbox);
