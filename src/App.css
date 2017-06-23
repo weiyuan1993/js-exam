@@ -8,9 +8,26 @@
     margin: 0;
 }
 
+.App > div:last-child {
+    display: flex;
+    flex-direction: column;
+}
 
-.App > #mocha {
+.additional-info {
+    display: flex;
+    border-bottom: 1px solid #cfcfcf;
+    padding: 10px 0;
+}
+
+.syntax-error {
+    color: red;
+    align-self: center;
+}
+
+#tests {
+    flex: 1;
     overflow: auto;
+    margin-bottom: 0;
 }
 
 .CodeMirror {

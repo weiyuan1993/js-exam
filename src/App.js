@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import vm from 'vm';
-import { transform } from 'buble';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import vm from "vm";
+import { transform } from "buble";
 
-import CodeMirror from 'react-codemirror';
+import CodeMirror from "react-codemirror";
 
-import { changeCode } from './actions/code';
-import './App.css';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import questionList from './utils/questions';
+import { changeCode } from "./actions/code";
+import "./App.css";
+import DropDownMenu from "material-ui/DropDownMenu";
+import MenuItem from "material-ui/MenuItem";
+import questionList from "./utils/questions";
 
 function runCode(code) {
-  delete require.cache[require.resolve('tape')]
-  const tape = require('tape');
-  require('tape-dom')(tape);
+  delete require.cache[require.resolve("tape")];
+  const tape = require("tape");
+  require("tape-dom")(tape);
   const sandbox = {
     console,
-    test: tape,
+    test: tape
   };
   const script = new vm.Script(code);
   const context = new vm.createContext(sandbox);
@@ -25,17 +25,13 @@ function runCode(code) {
 }
 const QuestionSelector = ({ handleSelected, activeIndex }) => {
   const items = questionList.map((q, i) => {
-    return <MenuItem key={i} value={i} primaryText={q.name} />
-  })
+    return <MenuItem key={i} value={i} primaryText={q.name} />;
+  });
 
   return (
     <DropDownMenu
       value={activeIndex}
-      onChange={ (e, i) => handleSelected(i) }
-      style={{
-        position: 'absolute',
-        zIndex: 99,
-      }}
+      onChange={(e, i) => handleSelected(i)}
     >
       {items}
     </DropDownMenu>
@@ -66,56 +62,64 @@ class App extends Component {
   render() {
     const props = this.props;
 
-    if(this.testsRef) {
-      this.testsRef.innerHTML = '';
+    if (this.testsRef) {
+      this.testsRef.innerHTML = "";
       runCode(props.code);
     }
 
-    return (<div className="App">
-      <QuestionSelector 
-        handleSelected={this.handleSelected}
-        activeIndex={this.state.activeIndex}
-      />
-      {
-        !this.state.syntaxError ? null : 
-        <div>{ this.state.syntaxError }</div>
-      }
-      <CodeMirror
-        onChange={(newCode) => {
-          try {
-            const { code } = transform(newCode);
-            props.actions.changeCode(code);
-            this.setState({
-              code: newCode,
-              syntaxError: ''
-            });
-          } catch(e) {
-            const { line, column } = e.loc;
-            this.setState({
-              syntaxError: `Syntax error: line ${line}, column ${column}`
-            })
-          }
-        }}
-        options={{
-          mode: 'javascript',
-          lineNumbers: true,
-          autoCloseBrackets: true,
-        }}
-        value={this.state.code}
-      />
-      <div id='tests' ref={ref => this.testsRef = ref} />
-    </div>);
+    return (
+      <div className="App">
+        <CodeMirror
+          onChange={newCode => {
+            try {
+              const { code } = transform(newCode);
+              props.actions.changeCode(code);
+              this.setState({ code: newCode, syntaxError: "" });
+            } catch (e) {
+              const { line, column } = e.loc;
+              this.setState({
+                syntaxError: `Syntax error: line ${line}, column ${column}`
+              });
+            }
+          }}
+          options={{
+            mode: "javascript",
+            lineNumbers: true,
+            autoCloseBrackets: true
+          }}
+          value={this.state.code}
+        />
+        <div>
+          <div className="additional-info">
+            <QuestionSelector
+              handleSelected={this.handleSelected}
+              activeIndex={this.state.activeIndex}
+            />
+            {!this.state.syntaxError
+              ? null
+              : <div className="syntax-error">
+                  {this.state.syntaxError}
+                </div>}
+          </div>
+
+          <div id="tests" ref={ref => (this.testsRef = ref)} />
+        </div>
+      </div>
+    );
   }
 }
 
-export default connect(state => {
-  return {
-    code: state.code
-  };
-}, dispatch => {
-  return {
-    actions: {
-      changeCode: newCode => dispatch(changeCode(newCode))
-    }
+export default connect(
+  state => {
+    return {
+      code: state.code
+    };
+  },
+  dispatch => {
+    return {
+      actions: {
+        changeCode: newCode => dispatch(changeCode(newCode))
+      }
+    };
   }
-})(App);
+)(App);
