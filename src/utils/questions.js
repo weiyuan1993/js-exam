@@ -4,17 +4,17 @@ const questionList = [
     content: `
 /**
  * Implement the function 'countChar'
- * to count the occurance of each character for the input string, 
+ * to count the occurance of each character for the input string,
  * and return an object containing those information.
  *
  * For example :
  *  input string: 'abca'
  *
- *  returned object: 
+ *  returned object:
  *  {
  *     a: 2,
  *     b: 1,
- *     c: 1 
+ *     c: 1
  *  }
  */
 
@@ -59,11 +59,11 @@ test('countChar test', (t) => {
 /**
  * Implement a function 'adder'
  * which behavior is like the following example
- * 
+ *
  * ex:
- *   addTen = adder(10) 
- *   addFive = adder(5) 
- *   
+ *   addTen = adder(10)
+ *   addFive = adder(5)
+ *
  *   addTen(10)  // return 20
  *   addFive(10) // return 15
 */
@@ -86,7 +86,7 @@ test('adder test', (t) => {
     const add5 = adder(5);
     t.equal(add5(10), 15);
     t.equal(add5(20), 25);
-    
+
     t.equal(adder(40)(2), 42);
   }
 })
@@ -100,7 +100,7 @@ test('adder test', (t) => {
 /**
  * Implement the function 'sequential'
  * to execute async functions in sequence.
- * 
+ *
  * 'sequential' takes an array of async functions as parameter,
  * and execute each of them after previous one has done.
  */
@@ -109,7 +109,7 @@ test('adder test', (t) => {
  * Implement function body
  */
 function sequential(tasks = []) {
-	
+
 }
 
 /** DO NOT modify anything below **/
@@ -159,10 +159,10 @@ test('sequential test', (t) => {
 /**
  * Implement the function 'parallel'
  * to execute async functions at once.
- * 
+ *
  * 'parallel' takes an array of async functions as parameter,
  * and execute each of them in the same time.
- * 
+ *
  */
 
 /**
@@ -228,6 +228,57 @@ test('parallel test', t => {
 });
 
 /*********************************/
+    `
+  },
+  {
+    name: 'combineReducers',
+    content: `
+// http://redux.js.org/docs/api/combineReducers.html
+function combineReducers(reducers) {
+}
+
+
+function calc(state = 0, action) {
+  switch(action.type) {
+    case 'ADD':
+      return state + 1;
+    case 'DEC':
+      return state - 1;
+    default:
+      return state;
+  }
+}
+
+function calledCount(state = 0, action) {
+  if(action.type == 'CALL') {
+    return state + 1;
+  }
+  return state;
+}
+
+test('combineReducers', t => {
+  const reducer = combineReducers({
+    calc: calc,
+    calls: calledCount,
+  });
+
+  t.comment('should init states');
+  {
+    let state = {};
+    state = reducer(state, {type: ''});
+    t.equal(state.calc, 0);
+    t.equal(state.calls, 0);
+  }
+
+  t.comment('should handle actions');
+  {
+    let state = {};
+    state = reducer(state, {type: 'ADD'});
+    t.equal(state.calc, 1);
+    state = reducer(state, {type: 'ADD'});
+    t.equal(state.calc, 2);
+  }
+})
     `
   }
 ];
