@@ -12,6 +12,23 @@ import DropDownMenu from "material-ui/DropDownMenu";
 import MenuItem from "material-ui/MenuItem";
 import questionList from "./utils/questions";
 
+function spy(obj, methodName)  {
+  const origFn = obj[methodName];
+  let callCount = 0;
+  let calledWith = [];
+  obj[methodName] = (...args) => {
+    const result = origFn.apply(obj, args);
+    callCount++;
+    calledWith.push(args.join('JENO'));
+    return result;
+  };
+  return {
+    calledWith: (...args) => calledWith.indexOf(args.join('JENO')) >= 0,
+    callCount: () => callCount,
+    restore: () => (obj[methodName] = origFn),
+  };
+}
+
 function runCode(code) {
   delete require.cache[require.resolve("tape")];
   const tape = require("tape");
@@ -21,8 +38,10 @@ function runCode(code) {
   const sandbox = {
     setTimeout: window.setTimeout, // need to be passed also...
     console,
+    sinon,
     test: tape,
-    clock
+    clock,
+    spy
   };
 
   const script = new vm.Script(code);
