@@ -21,7 +21,8 @@ const authCheck = Comp => {
       if (isLogin) {
         return <Comp />;
       } else {
-        return <Login firebaseApp={firebaseApp} />;
+        return <Comp />;
+        // return <Login firebaseApp={firebaseApp} />;
       }
     }
   }

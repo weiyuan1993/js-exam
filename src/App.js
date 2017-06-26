@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import vm from "vm";
 import { transform } from "buble";
+import sinon from "sinon";
 
 import CodeMirror from "react-codemirror";
-import sinon from "sinon";
 
 import { changeCode } from "./actions/code";
 import "./App.css";
@@ -16,14 +16,19 @@ function runCode(code) {
   delete require.cache[require.resolve("tape")];
   const tape = require("tape");
   require("tape-dom")(tape);
+  // should hijack setTimeout before pass to sandbox
+  const clock = sinon.useFakeTimers();
   const sandbox = {
+    setTimeout: window.setTimeout, // need to be passed also...
     console,
     test: tape,
-    sinon
+    clock
   };
+
   const script = new vm.Script(code);
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
+  clock.restore();
 }
 const QuestionSelector = ({ handleSelected, activeIndex }) => {
   const items = questionList.map((q, i) => {
@@ -31,10 +36,7 @@ const QuestionSelector = ({ handleSelected, activeIndex }) => {
   });
 
   return (
-    <DropDownMenu
-      value={activeIndex}
-      onChange={(e, i) => handleSelected(i)}
-    >
+    <DropDownMenu value={activeIndex} onChange={(e, i) => handleSelected(i)}>
       {items}
     </DropDownMenu>
   );
@@ -53,6 +55,14 @@ class App extends Component {
     this.handleSelected = this.handleSelected.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    // Jeno is our god
+    if (this.testsRef) {
+      this.testsRef.innerHTML = "";
+      runCode(nextProps.code);
+    }
+  }
+
   handleSelected(index) {
     const code = questionList[index].content;
     this.setState({
@@ -64,11 +74,6 @@ class App extends Component {
   render() {
     const props = this.props;
 
-    if (this.testsRef) {
-      this.testsRef.innerHTML = "";
-      runCode(props.code);
-    }
-
     return (
       <div className="App">
         <CodeMirror
@@ -78,10 +83,12 @@ class App extends Component {
               props.actions.changeCode(code);
               this.setState({ code: newCode, syntaxError: "" });
             } catch (e) {
-              const { line, column } = e.loc;
-              this.setState({
-                syntaxError: `Syntax error: line ${line}, column ${column}`
-              });
+              if (e.loc) {
+                const { line, column } = e.loc;
+                this.setState({
+                  syntaxError: `Syntax error: line ${line}, column ${column}`
+                });
+              }
             }
           }}
           options={{
