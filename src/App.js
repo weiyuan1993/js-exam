@@ -14,17 +14,19 @@ import questionList from "./utils/questions";
 
 function spy(obj, methodName)  {
   const origFn = obj[methodName];
-  let callCount = 0;
-  let calledWith = [];
+  let callHistory = [];
+  let calledWith = {};
+
+  const secret = Math.random().toFixed(4) + '';
   obj[methodName] = (...args) => {
     const result = origFn.apply(obj, args);
-    callCount++;
-    calledWith.push(args.join('JENO'));
+    callHistory.push(args);
+    calledWith[args.join(secret)] = true;
     return result;
   };
   return {
-    calledWith: (...args) => calledWith.indexOf(args.join('JENO')) >= 0,
-    callCount: () => callCount,
+    calledWith: (...args) => !!calledWith[args.join(secret)],
+    callCount: () => callHistory.length,
     restore: () => (obj[methodName] = origFn),
   };
 }
