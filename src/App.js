@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import vm from "vm";
@@ -51,6 +52,8 @@ function runCode(code) {
   script.runInContext(context);
   clock.restore();
 }
+const debouncedRunCode = _.debounce(runCode, 200);
+
 const QuestionSelector = ({ handleSelected, activeIndex }) => {
   const items = questionList.map((q, i) => {
     return <MenuItem key={i} value={i} primaryText={q.name} />;
@@ -74,13 +77,14 @@ class App extends Component {
     };
 
     this.handleSelected = this.handleSelected.bind(this);
+    this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 300);
   }
 
   componentWillReceiveProps(nextProps) {
     // Jeno is our god
     if (this.testsRef) {
       this.testsRef.innerHTML = "";
-      runCode(nextProps.code);
+      debouncedRunCode(nextProps.code);
     }
   }
 
@@ -92,26 +96,26 @@ class App extends Component {
     });
   }
 
-  render() {
-    const props = this.props;
+  handleCodeChange(newCode) {
+    try {
+      const { code } = transform(newCode);
+      this.props.actions.changeCode(code);
+      this.setState({ code: newCode, syntaxError: "" });
+    } catch (e) {
+      if (e.loc) {
+        const { line, column } = e.loc;
+        this.setState({
+          syntaxError: `Syntax error: line ${line}, column ${column}`
+        });
+      }
+    }
+  }
 
+  render() {
     return (
       <div className="App">
         <CodeMirror
-          onChange={newCode => {
-            try {
-              const { code } = transform(newCode);
-              props.actions.changeCode(code);
-              this.setState({ code: newCode, syntaxError: "" });
-            } catch (e) {
-              if (e.loc) {
-                const { line, column } = e.loc;
-                this.setState({
-                  syntaxError: `Syntax error: line ${line}, column ${column}`
-                });
-              }
-            }
-          }}
+          onChange={this.handleCodeChange}
           options={{
             mode: "javascript",
             lineNumbers: true,
