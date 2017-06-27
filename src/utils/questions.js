@@ -311,7 +311,38 @@ function foo(a, b) {
 
 console.log(foo([1,4,5], [2,3,6]))
 `
+  },
+  {
+    name: 'mergeSort',
+    content: `
+// implement function merge, so mergeSort can run correctly
+function merge(arr1, arr2) {
+  // TODO enter your code here
+  return arr1;
+}
+
+function mergeSort(arr) {
+  if(arr.length <= 1) {
+    return arr;
   }
+  const mid = Math.floor(arr.length / 2);
+  const sortedArr1 = mergeSort(arr.slice(0, mid));
+  const sortedArr2 = mergeSort(arr.slice(mid));
+  return merge(sortedArr1, sortedArr2);
+}
+
+test('mergeSort', t => {
+  t.comment('can sort numbers');
+  {
+    t.deepEqual(mergeSort([6,3,5,10,2,100,4,1]),[1,2,3,4,5,6,10,100]);
+    const randomNumbers = Array.from({length: 20})
+      .map(() => Math.floor(Math.random() * 100));
+    const sorted = randomNumbers.slice(0).sort((a, b) => a - b);
+    t.deepEqual(mergeSort(randomNumbers), sorted);
+  }
+})
+`
+  },
 ];
 
 export default questionList;
