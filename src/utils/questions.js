@@ -51,7 +51,7 @@ test('countChar test', (t) => {
 })
 
 /*********************************/
-    `
+`
   },
   {
     name: "adder",
@@ -92,7 +92,7 @@ test('adder test', (t) => {
 })
 
 /*********************************/
-    `
+`
   },
   {
     name: "sequential",
@@ -228,7 +228,7 @@ test('parallel test', t => {
 });
 
 /*********************************/
-    `
+`
   },
   {
     name: 'combineReducers',
@@ -236,7 +236,6 @@ test('parallel test', t => {
 // http://redux.js.org/docs/api/combineReducers.html
 function combineReducers(reducers) {
 }
-
 
 function calc(state = 0, action) {
   switch(action.type) {
@@ -279,7 +278,39 @@ test('combineReducers', t => {
     t.equal(state.calc, 2);
   }
 })
-    `
+`
+  },
+  {
+    name: 'explain',
+    content: `
+// explain the purpose of following code;
+// modify variable name and/or code style when appropriate;
+// add comments where you see fit
+function foo(a, b) {
+  var c = [];
+  for(var i0 = 0, i1 = 0; i0 < a.length && i1 < b.length; ) {
+    if(a[i0] < b[i1]) {
+      c.push(a[i0++]);
+    }
+    if(a[i0] >= b[i1]) {
+      c.push(b[i1++]);
+    }
+  }
+  if(i0 < a.length) {
+    for(var i = i0; i < a.length; i++) {
+      c.push(a[i]);
+    }
+  }
+  if(i1 < b.length) {
+    for(var i = i1; i < b.length; i++) {
+      c.push(b[i]);
+    }
+  }
+  return c;
+}
+
+console.log(foo([1,4,5], [2,3,6]))
+`
   }
 ];
 

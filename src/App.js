@@ -1,19 +1,19 @@
 import _ from 'underscore';
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import vm from "vm";
-import { transform } from "buble";
-import sinon from "sinon";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import vm from 'vm';
+import { transform } from 'buble';
+import sinon from 'sinon';
 
-import CodeMirror from "react-codemirror";
+import CodeMirror from 'react-codemirror';
 
-import { changeCode } from "./actions/code";
-import "./App.css";
-import DropDownMenu from "material-ui/DropDownMenu";
-import MenuItem from "material-ui/MenuItem";
-import questionList from "./utils/questions";
+import { changeCode } from './actions/code';
+import './App.css';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import questionList from './utils/questions';
 
-function spy(obj, methodName)  {
+function spy(obj, methodName) {
   const origFn = obj[methodName];
   let callHistory = [];
   let calledWith = {};
@@ -28,14 +28,14 @@ function spy(obj, methodName)  {
   return {
     calledWith: (...args) => !!calledWith[args.join(secret)],
     callCount: () => callHistory.length,
-    restore: () => (obj[methodName] = origFn),
+    restore: () => (obj[methodName] = origFn)
   };
 }
 
 function runCode(code) {
-  delete require.cache[require.resolve("tape")];
-  const tape = require("tape");
-  require("tape-dom")(tape);
+  delete require.cache[require.resolve('tape')];
+  const tape = require('tape');
+  require('tape-dom')(tape);
   // should hijack setTimeout before pass to sandbox
   const clock = sinon.useFakeTimers();
   const sandbox = {
@@ -80,11 +80,16 @@ class App extends Component {
     this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 300);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // Jeno is our god
+  componentDidMount() {
+    this.testsRef.innerHTML = '';
+    debouncedRunCode(this.state.code);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    // Jeno is our god, Jeno how bomb bomb
     if (this.testsRef) {
-      this.testsRef.innerHTML = "";
-      debouncedRunCode(nextProps.code);
+      this.testsRef.innerHTML = '';
+      debouncedRunCode(nextProps.code || nextState.code);
     }
   }
 
@@ -100,7 +105,7 @@ class App extends Component {
     try {
       const { code } = transform(newCode);
       this.props.actions.changeCode(code);
-      this.setState({ code: newCode, syntaxError: "" });
+      this.setState({ code: newCode, syntaxError: '' });
     } catch (e) {
       if (e.loc) {
         const { line, column } = e.loc;
@@ -117,7 +122,7 @@ class App extends Component {
         <CodeMirror
           onChange={this.handleCodeChange}
           options={{
-            mode: "javascript",
+            mode: 'javascript',
             lineNumbers: true,
             autoCloseBrackets: true
           }}
