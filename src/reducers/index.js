@@ -4,7 +4,7 @@ import firebase from './firebase';
 
 const reducer = combineReducers({
   code,
-  firebase,
+  firebase
 });
 
 export default reducer;

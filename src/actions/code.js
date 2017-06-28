@@ -4,3 +4,17 @@ export function changeCode(code) {
     code
   };
 }
+
+export function changeQuestion(index) {
+  return {
+    type: 'QUESTION/CHANGE',
+    index
+  };
+}
+
+export function changeSyntaxError(error){
+  return {
+  	type: 'ERROR/CHANGE' ,
+  	error
+  }
+}

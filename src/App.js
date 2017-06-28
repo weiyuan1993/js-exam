@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 import CodeMirror from 'react-codemirror';
 
-import { changeCode } from './actions/code';
+import { changeCode ,changeQuestion , changeSyntaxError } from './actions/code';
 import './App.css';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -69,49 +69,51 @@ const QuestionSelector = ({ handleSelected, activeIndex }) => {
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.testsRef = null;
 
-    this.state = {
-      activeIndex: 0,
-      code: questionList[0].content
-    };
+    this.index = this.props.code.index ;
+    const codeState = this.props.code[this.index] ;
+    this.code = codeState.code || questionList[this.index].content ;
+    this.syntaxError = codeState.syntaxError ;
 
     this.handleSelected = this.handleSelected.bind(this);
     this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 300);
+
+    this.actions = this.props.actions ;
+    this.changeQuestion = this.actions.changeQuestion ;
+    this.changeCode = this.actions.changeCode ;
+    this.changeSyntaxError = this.actions.changeSyntaxError ;
   }
 
   componentDidMount() {
     this.testsRef.innerHTML = '';
-    debouncedRunCode(this.state.code);
+    debouncedRunCode(this.code);
   }
 
   componentWillUpdate(nextProps, nextState) {
-    // Jeno is our god, Jeno how bomb bomb
+    this.index = nextProps.code.index ;
+    const codeState = nextProps.code[this.index] || {} ;
+    this.code = codeState.code || questionList[this.index].content ;
+    this.syntaxError = codeState.syntaxError ;
     if (this.testsRef) {
       this.testsRef.innerHTML = '';
-      debouncedRunCode(nextProps.code || nextState.code);
+      debouncedRunCode(this.code);
     }
   }
 
   handleSelected(index) {
-    const code = questionList[index].content;
-    this.setState({
-      activeIndex: index,
-      code
-    });
+    this.changeQuestion(index);
   }
 
   handleCodeChange(newCode) {
     try {
       const { code } = transform(newCode);
-      this.props.actions.changeCode(code);
-      this.setState({ code: newCode, syntaxError: '' });
+      this.changeCode(code);
     } catch (e) {
       if (e.loc) {
         const { line, column } = e.loc;
-        this.setState({
-          syntaxError: `Syntax error: line ${line}, column ${column}`
-        });
+        this.changeSyntaxError(`Syntax error: line ${line}, column ${column}`) ;
       }
     }
   }
@@ -126,18 +128,18 @@ class App extends Component {
             lineNumbers: true,
             autoCloseBrackets: true
           }}
-          value={this.state.code}
+          value={this.code}
         />
         <div>
           <div className="additional-info">
             <QuestionSelector
               handleSelected={this.handleSelected}
-              activeIndex={this.state.activeIndex}
+              activeIndex={this.index}
             />
-            {!this.state.syntaxError
+            {!this.syntaxError
               ? null
               : <div className="syntax-error">
-                  {this.state.syntaxError}
+                  {this.syntaxError}
                 </div>}
           </div>
 
@@ -151,14 +153,16 @@ class App extends Component {
 export default connect(
   state => {
     return {
-      code: state.code
+      code : state.code 
     };
   },
   dispatch => {
     return {
       actions: {
-        changeCode: newCode => dispatch(changeCode(newCode))
-      }
+        changeCode: newCode => dispatch(changeCode(newCode)) ,
+        changeQuestion : index => dispatch(changeQuestion(index)) ,
+        changeSyntaxError: error => dispatch(changeSyntaxError(error)) ,
+      } 
     };
   }
 )(App);
