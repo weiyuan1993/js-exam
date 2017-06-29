@@ -1,7 +1,8 @@
-export function changeCode(code) {
+export function changeCode({ compiledCode , rawCode }) {
   return {
     type: 'CODE/CHANGE',
-    code
+    compiledCode ,
+    rawCode 
   };
 }
 

@@ -2,24 +2,19 @@ const code = (state = { index : 0 }, action) => {
   switch(action.type) {
     case 'CODE/RESET':
       return state ;
-    case 'CODE/CHANGE':
+    case 'CODE/CHANGE': 
       return {
         ...state ,
+        compiledCode: action.compiledCode || state.compiledCode ,
         [state.index] : {
-          code : action.code 
-        } 
-      }
-    case 'ERROR/CHANGE':
-      return {
-        ...state ,
-        [state.index] : {
-          code : state[state.index].code 
+          code : action.rawCode 
         } 
       }
     case 'QUESTION/CHANGE':
       return {
         ...state,
-        index : action.index 
+        index : action.index ,
+        compiledCode : ''
       }
     default:
       return state;

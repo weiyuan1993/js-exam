@@ -83,16 +83,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { code } = this.props ;
+    const { compiledCode } = this.props ;
     this.testsRef.innerHTML = '';
-    debouncedRunCode(code);
+    debouncedRunCode(compiledCode);
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const { code , index } = nextProps ;
+    const { compiledCode , index } = nextProps ;
     if (this.testsRef) {
       this.testsRef.innerHTML = '';
-      debouncedRunCode(code);
+      debouncedRunCode(compiledCode);
     }
   }
 
@@ -103,9 +103,10 @@ class App extends Component {
   handleCodeChange(newCode) {
     try {
       const { code } = transform(newCode);
-      this.changeCode(code);
+      this.changeCode({ compiledCode : code , rawCode : newCode });
       this.setState({ 'SyntaxError' : '' }) ;
     } catch (e) {
+      this.changeCode({ rawCode : newCode });
       if (e.loc) {
         const { line, column } = e.loc;
         this.setState({ SyntaxError : `Syntax error: line ${line}, column ${column}` }) ;
@@ -114,7 +115,7 @@ class App extends Component {
   }
 
   render() {
-    const { code , index } = this.props ;
+    const { rawCode , index } = this.props ;
     return (
       <div className="App">
         <CodeMirror
@@ -124,7 +125,7 @@ class App extends Component {
             lineNumbers: true,
             autoCloseBrackets: true
           }}
-          value={code}
+          value={rawCode}
         />
         <div>
           <div className="additional-info">
@@ -148,17 +149,20 @@ class App extends Component {
 
 export default connect(
   state => {
-    const { code : codeObj , code : { index } } = state ;
-    const code = ( codeObj[index] && codeObj[index].code ) || questionList[index].content ;
+    const { code : codeObj } = state ;
+    const { index } = codeObj ;
+    const compiledCode = codeObj.compiledCode ;  
+    const rawCode = ( codeObj[index] && codeObj[index].code ) || questionList[index].content ;
     return {
-      code ,
-      index
+      rawCode ,
+      compiledCode ,
+      index 
     };
   },
   dispatch => {
     return {
       actions: {
-        changeCode: newCode => dispatch(changeCode(newCode)) ,
+        changeCode: (args) => dispatch(changeCode(args)) ,
         changeQuestion : index => dispatch(changeQuestion(index)) ,
         changeSyntaxError: error => dispatch(changeSyntaxError(error)) ,
       } 
