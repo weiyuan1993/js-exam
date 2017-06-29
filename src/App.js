@@ -74,7 +74,7 @@ class App extends Component {
 
     this.state = { SyntaxError : '' } ;
     this.handleSelected = this.handleSelected.bind(this);
-    this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 300);
+    this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 800);
 
     this.actions = this.props.actions ;
     this.changeQuestion = this.actions.changeQuestion ;
