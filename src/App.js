@@ -72,11 +72,7 @@ class App extends Component {
 
     this.testsRef = null;
 
-    this.index = this.props.code.index ;
-    const codeState = this.props.code[this.index] ;
-    this.code = codeState.code || questionList[this.index].content ;
-    this.syntaxError = codeState.syntaxError ;
-
+    this.state = { SyntaxError : '' } ;
     this.handleSelected = this.handleSelected.bind(this);
     this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 300);
 
@@ -87,18 +83,16 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const { code } = this.props ;
     this.testsRef.innerHTML = '';
-    debouncedRunCode(this.code);
+    debouncedRunCode(code);
   }
 
   componentWillUpdate(nextProps, nextState) {
-    this.index = nextProps.code.index ;
-    const codeState = nextProps.code[this.index] || {} ;
-    this.code = codeState.code || questionList[this.index].content ;
-    this.syntaxError = codeState.syntaxError ;
+    const { code , index } = nextProps ;
     if (this.testsRef) {
       this.testsRef.innerHTML = '';
-      debouncedRunCode(this.code);
+      debouncedRunCode(code);
     }
   }
 
@@ -110,15 +104,17 @@ class App extends Component {
     try {
       const { code } = transform(newCode);
       this.changeCode(code);
+      this.setState({ 'SyntaxError' : '' }) ;
     } catch (e) {
       if (e.loc) {
         const { line, column } = e.loc;
-        this.changeSyntaxError(`Syntax error: line ${line}, column ${column}`) ;
+        this.setState({ SyntaxError : `Syntax error: line ${line}, column ${column}` }) ;
       }
     }
   }
 
   render() {
+    const { code , index } = this.props ;
     return (
       <div className="App">
         <CodeMirror
@@ -128,18 +124,18 @@ class App extends Component {
             lineNumbers: true,
             autoCloseBrackets: true
           }}
-          value={this.code}
+          value={code}
         />
         <div>
           <div className="additional-info">
             <QuestionSelector
               handleSelected={this.handleSelected}
-              activeIndex={this.index}
+              activeIndex={index}
             />
-            {!this.syntaxError
+            {!this.state.SyntaxError
               ? null
               : <div className="syntax-error">
-                  {this.syntaxError}
+                  {this.state.SyntaxError}
                 </div>}
           </div>
 
@@ -152,8 +148,11 @@ class App extends Component {
 
 export default connect(
   state => {
+    const { code : codeObj , code : { index } } = state ;
+    const code = ( codeObj[index] && codeObj[index].code ) || questionList[index].content ;
     return {
-      code : state.code 
+      code ,
+      index
     };
   },
   dispatch => {
