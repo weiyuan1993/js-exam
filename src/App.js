@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 import CodeMirror from 'react-codemirror';
 
-import { changeCode ,changeQuestion , changeSyntaxError } from './actions/code';
+import { changeCode , changeQuestion , resetQuestion } from './actions/code';
 import './App.css';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -77,6 +77,7 @@ class App extends Component {
     this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 800);
 
     this.actions = this.props.actions ;
+    this.resetQuestion = this.actions.resetQuestion ;
     this.changeQuestion = this.actions.changeQuestion ;
     this.changeCode = this.actions.changeCode ;
     this.changeSyntaxError = this.actions.changeSyntaxError ;
@@ -96,7 +97,7 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if ( this.props.index !== nextProps.index ){
+    if ( this.props.index !== nextProps.index || nextProps.compiledCode === '' ){
       this.handleCodeChange(nextProps.rawCode) ;
     }
   }
@@ -138,6 +139,7 @@ class App extends Component {
               handleSelected={this.handleSelected}
               activeIndex={index}
             />
+            <button onClick={this.resetQuestion}>Reset</button>
             {!this.state.SyntaxError
               ? null
               : <div className="syntax-error">
@@ -169,7 +171,7 @@ export default connect(
       actions: {
         changeCode: (args) => dispatch(changeCode(args)) ,
         changeQuestion : index => dispatch(changeQuestion(index)) ,
-        changeSyntaxError: error => dispatch(changeSyntaxError(error)) ,
+        resetQuestion : () => dispatch(resetQuestion()) 
       } 
     };
   }

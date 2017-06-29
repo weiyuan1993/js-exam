@@ -13,9 +13,8 @@ export function changeQuestion(index) {
   };
 }
 
-export function changeSyntaxError(error){
+export function resetQuestion(index) {
   return {
-  	type: 'ERROR/CHANGE' ,
-  	error
-  }
+    type: 'QUESTION/RESET'
+  };
 }

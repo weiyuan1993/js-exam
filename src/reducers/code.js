@@ -10,6 +10,14 @@ const code = (state = { index : 0 }, action) => {
           code : action.rawCode 
         } 
       }
+    case 'QUESTION/RESET':
+      return {
+        ...state,
+        compiledCode : '' ,
+        [state.index] : {
+          code : '' 
+        } 
+      }
     case 'QUESTION/CHANGE':
       return {
         ...state,
