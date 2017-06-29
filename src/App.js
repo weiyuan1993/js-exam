@@ -83,16 +83,21 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { compiledCode } = this.props ;
-    this.testsRef.innerHTML = '';
-    debouncedRunCode(compiledCode);
+    const { rawCode } = this.props ;
+    this.handleCodeChange(rawCode) ;
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const { compiledCode , index } = nextProps ;
+    const { compiledCode , index , rawCode } = nextProps ;
     if (this.testsRef) {
       this.testsRef.innerHTML = '';
       debouncedRunCode(compiledCode);
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if ( this.props.index !== nextProps.index ){
+      this.handleCodeChange(nextProps.rawCode) ;
     }
   }
 
