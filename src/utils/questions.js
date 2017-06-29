@@ -137,7 +137,7 @@ const tasks = [asyncTask1, asyncTask2, asyncTask3];
 
 test('sequential test', (t) => {
   t.comment('should be able to run things in sequence');
-  {
+  try {
     const log = spy(console, 'log');
     sequential(tasks);
     t.equal(log.callCount(), 0);
@@ -147,6 +147,8 @@ test('sequential test', (t) => {
     clock.tick(600);
     t.equal(log.callCount(), 3);
     t.ok(log.calledWith('task 3 done'));
+  } catch (e) {
+    t.end(e);
   };
 });
 
