@@ -131,17 +131,15 @@ function asyncTask3(done) {
 const tasks = [asyncTask1, asyncTask2, asyncTask3];
 
 test('sequential test', (t) => {
-  t.subtest('should be able to run things in sequence', t => {
-    const log = spy(console, 'log');
-    sequential(tasks);
-    t.equal(log.callCount(), 0);
-    clock.tick(600);
-    t.equal(log.callCount(), 1);
-    t.ok(log.calledWith('task 1 done'));
-    clock.tick(600);
-    t.equal(log.callCount(), 3);
-    t.ok(log.calledWith('task 3 done'));
-  });
+  const log = spy(console, 'log');
+  sequential(tasks);
+  t.equal(log.callCount(), 0);
+  clock.tick(600);
+  t.equal(log.callCount(), 1);
+  t.ok(log.calledWith('task 1 done'));
+  clock.tick(600);
+  t.equal(log.callCount(), 3);
+  t.ok(log.calledWith('task 3 done'));
 });
 
 /*********************************/
@@ -321,13 +319,11 @@ function mergeSort(arr) {
 }
 
 test('mergeSort', t => {
-  t.subtest('can sort numbers', t => {
-    t.deepEqual(mergeSort([6,3,5,10,2,100,4,1]),[1,2,3,4,5,6,10,100]);
-    const randomNumbers = Array.from({length: 20})
-      .map(() => Math.floor(Math.random() * 100));
-    const sorted = randomNumbers.slice(0).sort((a, b) => a - b);
-    t.deepEqual(mergeSort(randomNumbers), sorted);
-  });
+  t.deepEqual(mergeSort([6,3,5,10,2,100,4,1]),[1,2,3,4,5,6,10,100]);
+  const randomNumbers = Array.from({length: 20})
+    .map(() => Math.floor(Math.random() * 100));
+  const sorted = randomNumbers.slice(0).sort((a, b) => a - b);
+  t.deepEqual(mergeSort(randomNumbers), sorted);
 })
 `
   },

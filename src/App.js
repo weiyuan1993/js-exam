@@ -55,7 +55,11 @@ function runCode(code) {
             t.fail(e);
           }
         };
-        cb(t);
+        try {
+          cb(t);
+        } catch(e) {
+          t.fail(e);
+        }
       })
     };
   })(tape);
