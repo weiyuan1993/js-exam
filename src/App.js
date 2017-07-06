@@ -36,13 +36,14 @@ function runCode(code) {
   delete require.cache[require.resolve('tape')];
   const tape = require('tape');
   require('tape-dom')(tape);
-    const test = (function(tape) {
+  const test = (function(tape) {
     return (...args) => {
       const [cb] = args.slice(-1);
       if(typeof cb !== 'function') {
-        throw 'should provide callback';
+        throw new Error('should provide callback');
       }
       tape(...args.slice(0, -1), t => {
+        let endCalled = false;
         t.subtest = (comment, testBlock) => {
           if(!testBlock) {
             testBlock = comment;
@@ -52,7 +53,10 @@ function runCode(code) {
             t.comment(comment);
             testBlock(t);
           } catch(e) {
-            t.end(e);
+            if(e && ! endCalled) {
+              endCalled = true;
+              t.end(e);
+            }
           }
         };
         cb(t);
@@ -112,7 +116,7 @@ class App extends Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const { compiledCode , index , rawCode } = nextProps ;
+    const { compiledCode } = nextProps ;
     if (this.testsRef) {
       this.testsRef.innerHTML = '';
       debouncedRunCode(compiledCode);
