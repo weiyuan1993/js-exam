@@ -27,7 +27,7 @@
 #tests {
     flex: 1;
     overflow: auto;
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 }
 
 .CodeMirror {
