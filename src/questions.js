@@ -28,26 +28,23 @@ function countChar(s) {
 /** DO NOT modify anything below **/
 
 test('countChar test', (t) => {
-  t.comment('should return character count in an object');
-  {
+  t.subtest('should return character count in an object', t => {
     const result = countChar();
     t.equal(typeof result, 'object');
-  }
-  t.comment('should be able to count chars');
-  {
+  });
+  t.subtest('should be able to count chars', t => {
     const input = 'abca';
     const result = countChar(input);
     t.equal(result.a, 2);
     t.equal(result.b, 1);
-  }
-  t.comment('should be able count some longer string as well');
-  {
+  });
+  t.subtest('should be able count some longer string as well', t => {
     const input = 'The Quick Brown Fox Jumps Over The Lazy Dog';
     const result = countChar(input);
     t.equal(result[' '], 8);
     t.equal(result.T, 2);
     t.equal(result.o, 3);
-  }
+  });
 })
 
 /*********************************/
@@ -77,18 +74,16 @@ function adder() {
 /** DO NOT modify anything below **/
 
 test('adder test', (t) => {
-  t.comment('should return a function');
-  {
+  t.subtest('should return a function', t => {
     t.equal(typeof adder(), 'function');
-  }
-  t.comment('should be able to add two numbers');
-  {
+  });
+  t.subtest('should be able to add two numbers', t => {
     const add5 = adder(5);
     t.equal(add5(10), 15);
     t.equal(add5(20), 25);
 
     t.equal(adder(40)(2), 42);
-  }
+  });
 })
 
 /*********************************/
@@ -136,8 +131,7 @@ function asyncTask3(done) {
 const tasks = [asyncTask1, asyncTask2, asyncTask3];
 
 test('sequential test', (t) => {
-  t.comment('should be able to run things in sequence');
-  try {
+  t.subtest('should be able to run things in sequence', t => {
     const log = spy(console, 'log');
     sequential(tasks);
     t.equal(log.callCount(), 0);
@@ -147,9 +141,7 @@ test('sequential test', (t) => {
     clock.tick(600);
     t.equal(log.callCount(), 3);
     t.ok(log.calledWith('task 3 done'));
-  } catch (e) {
-    t.end(e);
-  };
+  });
 });
 
 /*********************************/
@@ -197,27 +189,24 @@ function asyncTask3(done) {
 const tasks = [asyncTask1, asyncTask2, asyncTask3];
 
 test('parallel test', t => {
-  t.comment('should run all tasks at once');
-  {
+  t.subtest('should run all tasks at once', t => {
     const spyLog = spy(console, 'log');
     parallel(tasks, (result) => { /* do nothing */ });
     t.equal(spyLog.callCount(), 0);
     clock.tick(600);
     t.equal(spyLog.callCount(), 3);
-  }
+  });
 
-  t.comment('should get task result in an array');
-  {
+  t.subtest('should get task result in an array', t => {
     let obj = {};
     parallel(tasks, (result) => {
       obj.result = result;
     });
     clock.tick(600);
     t.deepEqual(obj.result, [1, 2, 3]);
-  }
+  });
 
-  t.comment('should trigger callback only once');
-  {
+  t.subtest('should trigger callback only once', t => {
     let count = 0;
     const callback = () => count++;
 
@@ -226,7 +215,7 @@ test('parallel test', t => {
     t.equal(count, 0);
     clock.tick(600);
     t.equal(count, 1);
-  }
+  });
 });
 
 /*********************************/
@@ -263,22 +252,20 @@ test('combineReducers', t => {
     calls: calledCount,
   });
 
-  t.comment('should init states');
-  {
+  t.subtest('should init states', t => {
     let state = {};
     state = reducer(state, {type: ''});
     t.equal(state.calc, 0);
     t.equal(state.calls, 0);
-  }
+  });
 
-  t.comment('should handle actions');
-  {
+  t.subtest('should handle actions', t => {
     let state = {};
     state = reducer(state, {type: 'ADD'});
     t.equal(state.calc, 1);
     state = reducer(state, {type: 'ADD'});
     t.equal(state.calc, 2);
-  }
+  });
 })
 `
   },
@@ -334,14 +321,13 @@ function mergeSort(arr) {
 }
 
 test('mergeSort', t => {
-  t.comment('can sort numbers');
-  {
+  t.subtest('can sort numbers', t => {
     t.deepEqual(mergeSort([6,3,5,10,2,100,4,1]),[1,2,3,4,5,6,10,100]);
     const randomNumbers = Array.from({length: 20})
       .map(() => Math.floor(Math.random() * 100));
     const sorted = randomNumbers.slice(0).sort((a, b) => a - b);
     t.deepEqual(mergeSort(randomNumbers), sorted);
-  }
+  });
 })
 `
   },
