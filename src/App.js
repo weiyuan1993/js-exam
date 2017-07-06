@@ -11,7 +11,7 @@ import { changeCode , changeQuestion , resetQuestion } from './actions/code';
 import './App.css';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import questionList from './utils/questions';
+import questions from './questions';
 
 function spy(obj, methodName) {
   const origFn = obj[methodName];
@@ -55,7 +55,7 @@ function runCode(code) {
 const debouncedRunCode = _.debounce(runCode, 200);
 
 const QuestionSelector = ({ handleSelected, activeIndex }) => {
-  const items = questionList.map((q, i) => {
+  const items = questions.map((q, i) => {
     return <MenuItem key={i} value={i} primaryText={q.name} />;
   });
 
@@ -158,12 +158,12 @@ export default connect(
   state => {
     const { code : codeObj } = state ;
     const { index } = codeObj ;
-    const compiledCode = codeObj.compiledCode ;  
-    const rawCode = ( codeObj[index] && codeObj[index].code ) || questionList[index].content ;
+    const compiledCode = codeObj.compiledCode ;
+    const rawCode = ( codeObj[index] && codeObj[index].code ) || questions[index].content ;
     return {
       rawCode ,
       compiledCode ,
-      index 
+      index
     };
   },
   dispatch => {
@@ -171,8 +171,8 @@ export default connect(
       actions: {
         changeCode: (args) => dispatch(changeCode(args)) ,
         changeQuestion : index => dispatch(changeQuestion(index)) ,
-        resetQuestion : () => dispatch(resetQuestion()) 
-      } 
+        resetQuestion : () => dispatch(resetQuestion())
+      }
     };
   }
 )(App);
