@@ -25,10 +25,10 @@ const combinePatch = (tape, patches) => (...args) => {
 };
 
 const getPatchedTape = () => {
-	delete require.cache[require.resolve('tape')];
-	const tape = require('tape'); 
-	require('tape-dom')(tape);
-	return combinePatch(tape,{
+  delete require.cache[require.resolve('tape')];
+  const tape = require('tape'); 
+  require('tape-dom')(tape);
+  return combinePatch(tape,{
     subtest : tryCatchPatch ,
     should : tryCatchPatch
   }) ;
