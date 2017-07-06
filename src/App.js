@@ -12,6 +12,7 @@ import './App.css';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import questions from './questions';
+import getPatchedTape from './utils/tape';
 
 function spy(obj, methodName) {
   const origFn = obj[methodName];
@@ -33,42 +34,14 @@ function spy(obj, methodName) {
 }
 
 function runCode(code) {
-  delete require.cache[require.resolve('tape')];
-  const tape = require('tape');
-  require('tape-dom')(tape);
-  const test = (function(tape) {
-    return (...args) => {
-      const [cb] = args.slice(-1);
-      if(typeof cb !== 'function') {
-        throw new Error('should provide callback');
-      }
-      tape(...args.slice(0, -1), t => {
-        t.subtest = (comment, testBlock) => {
-          if(!testBlock) {
-            testBlock = comment;
-            comment = '(anonymous)';
-          }
-          try {
-            t.comment(comment);
-            testBlock(t);
-          } catch(e) {
-            t.fail(e);
-          }
-        };
-        try {
-          cb(t);
-        } catch(e) {
-          t.fail(e);
-        }
-      })
-    };
-  })(tape);
+  const test = getPatchedTape();
   // should hijack setTimeout before pass to sandbox
   const clock = sinon.useFakeTimers();
   const sandbox = {
     setTimeout: window.setTimeout, // need to be passed also...
     console,
-    sinon,
+    sinon,   
+    describe: test,
     test,
     clock,
     spy
