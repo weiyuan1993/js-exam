@@ -1,10 +1,7 @@
 import _ from 'underscore';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import vm from 'vm';
 import { transform } from 'buble';
-import sinon from 'sinon';
-
 import CodeMirror from 'react-codemirror';
 
 import { changeCode , changeQuestion , resetQuestion } from './actions/code';
@@ -12,47 +9,7 @@ import './App.css';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import questions from './questions';
-import getPatchedTape from './utils/tape';
-
-function spy(obj, methodName) {
-  const origFn = obj[methodName];
-  let callHistory = [];
-  let calledWith = {};
-
-  const secret = Math.random().toFixed(4) + '';
-  obj[methodName] = (...args) => {
-    const result = origFn.apply(obj, args);
-    callHistory.push(args);
-    calledWith[args.join(secret)] = true;
-    return result;
-  };
-  return {
-    calledWith: (...args) => !!calledWith[args.join(secret)],
-    callCount: () => callHistory.length,
-    restore: () => (obj[methodName] = origFn)
-  };
-}
-
-function runCode(code) {
-  const test = getPatchedTape();
-  // should hijack setTimeout before pass to sandbox
-  const clock = sinon.useFakeTimers();
-  const sandbox = {
-    setTimeout: window.setTimeout, // need to be passed also...
-    console,
-    sinon,   
-    describe: test,
-    test,
-    clock,
-    spy
-  };
-
-  const script = new vm.Script(code);
-  const context = new vm.createContext(sandbox);
-  script.runInContext(context);
-  clock.restore();
-}
-const debouncedRunCode = _.debounce(runCode, 200);
+import debouncedRunCode from './utils/runCode';
 
 const QuestionSelector = ({ handleSelected, activeIndex }) => {
   const items = questions.map((q, i) => {
