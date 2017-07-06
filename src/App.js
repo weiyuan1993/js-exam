@@ -43,7 +43,6 @@ function runCode(code) {
         throw new Error('should provide callback');
       }
       tape(...args.slice(0, -1), t => {
-        let endCalled = false;
         t.subtest = (comment, testBlock) => {
           if(!testBlock) {
             testBlock = comment;
@@ -53,10 +52,7 @@ function runCode(code) {
             t.comment(comment);
             testBlock(t);
           } catch(e) {
-            if(e && ! endCalled) {
-              endCalled = true;
-              t.end(e);
-            }
+            t.fail(e);
           }
         };
         cb(t);
