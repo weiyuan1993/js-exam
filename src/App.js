@@ -36,13 +36,36 @@ function runCode(code) {
   delete require.cache[require.resolve('tape')];
   const tape = require('tape');
   require('tape-dom')(tape);
+    const test = (function(tape) {
+    return (...args) => {
+      const [cb] = args.slice(-1);
+      if(typeof cb !== 'function') {
+        throw 'should provide callback';
+      }
+      tape(...args.slice(0, -1), t => {
+        t.subtest = (comment, testBlock) => {
+          if(!testBlock) {
+            testBlock = comment;
+            comment = '(anonymous)';
+          }
+          try {
+            t.comment(comment);
+            testBlock(t);
+          } catch(e) {
+            t.end(e);
+          }
+        };
+        cb(t);
+      })
+    };
+  })(tape);
   // should hijack setTimeout before pass to sandbox
   const clock = sinon.useFakeTimers();
   const sandbox = {
     setTimeout: window.setTimeout, // need to be passed also...
     console,
     sinon,
-    test: tape,
+    test,
     clock,
     spy
   };
