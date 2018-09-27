@@ -2,7 +2,7 @@ const code = (state = { index : 0 }, action) => {
   switch(action.type) {
     case 'CODE/RESET':
       return state ;
-    case 'CODE/CHANGE': 
+    case 'CODE/CHANGE':
       return {
         ...state ,
         compiledCode: action.compiledCode || state.compiledCode ,
