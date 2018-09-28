@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "1.0.7",
-    "react-tap-event-plugin": "^3.0.3"
+    "react-scripts": "1.0.7"
   },
   "dependencies": {
     "@material-ui/core": "^3.1.1",
@@ -15,7 +14,6 @@
     "moment": "^2.22.2",
     "react": "^16.5.2",
     "react-ace": "^6.2.0",
-    "react-codemirror": "^1.0.0",
     "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",

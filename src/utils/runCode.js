@@ -4,6 +4,20 @@ import vm from 'vm';
 import spy from './spy';
 import getPatchedTape from './tape';
 
+const wrapCode = (code) => {
+  return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, (loopHead) => {
+    return `let count = 0;
+      const detector = (c) => {
+        if (c > 100000) {
+          throw new Error('infinite');
+        }
+      }
+      ${loopHead}
+      detector(count++);
+    `;
+  });
+}
+
 const runCode = (code) => {
   const test = getPatchedTape();
   // should hijack setTimeout before pass to sandbox
@@ -17,8 +31,7 @@ const runCode = (code) => {
     clock,
     spy
   };
-
-  const script = new vm.Script(code);
+  const script = new vm.Script(wrapCode(code));
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
   clock.restore();
