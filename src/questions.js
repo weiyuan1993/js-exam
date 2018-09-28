@@ -51,6 +51,65 @@ test('countChar test', (t) => {
 `
   },
   {
+    name: "forEach, map and reduce",
+    content: `
+/**
+ * Implement the function 'forEach, map and reduce'
+ *
+ */
+
+/**
+ * Implement function body
+ */
+const myForEach = function (array, callback) {
+
+}
+
+const myMap = function (array, callback) {
+
+}
+
+const myReduce = function (array, callback, initValue) {
+
+}
+
+/** DO NOT modify anything below **/
+
+test('forEach, map and reduce test', (t) => {
+  t.subtest('should execute forEach correctly', t => {
+    let count = 0;
+    myForEach([
+      (index) => { count += index; },
+      (index) => { count % 2 === 1 ? count += index : count -= index; },
+      (index) => { count *= index; }
+    ], (fn, index) => fn(index));
+    t.equal(count, -2);
+  });
+  t.subtest('should execute map correctly', t => {
+    const result = myMap([
+      { number: 'a' },
+      { number: 'b' },
+      { number: 'c' },
+      { number: 'a' }
+    ], (val, index) => {
+      return { key: val.number, index };
+    });
+    t.equal(result[0].key, 'a');
+    t.equal(result[0].index, 0);
+    t.equal(result[2].key, 'c');
+    t.equal(result[2].index, 2);
+  });
+  t.subtest('should execute reduce correctly', t => {
+    const result = myReduce([10, 2, 3], (cal, val, index) => cal + val + index, 0);
+    t.equal(result, 18);
+  });
+});
+
+
+/*********************************/
+`
+  },
+  {
     name: "adder",
     content: `
 /**
