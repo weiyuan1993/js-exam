@@ -35,7 +35,7 @@ class MainPage extends Component {
 
   componentDidMount() {
     if (!this.props.isLogin) {
-      this.props.history.push('/login');
+      this.props.history.push('/js-exam/login');
       return;
     }
     const { rawCode } = this.props ;

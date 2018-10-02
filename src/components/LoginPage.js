@@ -15,7 +15,7 @@ class LoginPage extends React.Component {
   }
   componentDidUpdate() {
     if (this.props.isLogin) {
-      this.props.history.push('/');
+      this.props.history.push('/js-exam');
     }
   }
   render() {
