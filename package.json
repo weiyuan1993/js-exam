@@ -2,6 +2,7 @@
   "name": "js-exam",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jeno5980515.github.io/js-exam/",
   "devDependencies": {
     "react-scripts": "1.0.7"
   },
@@ -10,6 +11,7 @@
     "blueimp-md5": "^2.10.0",
     "brace": "^0.11.1",
     "buble": "^0.15.2",
+    "gh-pages": "^2.0.0",
     "history": "^4.7.2",
     "moment": "^2.22.2",
     "react": "^16.5.2",
@@ -26,6 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
   }
 }
