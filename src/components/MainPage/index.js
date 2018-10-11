@@ -8,6 +8,7 @@ import 'brace/theme/textmate';
 import AceEditor from 'react-ace';
 import { withRouter } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
+import io from 'socket.io-client';
 
 import QuestionSelector from './QuestionSelector';
 import questions from '../../questions';
@@ -15,31 +16,38 @@ import { changeCode , changeQuestion , resetQuestion } from '../../actions/code'
 import './MainPage.css';
 import debouncedRunCode from '../../utils/runCode';
 
+const socket = io('http://localhost:8080');
 
 class MainPage extends Component {
   constructor(props) {
     super(props);
 
     this.testsRef = null;
-
+    this.timerId = null;
     this.state = { SyntaxError : '' } ;
     this.handleSelected = this.handleSelected.bind(this);
-    this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 800);
+    this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 100);
 
     this.actions = this.props.actions ;
     this.resetQuestion = this.actions.resetQuestion ;
     this.changeQuestion = this.actions.changeQuestion ;
     this.changeCode = this.actions.changeCode ;
     this.changeSyntaxError = this.actions.changeSyntaxError ;
+    this.saveCode = this.saveCode.bind(this);
   }
 
   componentDidMount() {
-    if (!this.props.isLogin) {
-      this.props.history.push('/js-exam/login');
-      return;
-    }
-    const { rawCode } = this.props ;
-    this.handleCodeChange(rawCode) ;
+    // if (!this.props.isLogin) {
+    //   this.props.history.push('/js-exam/login');
+    //   return;
+    // }
+    const { rawCode } = this.props;
+    this.handleCodeChange(rawCode);
+    this.timerId = setInterval(this.saveCode, 100);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerId);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -54,6 +62,10 @@ class MainPage extends Component {
     if ( this.props.index !== nextProps.index || nextProps.compiledCode === '' ){
       this.handleCodeChange(nextProps.rawCode) ;
     }
+  }
+
+  saveCode() {
+    socket.emit('code', this.props.rawCode);
   }
 
   handleSelected(index) {
