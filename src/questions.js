@@ -84,18 +84,9 @@ test('forEach, map and reduce test', (t) => {
     t.equal(count, -2);
   });
   t.subtest('should execute map correctly', t => {
-    const result = myMap([
-      { number: 'a' },
-      { number: 'b' },
-      { number: 'c' },
-      { number: 'a' }
-    ], (val, index) => {
-      return { key: val.number, index };
-    });
-    t.equal(result[0].key, 'a');
-    t.equal(result[0].index, 0);
-    t.equal(result[2].key, 'c');
-    t.equal(result[2].index, 2);
+    const result = myMap([1, 2, 3, 4], (val, index) => val * index);
+    t.equal(result[0], 0);
+    t.equal(result[2], 6);
   });
   t.subtest('should execute reduce correctly', t => {
     const result = myReduce([10, 2, 3], (cal, val, index) => cal + val + index, 0);
