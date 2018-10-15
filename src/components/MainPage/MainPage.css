@@ -1,17 +1,48 @@
 .App {
   width: 100vw;
   height: 100vh;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   overflow: hidden;
+}
+
+.input-panel {
+  display: block;
+  width: 50%;
+  min-width: 150px;
+  max-width: 60%;
+  height: 100%;
+  padding-right: 10px; 
+  float: left;
+  cursor: col-resize;
 }
 
 .code-panel {
   display: block;
-  width: 33%;
-  min-width: 150px;
-  max-width: 600px;
-  height: 100%;
-  float: left;
+  width: 100% !important;
+  min-height: 100px;
+  max-height: 550px;
+  /* height: 50% !important; */
+}
+
+.border.code-panel {
+  padding-bottom: 10px;
+  cursor: row-resize;
+}
+
+.code-panel > div, .test-panel > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.test-panel {
+  display: block;
+  width: 100% !important;
+  height: 100vh !important;
+  /* height: 50% !important; */
+}
+
+.test-panel > div {
+  height: 100% !important;
 }
 
 .result-panel {
@@ -22,7 +53,7 @@
 
 .additional-info {
   display: flex;
-  border-bottom: 1px solid #cfcfcf;
+  border-bottom: 1px solid #E0E0E0;
   padding: 10px 0;
 }
 
@@ -37,15 +68,14 @@
   margin-bottom: 0 !important;
 }
 
+.ace_layer {
+  height: 100% !important;
+}
+
 .border {
-  cursor: col-resize;
-  background: black;
-  padding-right: 3px;
-  height: 100%;
+  background: #E0E0E0;
 }
 
 .border > div {
-  width: 100% !important;
-  height: 100% !important;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #E0E0E0;
 }

@@ -8,10 +8,10 @@ class Border extends Component {
     this.resize = this.resize.bind(this);
     this.startResize = this.startResize.bind(this);
     this.endResize = this.endResize.bind(this);
-    this.state = { width: null };
+    this.state = { width: this.props.width, height: this.props.height };
   }
   componentDidMount() {
-    this.setState({ width: this.ref.current.clientWidth });
+    // this.setState({ width: this.ref.current.clientWidth, height: this.ref.current.clientHeight, isRendered: true });
   }
   startResize(e) {
     if (e.target.contains(this.ref.current)) {
@@ -20,11 +20,15 @@ class Border extends Component {
     }
   }
   resize(e) {
-    this.setState({ width: e.clientX - this.ref.current.offsetLeft });
+    this.setState({
+      width: this.props.allowWidth ? e.clientX - this.ref.current.offsetLeft : this.state.width,
+      height: this.props.allowHeight ? e.clientY - this.ref.current.offsetTop : this.state.height
+    });
   }
   endResize(e) {
     window.removeEventListener('mousemove', this.resize);
     window.removeEventListener('mouseup', this.endResize);
+    window.dispatchEvent(new Event('resize'));
   }
   render() {
     return (
@@ -33,9 +37,10 @@ class Border extends Component {
         className={`border ${this.props.className ? this.props.className : ''}`}
         onMouseDown={this.startResize}
         style={
-          this.state.width === null ?
-            {} :
-            { width: this.state.width + 'px' }
+          {
+            width: this.state.width + 'px',
+            height: this.state.height + 'px'
+          }
         }
       >
         { this.props.children }

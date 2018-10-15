@@ -81,27 +81,39 @@ class MainPage extends Component {
     const { rawCode , index } = this.props ;
     return (
       <div className="App">
-        <Border className="code-panel">
-          <AceEditor
-            showPrintMargin={false}
-            mode="javascript"
-            theme="textmate"
-            onChange={this.handleCodeChange}
-            value={rawCode}
-            tabSize={2}
-            debounceChangePeriod={800}
-          />
-        </Border>
-        <Border className="code-panel">
-          <AceEditor
-            showPrintMargin={false}
-            mode="javascript"
-            theme="textmate"
-            value={questions[index].test}
-            readOnly={true}
-            tabSize={2}
-            debounceChangePeriod={800}
-          />
+        <Border className="input-panel" allowWidth>
+          <Border 
+            className="code-panel"
+            allowHeight
+            width={window.innerWidth / 2}
+            height={window.innerHeight / 2}
+          >
+            <AceEditor
+              showPrintMargin={false}
+              mode="javascript"
+              theme="textmate"
+              onChange={this.handleCodeChange}
+              value={rawCode}
+              tabSize={2}
+              debounceChangePeriod={800}
+            />
+          </Border>
+          <Border
+            className="test-panel"
+            allowHeight
+            width={window.innerWidth / 2}
+            height={window.innerHeight / 2}
+          >
+            <AceEditor
+              showPrintMargin={false}
+              mode="javascript"
+              theme="textmate"
+              value={questions[index].test}
+              readOnly={true}
+              tabSize={2}
+              debounceChangePeriod={800}
+            />
+          </Border>
         </Border>
         <div className="result-panel">
           <div className="additional-info">
