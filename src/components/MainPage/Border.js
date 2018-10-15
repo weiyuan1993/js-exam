@@ -21,6 +21,8 @@ class Border extends Component {
       width: this.props.allowWidth ? e.clientX - this.ref.current.offsetLeft : this.state.width,
       height: this.props.allowHeight ? e.clientY - this.ref.current.offsetTop : this.state.height
     });
+    document.querySelector('.test-panel').style.height =
+      window.innerHeight - this.state.height + 'px';
   }
   endResize(e) {
     window.removeEventListener('mousemove', this.resize);

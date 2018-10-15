@@ -99,11 +99,8 @@ class MainPage extends Component {
               debounceChangePeriod={800}
             />
           </Border>
-          <Border
+          <div
             className="test-panel"
-            allowHeight
-            width={window.innerWidth / 2}
-            height={window.innerHeight / 2}
           >
             <AceEditor
               showPrintMargin={false}
@@ -114,7 +111,7 @@ class MainPage extends Component {
               tabSize={2}
               debounceChangePeriod={800}
             />
-          </Border>
+          </div>
         </Border>
         <div className="result-panel">
           <div className="additional-info">
