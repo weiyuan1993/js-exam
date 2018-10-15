@@ -65,7 +65,10 @@ class MainPage extends Component {
   }
 
   saveCode() {
-    socket.emit('code', this.props.rawCode);
+    socket.emit('code', {
+      question: this.props.index,
+      code: this.props.rawCode
+    });
   }
 
   handleSelected(index) {

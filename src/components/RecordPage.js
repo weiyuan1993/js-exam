@@ -8,6 +8,7 @@ import 'brace/theme/textmate';
 import AceEditor from 'react-ace';
 import { withRouter } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
+import moment from 'moment';
 
 import { changeCode } from '../actions/code';
 import './RecordPage.css';
@@ -21,14 +22,16 @@ class RecordPage extends Component {
 
     this.testsRef = null;
     this.timerId = null;
-    this.state = { rawCode : '' } ;
+    this.state = { rawCode : '', frameAmount: 0, frame: 0, isPlaying: false } ;
+    this.codes = [];
+    this.speed = 100;
 
     this.actions = this.props.actions ;
-    this.resetQuestion = this.actions.resetQuestion ;
-    this.changeQuestion = this.actions.changeQuestion ;
-    this.changeCode = this.actions.changeCode ;
-    this.changeSyntaxError = this.actions.changeSyntaxError ;
-		this.readFile = this.readFile.bind(this);
+    this.readFile = this.readFile.bind(this);
+    this.changeSpeed = this.changeSpeed.bind(this);
+    this.changeCode = this.changeCode.bind(this);
+    this.play = this.play.bind(this);
+    this.changeFrame = this.changeFrame.bind(this);
   }
 
   componentDidMount() {
@@ -39,28 +42,48 @@ class RecordPage extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timerId);
+    clearTimeout(this.timerId);
+  }
+
+  changeCode () {
+    clearTimeout(this.timerId);
+    this.setState({ rawCode: this.codes[this.state.frame] });
+    if (!this.state.isPlaying) return;
+    if (this.state.frame < this.codes.length) {
+      this.setState({ frame: this.state.frame + 1 });
+      this.timerId = setTimeout(this.changeCode, this.speed);
+    } else {
+      this.setState({ isPlaying: false });
+    }
   }
 
 	readFile(file) {
-		console.log(file);
 		const fileReader = new FileReader();
 		fileReader.onloadend = () => {
-			const codes = fileReader.result.split('\n$$$$$$$$$$$$$$$$$$$$$$$\n');
-			let index = 0;
-			let timerId = setInterval(() => {
-				this.setState({ rawCode: codes[index] });
-				index ++;
-				if (index >= codes.length) {
-					clearInterval(timerId);
-				}
-			}, 100);
+      this.codes = fileReader.result.split('\n$$$$$$$$$$$$$$$$$$$$$$$\n');
+      this.setState({ frameAmount: this.codes.length });
+      this.changeCode();
 		}
 		fileReader.readAsText(file);
-	}
+  }
+  
+  changeSpeed(times) {
+    this.speed *= times;
+  }
+
+  changeFrame(index) {
+    this.setState({ frame: parseInt(index, 10) }, this.changeCode);
+    this.changeCode();
+  }
+
+  play(value) {
+    this.setState({ isPlaying: value }, this.changeCode);
+  }
 
   render() {
-    const { rawCode } = this.state ;
+    const { rawCode, frameAmount, frame, isPlaying } = this.state ;
+    console.log(frame);
+    console.log(frameAmount);
     return (
       <div className="App">
         <AceEditor
@@ -68,10 +91,23 @@ class RecordPage extends Component {
           theme="textmate"
           value={rawCode}
         />
-				<input
-					type="file"
-					onChange={(e) => this.readFile(e.target.files[0])}
-				></input>
+        <div>
+          <input
+            type="file"
+            onChange={(e) => this.readFile(e.target.files[0])}
+          >
+          </input>
+          <Button variant="outlined" onClick={() => this.changeSpeed(2)}>-</Button>
+          <Button variant="outlined" onClick={() => this.changeSpeed(0.5)}>+</Button>
+          <Button
+            variant="outlined"
+            onClick={() => this.play(!isPlaying)}
+          >
+            { isPlaying ? 'Stop' : 'Play' }
+          </Button>
+          <input type="range" min="0" max={frameAmount} onChange={(e) => this.changeFrame(e.target.value)} value={frame}></input>
+          <div>{moment.utc(frame * 100).format('HH:mm:ss')}/{moment.utc(frameAmount * 100).format('HH:mm:ss')}</div>
+        </div>
       </div>
     );
   }
@@ -93,7 +129,6 @@ export default withRouter(connect(
   dispatch => {
     return {
       actions: {
-        changeCode: (args) => dispatch(changeCode(args))
       }
     };
   }
