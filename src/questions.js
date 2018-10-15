@@ -24,6 +24,7 @@ const questionList = [
 function countChar(s) {
 
 }
+
 `,
     test: `
 test('countChar test', (t) => {
