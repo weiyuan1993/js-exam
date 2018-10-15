@@ -10,6 +10,10 @@ class Border extends Component {
     this.endResize = this.endResize.bind(this);
     this.state = { width: this.props.width, height: this.props.height };
   }
+  componentDidMount() {
+    document.querySelector('.test-panel').style.height =
+      window.innerHeight - this.state.height + 'px';
+  }
   startResize(e) {
     if (e.target.contains(this.ref.current)) {
       window.addEventListener('mousemove', this.resize);
