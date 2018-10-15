@@ -9,3 +9,7 @@
 .login-input {
   margin-right: 30px;
 }
+
+.error {
+  color: red;
+}

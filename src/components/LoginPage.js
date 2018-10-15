@@ -11,7 +11,7 @@ class LoginPage extends React.Component {
     super(props);
     this.actions = this.props.actions;
     this.submitPassword = this.actions.submitPassword;
-    this.state = { password: '' };
+    this.state = { password: '', error: '' };
   }
   componentDidUpdate() {
     if (this.props.isLogin) {
@@ -25,6 +25,11 @@ class LoginPage extends React.Component {
           onChange={e => this.setState({ password: e.target.value })}
           margin="normal"
           placeholder="input the password to login"
+          onKeyDown={e => {
+            if(e.keyCode === 13) {
+              this.submitPassword(this.state.password )
+            }
+          }}
         />
         <Button
           variant="outlined"
@@ -32,6 +37,7 @@ class LoginPage extends React.Component {
         >
           Login
         </Button>
+        <div className="error">{ this.state.error }</div>
       </div>
     )
   }

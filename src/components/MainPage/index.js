@@ -36,10 +36,10 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.isLogin) {
-      this.props.history.push('/js-exam/login');
-      return;
-    }
+    // if (!this.props.isLogin) {
+    //   this.props.history.push('/js-exam/login');
+    //   return;
+    // }
     const { rawCode } = this.props ;
     this.handleCodeChange(rawCode) ;
   }
