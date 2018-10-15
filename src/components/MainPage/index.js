@@ -5,6 +5,7 @@ import { transform } from 'buble';
 import brace from 'brace';
 import 'brace/mode/javascript';
 import 'brace/theme/textmate';
+import 'brace/theme/monokai';
 import AceEditor from 'react-ace';
 import { withRouter } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
@@ -36,10 +37,10 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    // if (!this.props.isLogin) {
-    //   this.props.history.push('/js-exam/login');
-    //   return;
-    // }
+    if (!this.props.isLogin) {
+      this.props.history.push('/js-exam/login');
+      return;
+    }
     const { rawCode } = this.props ;
     this.handleCodeChange(rawCode) ;
   }
@@ -91,7 +92,7 @@ class MainPage extends Component {
             <AceEditor
               showPrintMargin={false}
               mode="javascript"
-              theme="textmate"
+              theme="monokai"
               onChange={this.handleCodeChange}
               value={rawCode}
               tabSize={2}
