@@ -14,6 +14,7 @@ import questions from '../../questions';
 import { changeCode , changeQuestion , resetQuestion } from '../../actions/code';
 import './MainPage.css';
 import debouncedRunCode from '../../utils/runCode';
+import Border from './Border';
 
 
 class MainPage extends Component {
@@ -24,7 +25,8 @@ class MainPage extends Component {
 
     this.state = { SyntaxError : '' } ;
     this.handleSelected = this.handleSelected.bind(this);
-    this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 800);
+    // this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 800);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
 
     this.actions = this.props.actions ;
     this.resetQuestion = this.actions.resetQuestion ;
@@ -61,8 +63,9 @@ class MainPage extends Component {
   }
 
   handleCodeChange(newCode) {
+    const fullCode = `${newCode} ${questions[this.props.index].test}`;
     try {
-      const { code } = transform(newCode);
+      const { code } = transform(fullCode);
       this.changeCode({ compiledCode : code , rawCode : newCode });
       this.setState({ 'SyntaxError' : '' }) ;
     } catch (e) {
@@ -78,13 +81,29 @@ class MainPage extends Component {
     const { rawCode , index } = this.props ;
     return (
       <div className="App">
-        <AceEditor
-          mode="javascript"
-          theme="textmate"
-          onChange={this.handleCodeChange}
-          value={rawCode}
-        />
-        <div>
+        <Border className="code-panel">
+          <AceEditor
+            showPrintMargin={false}
+            mode="javascript"
+            theme="textmate"
+            onChange={this.handleCodeChange}
+            value={rawCode}
+            tabSize={2}
+            debounceChangePeriod={800}
+          />
+        </Border>
+        <Border className="code-panel">
+          <AceEditor
+            showPrintMargin={false}
+            mode="javascript"
+            theme="textmate"
+            value={questions[index].test}
+            readOnly={true}
+            tabSize={2}
+            debounceChangePeriod={800}
+          />
+        </Border>
+        <div className="result-panel">
           <div className="additional-info">
             <QuestionSelector
               handleSelected={this.handleSelected}

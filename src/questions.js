@@ -24,9 +24,8 @@ const questionList = [
 function countChar(s) {
 
 }
-
-/** DO NOT modify anything below **/
-
+`,
+    test: `
 test('countChar test', (t) => {
   t.subtest('should return character count in an object', t => {
     const result = countChar();
@@ -47,7 +46,6 @@ test('countChar test', (t) => {
   });
 })
 
-/*********************************/
 `
   },
   {
@@ -73,8 +71,8 @@ const myReduce = function (array, callback, initValue) {
 
 }
 
-/** DO NOT modify anything below **/
-
+`,
+    test: `
 test('forEach, map and reduce test', (t) => {
   t.subtest('should execute forEach correctly', t => {
     let count = 0;
@@ -105,8 +103,6 @@ test('forEach, map and reduce test', (t) => {
   });
 });
 
-
-/*********************************/
 `
   },
   {
@@ -130,8 +126,8 @@ test('forEach, map and reduce test', (t) => {
 function adder() {
 }
 
-/** DO NOT modify anything below **/
-
+`,
+    test: `
 test('adder test', (t) => {
   t.subtest('should return a function', t => {
     t.equal(typeof adder(), 'function');
@@ -145,7 +141,6 @@ test('adder test', (t) => {
   });
 })
 
-/*********************************/
 `
   },
   {
@@ -166,8 +161,8 @@ function sequential(tasks = []) {
 
 }
 
-/** DO NOT modify anything below **/
-
+`,
+    test: `
 function asyncTask1(done) {
   setTimeout(() => {
     console.log('task 1 done');
@@ -201,7 +196,6 @@ test('sequential test', (t) => {
   t.ok(log.calledWith('task 3 done'));
 });
 
-/*********************************/
     `
   },
   {
@@ -222,8 +216,8 @@ test('sequential test', (t) => {
 function parallel(tasks = [], callback) {
 }
 
-/** DO NOT modify anything below **/
-
+`,
+    test: `
 function asyncTask1(done) {
   setTimeout(() => {
     console.log('task 1 done');
@@ -275,7 +269,6 @@ test('parallel test', t => {
   });
 });
 
-/*********************************/
 `
   },
   {
@@ -303,6 +296,8 @@ function calledCount(state = 0, action) {
   return state;
 }
 
+`,
+    test: `
 test('combineReducers', t => {
   const reducer = combineReducers({
     calc: calc,
@@ -377,6 +372,8 @@ function mergeSort(arr) {
   return merge(sortedArr1, sortedArr2);
 }
 
+`,
+    test: `
 test('mergeSort', t => {
   t.deepEqual(mergeSort([6,3,5,10,2,100,4,1]),[1,2,3,4,5,6,10,100]);
   const randomNumbers = Array.from({length: 20})
