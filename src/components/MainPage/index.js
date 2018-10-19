@@ -16,7 +16,7 @@ import { changeCode , changeQuestion , resetQuestion } from '../../actions/code'
 import './MainPage.css';
 import debouncedRunCode from '../../utils/runCode';
 import Border from './Border';
-
+import firebase from '../../utils/firebase';
 
 class MainPage extends Component {
   constructor(props) {
@@ -66,7 +66,12 @@ class MainPage extends Component {
   handleCodeChange(newCode) {
     const fullCode = `${newCode} ${questions[this.props.index].test}`;
     try {
-      const { code } = transform(fullCode);
+      const { code } = transform(fullCode, {
+        transforms: {
+          dangerousForOf: true,
+          spreadRest: true
+        }
+      });
       this.changeCode({ compiledCode : code , rawCode : newCode });
       this.setState({ 'SyntaxError' : '' }) ;
     } catch (e) {

@@ -4,7 +4,7 @@ import vm from 'vm';
 import spy from './spy';
 import getPatchedTape from './tape';
 
-const wrapCode = (code) => {
+const wrapCode = (code = '') => {
   return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, (loopHead) => {
     return `let count = 0;
       const detector = (c) => {

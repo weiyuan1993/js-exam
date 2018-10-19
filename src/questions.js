@@ -132,6 +132,79 @@ test('adder test', (t) => {
 `
   },
   {
+    name: "infinite adder",
+    content: `
+/**
+ * Implement a function 'adder'
+ * which behavior is like the following example
+ *
+ * ex:
+ *
+ *   adder(10)(20)(30).getValue()  // return 60
+ *   adder(10)(20)(30)(40).getValue() // return 100
+*/
+
+/**
+ * Implement function body
+ */
+function adder() {
+}
+
+`,
+    test: `
+test('adder test', (t) => {
+  t.subtest('should return a function', t => {
+    t.equal(typeof adder(), 'function');
+  });
+  t.subtest('should get default value with 0', t => {
+    t.equal(adder().getValue(), 0);
+  });
+  t.subtest('should be able to add mutiple numbers', t => {
+    t.equal(adder(10).getValue(), 10);
+    t.equal(adder(10)(20)(30).getValue(), 60);
+    t.equal(adder(10)(20)(30)(40).getValue(), 100);
+  });
+})
+
+`
+  },
+  {
+    name: "default function",
+    content: `
+/**
+ * Implement a function 'defaultWith'
+ * which behavior is like the following example
+ *
+ * ex:
+ *
+ *   const fn = ({ a, b }) => a + b;
+ *   const boundFn = defaultWith(fn, { a: 10 });
+ *   boundFn({ b: 20 }); // return 30
+*/
+
+/**
+ * Implement function body
+ */
+function defaultWith() {
+}
+
+`,
+    test: `
+test('defaultWith test', (t) => {
+  t.subtest('should return a function', t => {
+    const fn = () => {};
+    t.equal(typeof defaultWith(fn, {}), 'function');
+  });
+  t.subtest('should get correct result when all parameters are given', t => {
+    const fn = ({ a, b }) => a * 2 + b * 3;
+    const boundFn = defaultWith(fn, { a: 3 });
+    t.equal(boundFn({ b: 4 }), 18);
+  });
+})
+
+`
+  },
+  {
     name: "sequential",
     content: `
 /**
@@ -305,6 +378,205 @@ test('combineReducers', t => {
     t.equal(state.calc, 1);
     state = reducer(state, {type: 'ADD'});
     t.equal(state.calc, 2);
+  });
+})
+`
+  },
+  {
+    name: 'applyMiddleware',
+    content: `
+// http://redux.js.org/docs/api/applyMiddleware.html
+
+function applyMiddleware(...middlewares) {
+  return createStore => (...args) => {
+    const store = createStore(...args);
+    let dispatch = store.dispatch;
+    /**************************
+     implement              here
+     **************************/
+
+
+
+
+    /***************************/
+    return Object.assign(store, { dispatch })
+  }
+}
+
+`,
+    test: `
+
+function createStore(reducer, preloadedState, enhancer) {
+
+  if (typeof enhancer !== 'undefined') {
+    return enhancer(createStore)(reducer, preloadedState)
+  }
+
+  let currentReducer = reducer;
+  let currentState = preloadedState;
+
+  function getState() {
+    return currentState;
+  }
+
+  function dispatch(action) {
+    currentState = currentReducer(currentState, action);
+  }
+
+  dispatch({ type: '@@INIT' });
+
+  return {
+    dispatch,
+    getState
+  };
+}
+
+function calc(state = 0, action) {
+  switch(action.type) {
+    case 'ADD':
+      return state + 1;
+    case 'DEC':
+      return state - 1;
+    default:
+      return state;
+  }
+}
+
+const thunk = ({ getState, dispatch }) => next => action => {
+  if (typeof action === 'function') {
+    return action(dispatch, getState);
+  }
+  return next(action);
+}
+  
+
+test('applyMiddleware test', t => {
+
+  t.subtest('should execute normal action', t => {
+    const store = createStore(calc, 0, applyMiddleware(thunk));
+    store.dispatch({ type: 'ADD' });
+    t.equal(store.getState(), 1);
+  });
+
+  t.subtest('should execute function action', t => {
+    const store = createStore(calc, 0, applyMiddleware(thunk));
+    const incrementAsync = (dispatch, getState) => {
+      setTimeout(() => {
+        dispatch({ type: 'ADD' });
+      }, 1000);
+    };
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    t.equal(store.getState(), 0);
+    clock.tick(1000);
+    t.equal(store.getState(), 5);
+  });
+})
+`
+  },
+  {
+    name: 'createStore',
+    content: `
+// http://redux.js.org/docs/api/createStore.html
+
+function createStore(reducer, preloadedState, enhancer) {
+
+  function getState() {
+
+  }
+
+  function subscribe(listener) {
+
+  }
+
+  function dispatch(action) {
+
+  }
+
+  dispatch({ type: '@@INIT' })
+
+  return {
+    dispatch,
+    subscribe,
+    getState
+  }
+}
+
+
+`,
+    test: `
+function calc(state = 0, action) {
+  switch(action.type) {
+    case 'ADD':
+      return state + 1;
+    case 'DEC':
+      return state - 1;
+    default:
+      return state;
+  }
+}
+
+const wrappedThunk = (createStore) => {
+  return function (...args) {
+    const store = createStore(...args);
+    const { dispatch, getState } = store;
+    store.dispatch = (action) => {
+      if (typeof action === 'function') {
+        return action(dispatch, getState);
+      }
+      dispatch(action);
+    }
+    return store;
+  }
+}
+
+test('createStore test', t => {
+
+  t.subtest('should execute getState successfully', t => {
+    const store = createStore(calc, 0);
+    t.equal(store.getState(), 0);
+  });
+
+  t.subtest('should execute dispatch successfully', t => {
+    const store = createStore(calc, 0);
+    t.equal(store.getState(), 0);
+    store.dispatch({ type: 'ADD' });
+    t.equal(store.getState(), 1);
+  });
+
+  t.subtest('should execute subscribe and unsubscribe successfully', t => {
+    const store = createStore(calc, 0);
+    let dispatchCount = 1;
+    const unsubscribe = store.subscribe(() => dispatchCount *= 2);
+    store.dispatch({ type: 'ADD' });
+    store.dispatch({ type: 'ADD' });
+    store.dispatch({ type: 'ADD' });
+    t.equal(dispatchCount, 8);
+    unsubscribe();
+    store.dispatch({ type: 'ADD' });
+    store.dispatch({ type: 'ADD' });
+    store.dispatch({ type: 'ADD' });
+    t.equal(dispatchCount, 8);
+  });
+
+  t.subtest('should execute enhancer successfully', t => {
+    const store = createStore(calc, 0, wrappedThunk);
+    const incrementAsync = (dispatch, getState) => {
+      setTimeout(() => {
+        dispatch({ type: 'ADD' });
+      }, 1000);
+    };
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    store.dispatch(incrementAsync);
+    t.equal(store.getState(), 0);
+    clock.tick(1000);
+    t.equal(store.getState(), 5);
   });
 })
 `
