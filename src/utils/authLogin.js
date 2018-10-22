@@ -1,4 +1,4 @@
-const authLogin = (s) => `${(new Date().getFullYear() + 1) * (new Date().getMonth() + 1) * (new Date().getDate() + 1) * (new Date().getHours() + 1)}`.slice(0, 4) === s;
+const authLogin = (s) => `${(new Date().getUTCFullYear() + 1) * (new Date().getUTCMonth() + 1) * (new Date().getUTCDate() + 1) * (new Date().getUTCHours() + 1)}`.slice(0, 4) === s;
 
 export {
   authLogin
