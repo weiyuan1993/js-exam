@@ -15,10 +15,10 @@ class Console extends Component {
       <div>
         Console:
         {
-          this.props.console.map(({ args }) => 
-            <div className="console">
+          this.props.console.map(({ args }, index1) => 
+            <div className="console" key={index1}>
               {
-                args.map((text) => <div className="text">{ `${text}`.trim() === '' ? <br/> : `${text}`.trim() }</div> )
+                args.map((text, index2) => <div className="text" key={index2}>{ `${text}`.trim() === '' ? <br/> : `${text}`.trim() }</div> )
               }
             </div> )
         }

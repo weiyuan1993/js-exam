@@ -20,9 +20,11 @@ const wrapCode = (code = '') => {
 }
 
 const runCode = (code, wrappedConsole) => {
+  let script = null;
+  let context = null;
+  const clock = sinon.useFakeTimers();
   const test = getPatchedTape();
   // should hijack setTimeout before pass to sandbox
-  const clock = sinon.useFakeTimers();
   const sandbox = {
     setTimeout: window.setTimeout, // need to be passed also...
     console: wrappedConsole,
@@ -32,9 +34,16 @@ const runCode = (code, wrappedConsole) => {
     clock,
     spy
   };
-  const script = new vm.Script(wrapCode(code));
-  const context = new vm.createContext(sandbox);
-  script.runInContext(context);
+  try {
+    script = new vm.Script(wrapCode(code));
+    context = new vm.createContext(sandbox);
+    script.runInContext(context);
+  } catch (e) {
+    script = new vm.Script(wrapCode(''));
+    context = new vm.createContext(sandbox);
+    script.runInContext(context);
+    wrappedConsole.log(e);
+  }
   clock.restore();
 }
 const debouncedRunCode = _.debounce(runCode, 200);

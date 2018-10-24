@@ -54,10 +54,6 @@ class MainPage extends Component {
     }
     const { rawCode } = this.props ;
     this.handleCodeChange(rawCode);
-    const observer = new MutationObserver(() => {
-      console.log(123);
-    });
-    observer.observe(this.testsRef.current, { attributes: true, childList: true, subtree: true });
   }
 
   componentWillUpdate(nextProps, nextState) {
