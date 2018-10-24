@@ -12,18 +12,28 @@ import Button from '@material-ui/core/Button';
 
 import QuestionSelector from './QuestionSelector';
 import questions from '../../questions';
-import { changeCode , changeQuestion , resetQuestion } from '../../actions/code';
+import {
+  changeCode,
+  changeQuestion,
+  resetQuestion
+} from '../../actions/code';
+import {
+  resetConsole
+} from '../../actions/console';
 import './MainPage.css';
 import debouncedRunCode from '../../utils/runCode';
 import Border from './Border';
+import Console from './Console';
+import createWrappedConsole from '../../utils/consoleFactory';
 import firebase from '../../utils/firebase';
+import { fn } from '../../../node_modules/moment';
 
 class MainPage extends Component {
   constructor(props) {
     super(props);
 
-    this.testsRef = null;
-
+    this.testsRef = React.createRef();
+    this.wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
     this.state = { SyntaxError : '' } ;
     this.handleSelected = this.handleSelected.bind(this);
     // this.handleCodeChange = _.debounce(this.handleCodeChange.bind(this), 800);
@@ -32,24 +42,29 @@ class MainPage extends Component {
     this.actions = this.props.actions ;
     this.resetQuestion = this.actions.resetQuestion ;
     this.changeQuestion = this.actions.changeQuestion ;
-    this.changeCode = this.actions.changeCode ;
-    this.changeSyntaxError = this.actions.changeSyntaxError ;
+    this.changeCode = this.actions.changeCode;
+    this.resetConsole = this.actions.resetConsole;
+    this.changeSyntaxError = this.actions.changeSyntaxError;
   }
 
   componentDidMount() {
-    if (!this.props.isLogin) {
-      this.props.history.push('/js-exam/login');
-      return;
-    }
+    // if (!this.props.isLogin) {
+    //   this.props.history.push('/js-exam/login');
+    //   return;
+    // }
     const { rawCode } = this.props ;
-    this.handleCodeChange(rawCode) ;
+    this.handleCodeChange(rawCode);
+    const observer = new MutationObserver(() => {
+      console.log(123);
+    });
+    observer.observe(this.testsRef.current, { attributes: true, childList: true, subtree: true });
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const { compiledCode } = nextProps ;
-    if (this.testsRef) {
-      this.testsRef.innerHTML = '';
-      debouncedRunCode(compiledCode);
+    const { compiledCode } = nextProps;
+    if (this.testsRef.current) {
+      this.testsRef.current.innerHTML = '';
+      debouncedRunCode(compiledCode, this.wrappedConsole);
     }
   }
 
@@ -65,6 +80,7 @@ class MainPage extends Component {
 
   handleCodeChange(newCode) {
     const fullCode = `${newCode} ${questions[this.props.index].test}`;
+    this.resetConsole();
     try {
       const { code } = transform(fullCode, {
         transforms: {
@@ -84,7 +100,7 @@ class MainPage extends Component {
   }
 
   render() {
-    const { rawCode , index } = this.props ;
+    const { rawCode , index } = this.props;
     return (
       <div className="App">
         <Border className="input-panel" allowWidth>
@@ -136,8 +152,15 @@ class MainPage extends Component {
                   {this.state.SyntaxError}
                 </div>}
           </div>
-
-          <div id="tests" ref={ref => (this.testsRef = ref)} />
+          <Border 
+            className="control-panel"
+            allowHeight
+            width={window.innerWidth / 2}
+            height={window.innerHeight / 2}
+          >
+            <div id="tests" ref={this.testsRef} />
+          </Border>
+          <Console />
         </div>
       </div>
     );
@@ -162,7 +185,9 @@ export default withRouter(connect(
       actions: {
         changeCode: (args) => dispatch(changeCode(args)) ,
         changeQuestion : index => dispatch(changeQuestion(index)) ,
-        resetQuestion : () => dispatch(resetQuestion())
+        resetQuestion : () => dispatch(resetQuestion()),
+        _dispatch: dispatch,
+        resetConsole: () => dispatch(resetConsole())
       }
     };
   }

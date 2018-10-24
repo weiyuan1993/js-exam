@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import vm from 'vm';
 import spy from './spy';
 import getPatchedTape from './tape';
+import { calendarFormat } from '../../node_modules/moment';
 
 const wrapCode = (code = '') => {
   return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, (loopHead) => {
@@ -18,13 +19,13 @@ const wrapCode = (code = '') => {
   });
 }
 
-const runCode = (code) => {
+const runCode = (code, wrappedConsole) => {
   const test = getPatchedTape();
   // should hijack setTimeout before pass to sandbox
   const clock = sinon.useFakeTimers();
   const sandbox = {
     setTimeout: window.setTimeout, // need to be passed also...
-    console,
+    console: wrappedConsole,
     sinon,   
     describe: test,
     test,
