@@ -200,6 +200,11 @@ test('defaultWith test', (t) => {
     const boundFn = defaultWith(fn, { a: 3 });
     t.equal(boundFn({ b: 4 }), 18);
   });
+  t.subtest('should get correct result when all parameters are given', t => {
+    const fn = ({ x, y, z }) => x * y * z;
+    const boundFn = defaultWith(fn, { x: 3, y: 4 });
+    t.equal(boundFn({ x: 7, z: 2 }), 56);
+  });
 })
 
 `
@@ -448,7 +453,6 @@ const thunk = ({ getState, dispatch }) => next => action => {
   }
   return next(action);
 }
-  
 
 test('applyMiddleware test', t => {
 
@@ -473,6 +477,23 @@ test('applyMiddleware test', t => {
     t.equal(store.getState(), 0);
     clock.tick(1000);
     t.equal(store.getState(), 5);
+  });
+
+  t.subtest('should apply mutiple middlewares in the right order', t => {
+    let logCount = 1;
+    const log = () => next => action => {
+      logCount += 1;
+      next(action);
+    }
+    const log2 = () => next => action => {
+      logCount *= 2;
+      next(action);
+    }
+    const store = createStore(calc, 0, applyMiddleware(log, log2));
+    store.dispatch({ type: 'ADD' });
+    store.dispatch({ type: 'ADD' });
+    store.dispatch({ type: 'ADD' });
+    t.equal(logCount, 22);
   });
 })
 `
@@ -550,16 +571,21 @@ test('createStore test', t => {
   t.subtest('should execute subscribe and unsubscribe successfully', t => {
     const store = createStore(calc, 0);
     let dispatchCount = 1;
-    const unsubscribe = store.subscribe(() => dispatchCount *= 2);
+    let dispatchCount2 = 3;
+    const unsubscribeForCount = store.subscribe(() => dispatchCount *= 2);
+    const unsubscribeForCount2 = store.subscribe(() => dispatchCount2 *= 2);
     store.dispatch({ type: 'ADD' });
     store.dispatch({ type: 'ADD' });
     store.dispatch({ type: 'ADD' });
     t.equal(dispatchCount, 8);
-    unsubscribe();
+    t.equal(dispatchCount2, 24);
+    unsubscribeForCount();
     store.dispatch({ type: 'ADD' });
     store.dispatch({ type: 'ADD' });
+    unsubscribeForCount2();
     store.dispatch({ type: 'ADD' });
     t.equal(dispatchCount, 8);
+    t.equal(dispatchCount2, 96);
   });
 
   t.subtest('should execute enhancer successfully', t => {
