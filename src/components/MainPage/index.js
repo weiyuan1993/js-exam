@@ -78,11 +78,18 @@ class MainPage extends Component {
     const fullCode = `${newCode} ${questions[this.props.index].test}`;
     this.resetConsole();
     try {
+      /*
+        not support
+        [...'abc'],
+        async & await
+      */
       const { code } = transform(fullCode, {
         transforms: {
           dangerousForOf: true,
-          spreadRest: true
-        }
+          spreadRest: true,
+          objectRestSpread: true
+        },
+        objectAssign: 'Object.assign',
       });
       this.changeCode({ compiledCode : code , rawCode : newCode });
       this.setState({ 'SyntaxError' : '' }) ;
