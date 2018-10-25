@@ -131,32 +131,34 @@ class MainPage extends Component {
           </div>
         </Border>
         <div className="result-panel">
-          <div className="additional-info">
-            <QuestionSelector
-              handleSelected={this.handleSelected}
-              activeIndex={index}
-            />
-            <Button
-              variant="outlined"
-              onClick={(this.resetQuestion)}
+          <div className="top-panel">
+            <div className="additional-info">
+              <QuestionSelector
+                handleSelected={this.handleSelected}
+                activeIndex={index}
+              />
+              <Button
+                variant="outlined"
+                onClick={(this.resetQuestion)}
+              >
+                Reset
+              </Button>
+              {!this.state.SyntaxError
+                ? null
+                : <div className="syntax-error">
+                    {this.state.SyntaxError}
+                  </div>}
+            </div>
+            <Border 
+              className="control-panel"
+              allowHeight
+              width={window.innerWidth / 2}
+              height={window.innerHeight / 2}
             >
-              Reset
-            </Button>
-            {!this.state.SyntaxError
-              ? null
-              : <div className="syntax-error">
-                  {this.state.SyntaxError}
-                </div>}
+              <div id="tests" ref={this.testsRef} />
+            </Border>
           </div>
-          <Border 
-            className="control-panel"
-            allowHeight
-            width={window.innerWidth / 2}
-            height={window.innerHeight / 2}
-          >
-            <div id="tests" ref={this.testsRef} />
-          </Border>
-          <Console />
+          <Console className="bottom-panel"/>
         </div>
       </div>
     );

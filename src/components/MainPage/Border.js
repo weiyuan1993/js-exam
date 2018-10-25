@@ -13,6 +13,8 @@ class Border extends Component {
   componentDidMount() {
     document.querySelector('.test-panel').style.height =
       window.innerHeight - this.state.height + 'px';
+    document.querySelector('.bottom-panel').style.height =
+      window.innerHeight - document.querySelector('.top-panel').clientHeight + 'px';
   }
   startResize(e) {
     if (e.target.contains(this.ref.current)) {
@@ -25,8 +27,11 @@ class Border extends Component {
       width: this.props.allowWidth ? e.clientX - this.ref.current.offsetLeft : this.state.width,
       height: this.props.allowHeight ? e.clientY - this.ref.current.offsetTop : this.state.height
     });
+    // Todo: need to get rid of real dom
     document.querySelector('.test-panel').style.height =
       window.innerHeight - document.querySelector('.code-panel').clientHeight + 'px';
+    document.querySelector('.bottom-panel').style.height =
+      window.innerHeight - document.querySelector('.top-panel').clientHeight + 'px';
   }
   endResize(e) {
     window.removeEventListener('mousemove', this.resize);

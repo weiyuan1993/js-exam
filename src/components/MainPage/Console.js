@@ -12,7 +12,7 @@ class Console extends Component {
   }
   render() {
     return (
-      <div>
+      <div className={this.props.className ? this.props.className : ''}>
         Console:
         {
           this.props.console.map(({ args }, index1) => 
