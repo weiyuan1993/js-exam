@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom'
 
 import MainPage from './components/MainPage/';
@@ -12,6 +13,7 @@ const App = () => (
     <div>
       <Route exact path="/js-exam/" component={MainPage} />
       <Route path="/js-exam/login" component={LoginPage} />
+      <Route exact path="/" component={() => <Redirect to="/js-exam"/>}/>
     </div>
   </Router>
 )
