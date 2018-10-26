@@ -18,7 +18,15 @@ class Console extends Component {
           this.props.console.map(({ args }, index1) => 
             <div className="console" key={index1}>
               {
-                args.map((text, index2) => <div className="text" key={index2}>{ `${text}`.trim() === '' ? <br/> : `${text}`.trim() }</div> )
+                args.map((text, index2) => 
+                  <div className="text" key={index2}>
+                    { 
+                      typeof text === 'object'
+                        ? JSON.stringify(text, null, 2)
+                        : `${text}`.trim() === '' ? <br/> : `${text}`.trim()
+                    }
+                  </div>
+                )
               }
             </div> )
         }
