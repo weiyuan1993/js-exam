@@ -141,7 +141,7 @@ class MainPage extends Component {
                 handleSelected={this.handleSelected}
                 activeIndex={index}
               />
-              <Button onClick={(this.resetQuestion)}>Reset</Button>
+              <Button type="danger" onClick={(this.resetQuestion)}>Reset</Button>
               {!this.state.SyntaxError
                 ? null
                 : <div className="syntax-error">

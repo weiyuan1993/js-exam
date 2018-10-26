@@ -27,7 +27,7 @@ class LoginPage extends React.Component {
               onChange={e => this.setState({ password: e.target.value })}
               style={{ width: 200, marginRight: 5 }}
               />
-            <Button htmlType="submit">Login</Button>
+            <Button type="primary" htmlType="submit">Login</Button>
           </div>
         </form>
         <div className="error">{ this.state.error }</div>
