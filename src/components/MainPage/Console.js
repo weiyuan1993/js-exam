@@ -5,6 +5,8 @@ import {
 } from '../../actions/console';
 import './Console.css';
 
+const isError = (e) => e && e.stack && e.message && typeof e.stack === 'string' && typeof e.message === 'string';
+
 class Console extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +23,7 @@ class Console extends Component {
                 args.map((text, index2) => 
                   <div className="text" key={index2}>
                     { 
-                      typeof text === 'object'
+                      typeof text === 'object' && !isError(text)
                         ? JSON.stringify(text, null, 2)
                         : `${text}`.trim() === '' ? <br/> : `${text}`.trim()
                     }
