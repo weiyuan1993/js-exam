@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
-import TextField from '@material-ui/core/TextField';
+import { Input, Button } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { submitPassword } from '../actions/login';
@@ -21,22 +20,16 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div className="login">
-        <TextField
-          onChange={e => this.setState({ password: e.target.value })}
-          margin="normal"
-          placeholder="input the password to login"
-          onKeyDown={e => {
-            if(e.keyCode === 13) {
-              this.submitPassword(this.state.password )
-            }
-          }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.submitPassword(this.state.password)}
-        >
-          Login
-        </Button>
+        <form onSubmit={() => this.submitPassword(this.state.password)}>
+          <div style={{display:'flex'}}>
+            <Input
+              placeholder="input the password to login"
+              onChange={e => this.setState({ password: e.target.value })}
+              style={{ width: 200, marginRight: 5 }}
+              />
+            <Button htmlType="submit">Login</Button>
+          </div>
+        </form>
         <div className="error">{ this.state.error }</div>
       </div>
     )

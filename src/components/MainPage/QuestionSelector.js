@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import { Select } from 'antd';
 import questions from '../../questions';
 const { Option } = Select;
-
-const styles = () => ({
-  button: {
-    'text-transform': 'none'
-  }
-});
 
 class QuestionSelector extends Component {
   constructor(props) {
@@ -21,11 +14,13 @@ class QuestionSelector extends Component {
       return <Option key={i} value={i}>{q.name}</Option>
     });
     return (
-      <Select onChange={handleSelected} defaultValue={activeIndex}>
+      <Select
+        onChange={handleSelected} defaultValue={activeIndex}
+        style={{minWidth: 200}}>
         {options}
       </Select>
     );
   }
 }
 
-export default  withStyles(styles)(QuestionSelector);
+export default QuestionSelector;
