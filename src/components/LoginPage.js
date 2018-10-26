@@ -32,7 +32,7 @@ class LoginPage extends React.Component {
           }}
         />
         <Button
-          variant="outlined"
+          type="primary"
           onClick={() => this.submitPassword(this.state.password)}
         >
           Login
