@@ -1,14 +1,13 @@
-import _ from 'underscore';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { transform } from 'buble';
-import brace from 'brace';
+import 'brace';
 import 'brace/mode/javascript';
 import 'brace/theme/textmate';
 import 'brace/theme/monokai';
 import AceEditor from 'react-ace';
 import { withRouter } from 'react-router-dom'
-import Button from '@material-ui/core/Button';
+import { Button } from 'antd';
 
 import QuestionSelector from './QuestionSelector';
 import questions from '../../questions';
@@ -25,8 +24,6 @@ import debouncedRunCode from '../../utils/runCode';
 import Border from './Border';
 import Console from './Console';
 import createWrappedConsole from '../../utils/consoleFactory';
-import firebase from '../../utils/firebase';
-import { fn } from '../../../node_modules/moment';
 
 class MainPage extends Component {
   constructor(props) {
@@ -107,7 +104,7 @@ class MainPage extends Component {
     return (
       <div className="App">
         <Border className="input-panel" allowWidth>
-          <Border 
+          <Border
             className="code-panel"
             allowHeight
             width={window.innerWidth / 2}
@@ -144,19 +141,14 @@ class MainPage extends Component {
                 handleSelected={this.handleSelected}
                 activeIndex={index}
               />
-              <Button
-                variant="outlined"
-                onClick={(this.resetQuestion)}
-              >
-                Reset
-              </Button>
+              <Button type="danger" onClick={(this.resetQuestion)}>Reset</Button>
               {!this.state.SyntaxError
                 ? null
                 : <div className="syntax-error">
                     {this.state.SyntaxError}
                   </div>}
             </div>
-            <Border 
+            <Border
               className="control-panel"
               allowHeight
               width={window.innerWidth / 2}

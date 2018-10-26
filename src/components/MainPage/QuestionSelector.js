@@ -1,61 +1,26 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import { Select } from 'antd';
 import questions from '../../questions';
-
-const styles = () => ({
-  button: {
-    'text-transform': 'none'
-  }
-});
+const { Option } = Select;
 
 class QuestionSelector extends Component {
   constructor(props) {
     super(props);
     this.state = { anchorEl: null };
-    this.handleClicked = this.handleClicked.bind(this);
-  }
-  handleClicked(e) {
-    this.setState({ anchorEl: e.currentTarget });
   }
   render() {
-    const { handleClicked } = this;
-    const { handleSelected, activeIndex, classes } = this.props;
-    const { anchorEl } = this.state;
-    const items = questions.map((q, i) => {
-      return (
-        <MenuItem 
-          key={i}
-          value={i}
-          onClick={() => {
-            handleClicked(false);
-            handleSelected(i);
-          }}
-        >
-          {q.name} 
-        </MenuItem>
-      );
+    const { handleSelected, activeIndex } = this.props;
+    const options = questions.map((q, i) => {
+      return <Option key={i} value={i}>{q.name}</Option>
     });
-  
     return (
-      <div>
-        <Button
-          aria-owns={anchorEl ? 'simple-menu' : null}
-          aria-haspopup="true"
-          className={classes.button}
-          variant="outlined"
-          onClick={handleClicked}
-        >
-          {`${questions[activeIndex].name}  ▼`}
-        </Button>
-        <Menu id="simple-menu" open={Boolean(anchorEl)} anchorEl={anchorEl}>
-          {items}
-        </Menu>
-      </div>
+      <Select
+        onChange={handleSelected} defaultValue={activeIndex}
+        style={{minWidth: 200}}>
+        {options}
+      </Select>
     );
   }
 }
 
-export default  withStyles(styles)(QuestionSelector);
+export default QuestionSelector;
