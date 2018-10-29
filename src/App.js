@@ -7,13 +7,14 @@ import {
 
 import MainPage from './components/MainPage/';
 import LoginPage from './components/LoginPage';
+import ReactPage from './components/ReactPage';
 
 const App = () => (
   <Router>
     <div>
-      <Route exact path="/js-exam/" component={MainPage} />
-      <Route path="/js-exam/login" component={LoginPage} />
-      <Route exact path="/" component={() => <Redirect to="/js-exam"/>}/>
+      <Route exact path="/" component={MainPage} />
+      <Route path="/react" component={ReactPage} />
+      <Route path="/login" component={LoginPage} />
     </div>
   </Router>
 )

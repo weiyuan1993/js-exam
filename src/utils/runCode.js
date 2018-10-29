@@ -1,3 +1,5 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import _ from 'underscore';
 import sinon from 'sinon';
 import vm from 'vm';
@@ -31,7 +33,11 @@ const runCode = (code, wrappedConsole) => {
     describe: test,
     test,
     clock,
-    spy
+    spy,
+    React,
+    ReactDOM,
+    root: document.getElementById('result'),
+    answer: document.getElementById('answer')
   };
   try {
     script = new vm.Script(wrapCode(code));

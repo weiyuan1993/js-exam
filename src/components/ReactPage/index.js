@@ -10,8 +10,9 @@ import AceEditor from 'react-ace';
 import { withRouter } from 'react-router-dom'
 import { Button } from 'antd';
 
+import ResultPanel from './ResultPanel';
 import QuestionSelector from './QuestionSelector';
-import questions from '../../questions';
+import questions from '../../questionsReact';
 import {
   changeCode,
   changeQuestion,
@@ -30,7 +31,6 @@ class MainPage extends Component {
   constructor(props) {
     super(props);
 
-    this.testsRef = React.createRef();
     this.wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
     this.state = { SyntaxError : '' } ;
     this.handleSelected = this.handleSelected.bind(this);
@@ -56,10 +56,7 @@ class MainPage extends Component {
 
   componentWillUpdate(nextProps, nextState) {
     const { compiledCode } = nextProps;
-    if (this.testsRef.current) {
-      this.testsRef.current.innerHTML = '';
-      debouncedRunCode(compiledCode, this.wrappedConsole);
-    }
+    debouncedRunCode(compiledCode, this.wrappedConsole);
   }
 
   componentWillReceiveProps(nextProps){
@@ -73,7 +70,7 @@ class MainPage extends Component {
   }
 
   handleCodeChange(newCode) {
-    const fullCode = `${newCode} ${questions[this.props.index].test}`;
+    const fullCode = `${newCode} ${questions[this.props.index].answer}`;
     this.resetConsole();
     try {
       /*
@@ -89,7 +86,6 @@ class MainPage extends Component {
         },
         objectAssign: 'Object.assign',
       });
-      console.log(code);
       this.changeCode({ compiledCode : code , rawCode : newCode });
       this.setState({ 'SyntaxError' : '' }) ;
     } catch (e) {
@@ -114,7 +110,7 @@ class MainPage extends Component {
           >
             <AceEditor
               showPrintMargin={false}
-              mode="javascript"
+              mode="jsx"
               theme="monokai"
               onChange={this.handleCodeChange}
               value={rawCode}
@@ -122,18 +118,8 @@ class MainPage extends Component {
               debounceChangePeriod={800}
             />
           </Border>
-          <div
-            className="test-panel"
-          >
-            <AceEditor
-              showPrintMargin={false}
-              mode="javascript"
-              theme="textmate"
-              value={questions[index].test}
-              readOnly={true}
-              tabSize={2}
-              debounceChangePeriod={800}
-            />
+          <div className="test-panel">
+            <div id="answer"></div>
           </div>
         </Border>
         <div className="result-panel">
@@ -156,7 +142,7 @@ class MainPage extends Component {
               width={window.innerWidth / 2}
               height={window.innerHeight / 2}
             >
-              <div id="tests" ref={this.testsRef} />
+              <ResultPanel />
             </Border>
           </div>
           <Console className="bottom-panel"/>
