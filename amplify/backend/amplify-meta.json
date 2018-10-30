@@ -1,0 +1,23 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "jackiefork-20181030161252-authRole",
+			"UnauthRoleArn": "arn:aws:iam::917699728562:role/jackiefork-20181030161252-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::917699728562:role/jackiefork-20181030161252-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "jackiefork-20181030161252-deployment",
+			"UnauthRoleName": "jackiefork-20181030161252-unauthRole",
+			"StackName": "jackiefork-20181030161252",
+			"StackId": "arn:aws:cloudformation:us-east-1:917699728562:stack/jackiefork-20181030161252/b0bf87d0-dc1b-11e8-a6a1-500c20fef6d1"
+		}
+	},
+	"api": {
+		"jsexamgraphql": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "API_KEY"
+			}
+		}
+	}
+}
