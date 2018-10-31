@@ -1,16 +1,42 @@
-type Blog @model {
+type Zoom @model {
   id: ID!
-  name: String!
-  posts: [Post] @connection(name: "BlogPosts")
+  sujectId: String
+  description: String
+  testDate: String #YYYY-MM-DD
+  records: [Record] @connection(name: "ZoomRecords")
 }
-type Post @model {
+
+type Record @model {
   id: ID!
-  title: String!
-  blog: Blog @connection(name: "BlogPosts")
-  comments: [Comment] @connection(name: "PostComments")
+  sujectId: String
+  index: Int
+  timeBegin: Int
+  duration: Int
+  question: [QuestionSnapshot] @connection(name: "RecordQuestionSnapshots")
 }
-type Comment @model {
+
+type QuestionSnapshot @model {
   id: ID!
+  questionId: ID
+  zoomId: ID
+  name: String
   content: String
-  post: Post @connection(name: "PostComments")
+  test: String
 }
+
+type Question @model {
+  id: ID!
+  teamId: ID
+  name: String
+  content: String
+  test: String
+  created: Int
+  updated: Int
+}
+
+type Team @model {
+  id: ID!
+  name: String
+  description: String
+}
+
