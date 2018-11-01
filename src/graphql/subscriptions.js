@@ -1,109 +1,94 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const onCreateZoom = `subscription OnCreateZoom {
-  onCreateZoom {
+export const onCreateTest = `subscription OnCreateTest {
+  onCreateTest {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
-export const onUpdateZoom = `subscription OnUpdateZoom {
-  onUpdateZoom {
+export const onUpdateTest = `subscription OnUpdateTest {
+  onUpdateTest {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
-export const onDeleteZoom = `subscription OnDeleteZoom {
-  onDeleteZoom {
+export const onDeleteTest = `subscription OnDeleteTest {
+  onDeleteTest {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
 export const onCreateRecord = `subscription OnCreateRecord {
   onCreateRecord {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -114,6 +99,18 @@ export const onCreateRecord = `subscription OnCreateRecord {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -121,19 +118,10 @@ export const onCreateRecord = `subscription OnCreateRecord {
 export const onUpdateRecord = `subscription OnUpdateRecord {
   onUpdateRecord {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -144,6 +132,18 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -151,19 +151,10 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
 export const onDeleteRecord = `subscription OnDeleteRecord {
   onDeleteRecord {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -174,6 +165,18 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -183,11 +186,10 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -202,11 +204,10 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -221,11 +222,10 @@ export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -375,17 +375,6 @@ export const onCreateTeam = `subscription OnCreateTeam {
       }
       nextToken
     }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -403,17 +392,6 @@ export const onUpdateTeam = `subscription OnUpdateTeam {
       }
       nextToken
     }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -428,17 +406,6 @@ export const onDeleteTeam = `subscription OnDeleteTeam {
         name
         created
         updated
-      }
-      nextToken
-    }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
       }
       nextToken
     }

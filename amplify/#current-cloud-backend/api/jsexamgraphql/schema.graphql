@@ -1,24 +1,26 @@
-type Zoom @model {
+type Test @model {
   id: ID!
-  team: Team @connection(name: "TeamZooms")
-  sujectId: String
-  interviewerIds: [String]
+  teamId: ID
+  subjectId: String #could be email
+  interviewerIds: [String] #could be email(s)
+  progress: Int
   description: String
   testDate: String #YYYY-MM-DD
-  records: [Record] @connection(name: "ZoomRecords")
-  active: Boolean
+  timeBegin: Int
+  timeEnd: Int 
+  records: [Record] @connection(name: "TestRecords")
+  complete: Boolean
 }
 type Record @model {
   id: ID!
-  zoom: Zoom @connection(name: "ZoomRecords")
-  sujectId: String
-  interviewerId: String
-  index: Int
+  subjectId: String #could be email
+  interviewerId: String #could be email
   timeBegin: Int
-  duration: Int
+  timeEnd: Int
   history: String # todo
   result: String
   question: [QuestionSnapshot] @connection(name: "RecordQuestionSnapshots")
+  test: Test @connection(name: "TestRecords")
 }
 type QuestionSnapshot @model {
   id: ID!
@@ -49,6 +51,5 @@ type Team @model {
   name: String
   description: String
   questionSet: [QuestionSet] @connection(name: "TeamQuestionSet")
-  zooms: [Zoom] @connection(name: "TeamZooms")
 }
 

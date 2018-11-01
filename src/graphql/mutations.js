@@ -1,109 +1,94 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const createZoom = `mutation CreateZoom($input: CreateZoomInput!) {
-  createZoom(input: $input) {
+export const createTest = `mutation CreateTest($input: CreateTestInput!) {
+  createTest(input: $input) {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
-export const updateZoom = `mutation UpdateZoom($input: UpdateZoomInput!) {
-  updateZoom(input: $input) {
+export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
+  updateTest(input: $input) {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
-export const deleteZoom = `mutation DeleteZoom($input: DeleteZoomInput!) {
-  deleteZoom(input: $input) {
+export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
+  deleteTest(input: $input) {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
 export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
   createRecord(input: $input) {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -114,6 +99,18 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -121,19 +118,10 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
 export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
   updateRecord(input: $input) {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -144,6 +132,18 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -151,19 +151,10 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
 export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
   deleteRecord(input: $input) {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -174,6 +165,18 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -183,11 +186,10 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -202,11 +204,10 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -221,11 +222,10 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -375,17 +375,6 @@ export const createTeam = `mutation CreateTeam($input: CreateTeamInput!) {
       }
       nextToken
     }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -403,17 +392,6 @@ export const updateTeam = `mutation UpdateTeam($input: UpdateTeamInput!) {
       }
       nextToken
     }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -428,17 +406,6 @@ export const deleteTeam = `mutation DeleteTeam($input: DeleteTeamInput!) {
         name
         created
         updated
-      }
-      nextToken
-    }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
       }
       nextToken
     }

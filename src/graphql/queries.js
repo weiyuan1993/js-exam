@@ -1,66 +1,62 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const getZoom = `query GetZoom($id: ID!) {
-  getZoom(id: $id) {
+export const getTest = `query GetTest($id: ID!) {
+  getTest(id: $id) {
     id
-    team {
-      id
-      name
-      description
-    }
-    sujectId
+    teamId
+    subjectId
     interviewerIds
+    progress
     description
     testDate
+    timeBegin
+    timeEnd
     records {
       items {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
       nextToken
     }
-    active
+    complete
   }
 }
 `;
-export const listZooms = `query ListZooms(
-  $filter: ModelZoomFilterInput
+export const listTests = `query ListTests(
+  $filter: ModelTestFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listZooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listTests(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      team {
-        id
-        name
-        description
-      }
-      sujectId
+      teamId
+      subjectId
       interviewerIds
+      progress
       description
       testDate
+      timeBegin
+      timeEnd
       records {
         items {
           id
-          sujectId
+          subjectId
           interviewerId
-          index
           timeBegin
-          duration
+          timeEnd
           history
           result
         }
         nextToken
       }
-      active
+      complete
     }
     nextToken
   }
@@ -69,19 +65,10 @@ export const listZooms = `query ListZooms(
 export const getRecord = `query GetRecord($id: ID!) {
   getRecord(id: $id) {
     id
-    zoom {
-      id
-      sujectId
-      interviewerIds
-      description
-      testDate
-      active
-    }
-    sujectId
+    subjectId
     interviewerId
-    index
     timeBegin
-    duration
+    timeEnd
     history
     result
     question {
@@ -92,6 +79,18 @@ export const getRecord = `query GetRecord($id: ID!) {
         test
       }
       nextToken
+    }
+    test {
+      id
+      teamId
+      subjectId
+      interviewerIds
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      complete
     }
   }
 }
@@ -104,19 +103,10 @@ export const listRecords = `query ListRecords(
   listRecords(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      zoom {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
-      }
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
       question {
@@ -128,6 +118,18 @@ export const listRecords = `query ListRecords(
         }
         nextToken
       }
+      test {
+        id
+        teamId
+        subjectId
+        interviewerIds
+        progress
+        description
+        testDate
+        timeBegin
+        timeEnd
+        complete
+      }
     }
     nextToken
   }
@@ -138,11 +140,10 @@ export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
     id
     record {
       id
-      sujectId
+      subjectId
       interviewerId
-      index
       timeBegin
-      duration
+      timeEnd
       history
       result
     }
@@ -162,11 +163,10 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
       id
       record {
         id
-        sujectId
+        subjectId
         interviewerId
-        index
         timeBegin
-        duration
+        timeEnd
         history
         result
       }
@@ -290,17 +290,6 @@ export const getTeam = `query GetTeam($id: ID!) {
       }
       nextToken
     }
-    zooms {
-      items {
-        id
-        sujectId
-        interviewerIds
-        description
-        testDate
-        active
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -320,17 +309,6 @@ export const listTeams = `query ListTeams(
           name
           created
           updated
-        }
-        nextToken
-      }
-      zooms {
-        items {
-          id
-          sujectId
-          interviewerIds
-          description
-          testDate
-          active
         }
         nextToken
       }

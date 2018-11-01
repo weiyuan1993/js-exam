@@ -1,7 +1,7 @@
 {
     "AppSyncApiName": "jsexamgraphql",
-    "schemaGraphql": "s3://jackiefork-20181030161252-deployment/amplify-appsync-files/schema.graphql.1540966109689",
-    "ResolverBucket": "jackiefork-20181030161252-deployment",
+    "schemaGraphql": "s3://jackiefork-20181031171353-deployment/amplify-appsync-files/schema.graphql.1540977803317",
+    "ResolverBucket": "jackiefork-20181031171353-deployment",
     "ResolverRootKey": "amplify-appsync-files",
-    "DeploymentTimestamp": "1540966109689"
+    "DeploymentTimestamp": "1540977803317"
 }

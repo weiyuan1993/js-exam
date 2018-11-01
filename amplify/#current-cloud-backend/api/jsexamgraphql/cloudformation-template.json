@@ -69,14 +69,14 @@
                 }
             }
         },
-        "ZoomTable": {
+        "TestTable": {
             "Type": "AWS::DynamoDB::Table",
             "Properties": {
                 "TableName": {
                     "Fn::Join": [
                         "-",
                         [
-                            "Zoom",
+                            "Test",
                             {
                                 "Fn::GetAtt": [
                                     "GraphQLAPI",
@@ -96,10 +96,6 @@
                     {
                         "AttributeName": "id",
                         "AttributeType": "S"
-                    },
-                    {
-                        "AttributeName": "zoomTeamId",
-                        "AttributeType": "S"
                     }
                 ],
                 "ProvisionedThroughput": {
@@ -112,39 +108,17 @@
                 },
                 "StreamSpecification": {
                     "StreamViewType": "NEW_AND_OLD_IMAGES"
-                },
-                "GlobalSecondaryIndexes": [
-                    {
-                        "IndexName": "gsi-TeamZooms",
-                        "KeySchema": [
-                            {
-                                "AttributeName": "zoomTeamId",
-                                "KeyType": "HASH"
-                            }
-                        ],
-                        "Projection": {
-                            "ProjectionType": "ALL"
-                        },
-                        "ProvisionedThroughput": {
-                            "ReadCapacityUnits": {
-                                "Ref": "DynamoDBModelTableReadIOPS"
-                            },
-                            "WriteCapacityUnits": {
-                                "Ref": "DynamoDBModelTableWriteIOPS"
-                            }
-                        }
-                    }
-                ]
+                }
             }
         },
-        "ZoomIAMRole": {
+        "TestIAMRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "RoleName": {
                     "Fn::Join": [
                         "-",
                         [
-                            "ZoomTable",
+                            "TestTable",
                             "role",
                             {
                                 "Fn::GetAtt": [
@@ -188,7 +162,7 @@
                                     "Resource": [
                                         {
                                             "Fn::GetAtt": [
-                                                "ZoomTable",
+                                                "TestTable",
                                                 "Arn"
                                             ]
                                         },
@@ -198,7 +172,7 @@
                                                 [
                                                     {
                                                         "Fn::GetAtt": [
-                                                            "ZoomTable",
+                                                            "TestTable",
                                                             "Arn"
                                                         ]
                                                     },
@@ -214,7 +188,7 @@
                 ]
             }
         },
-        "ZoomDataSource": {
+        "TestDataSource": {
             "Type": "AWS::AppSync::DataSource",
             "Properties": {
                 "ApiId": {
@@ -223,11 +197,11 @@
                         "ApiId"
                     ]
                 },
-                "Name": "ZoomTable",
+                "Name": "TestTable",
                 "Type": "AMAZON_DYNAMODB",
                 "ServiceRoleArn": {
                     "Fn::GetAtt": [
-                        "ZoomIAMRole",
+                        "TestIAMRole",
                         "Arn"
                     ]
                 },
@@ -240,7 +214,7 @@
                                     ":",
                                     {
                                         "Fn::GetAtt": [
-                                            "ZoomTable",
+                                            "TestTable",
                                             "Arn"
                                         ]
                                     }
@@ -249,12 +223,12 @@
                         ]
                     },
                     "TableName": {
-                        "Ref": "ZoomTable"
+                        "Ref": "TestTable"
                     }
                 }
             }
         },
-        "GetZoomResolver": {
+        "GetTestResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -265,11 +239,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "ZoomDataSource",
+                        "TestDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "getZoom",
+                "FieldName": "getTest",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -291,7 +265,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "getZoom",
+                                                    "getTest",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -325,7 +299,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "getZoom",
+                                                    "getTest",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -342,7 +316,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "ListZoomResolver": {
+        "ListTestResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -353,11 +327,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "ZoomDataSource",
+                        "TestDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "listZooms",
+                "FieldName": "listTests",
                 "TypeName": "Query",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -379,7 +353,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "listZooms",
+                                                    "listTests",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -413,7 +387,7 @@
                                                 ".",
                                                 [
                                                     "Query",
-                                                    "listZooms",
+                                                    "listTests",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -430,7 +404,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "CreateZoomResolver": {
+        "CreateTestResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -441,11 +415,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "ZoomDataSource",
+                        "TestDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "createZoom",
+                "FieldName": "createTest",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -467,7 +441,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "createZoom",
+                                                    "createTest",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -501,7 +475,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "createZoom",
+                                                    "createTest",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -518,7 +492,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "UpdateZoomResolver": {
+        "UpdateTestResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -529,11 +503,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "ZoomDataSource",
+                        "TestDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "updateZoom",
+                "FieldName": "updateTest",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -555,7 +529,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "updateZoom",
+                                                    "updateTest",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -589,7 +563,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "updateZoom",
+                                                    "updateTest",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -606,7 +580,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "DeleteZoomResolver": {
+        "DeleteTestResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -617,11 +591,11 @@
                 },
                 "DataSourceName": {
                     "Fn::GetAtt": [
-                        "ZoomDataSource",
+                        "TestDataSource",
                         "Name"
                     ]
                 },
-                "FieldName": "deleteZoom",
+                "FieldName": "deleteTest",
                 "TypeName": "Mutation",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
@@ -643,7 +617,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "deleteZoom",
+                                                    "deleteTest",
                                                     "request",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -677,7 +651,7 @@
                                                 ".",
                                                 [
                                                     "Mutation",
-                                                    "deleteZoom",
+                                                    "deleteTest",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -723,7 +697,7 @@
                         "AttributeType": "S"
                     },
                     {
-                        "AttributeName": "recordZoomId",
+                        "AttributeName": "recordTestId",
                         "AttributeType": "S"
                     }
                 ],
@@ -740,10 +714,10 @@
                 },
                 "GlobalSecondaryIndexes": [
                     {
-                        "IndexName": "gsi-ZoomRecords",
+                        "IndexName": "gsi-TestRecords",
                         "KeySchema": [
                             {
-                                "AttributeName": "recordZoomId",
+                                "AttributeName": "recordTestId",
                                 "KeyType": "HASH"
                             }
                         ],
@@ -3793,95 +3767,7 @@
             },
             "DependsOn": "GraphQLSchema"
         },
-        "ZoomteamResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "TeamDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "team",
-                "TypeName": "Zoom",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Zoom",
-                                                    "team",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Zoom",
-                                                    "team",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "ZoomrecordsResolver": {
+        "TestrecordsResolver": {
             "Type": "AWS::AppSync::Resolver",
             "Properties": {
                 "ApiId": {
@@ -3897,7 +3783,7 @@
                     ]
                 },
                 "FieldName": "records",
-                "TypeName": "Zoom",
+                "TypeName": "Test",
                 "RequestMappingTemplateS3Location": {
                     "Fn::Join": [
                         "",
@@ -3917,7 +3803,7 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Zoom",
+                                                    "Test",
                                                     "records",
                                                     "request",
                                                     {
@@ -3951,96 +3837,8 @@
                                             "Fn::Join": [
                                                 ".",
                                                 [
-                                                    "Zoom",
+                                                    "Test",
                                                     "records",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "RecordzoomResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "ZoomDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "zoom",
-                "TypeName": "Record",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Record",
-                                                    "zoom",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Record",
-                                                    "zoom",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -4129,6 +3927,94 @@
                                                 [
                                                     "Record",
                                                     "question",
+                                                    "response",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": "GraphQLSchema"
+        },
+        "RecordtestResolver": {
+            "Type": "AWS::AppSync::Resolver",
+            "Properties": {
+                "ApiId": {
+                    "Fn::GetAtt": [
+                        "GraphQLAPI",
+                        "ApiId"
+                    ]
+                },
+                "DataSourceName": {
+                    "Fn::GetAtt": [
+                        "TestDataSource",
+                        "Name"
+                    ]
+                },
+                "FieldName": "test",
+                "TypeName": "Record",
+                "RequestMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Record",
+                                                    "test",
+                                                    "request",
+                                                    {
+                                                        "Ref": "DeploymentTimestamp"
+                                                    }
+                                                ]
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                "ResponseMappingTemplateS3Location": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "s3://",
+                            {
+                                "Fn::Join": [
+                                    "/",
+                                    [
+                                        {
+                                            "Ref": "ResolverBucket"
+                                        },
+                                        {
+                                            "Ref": "ResolverRootKey"
+                                        },
+                                        {
+                                            "Fn::Join": [
+                                                ".",
+                                                [
+                                                    "Record",
+                                                    "test",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
@@ -4569,94 +4455,6 @@
                                                 [
                                                     "Team",
                                                     "questionSet",
-                                                    "response",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                }
-            },
-            "DependsOn": "GraphQLSchema"
-        },
-        "TeamzoomsResolver": {
-            "Type": "AWS::AppSync::Resolver",
-            "Properties": {
-                "ApiId": {
-                    "Fn::GetAtt": [
-                        "GraphQLAPI",
-                        "ApiId"
-                    ]
-                },
-                "DataSourceName": {
-                    "Fn::GetAtt": [
-                        "ZoomDataSource",
-                        "Name"
-                    ]
-                },
-                "FieldName": "zooms",
-                "TypeName": "Team",
-                "RequestMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Team",
-                                                    "zooms",
-                                                    "request",
-                                                    {
-                                                        "Ref": "DeploymentTimestamp"
-                                                    }
-                                                ]
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    ]
-                },
-                "ResponseMappingTemplateS3Location": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "s3://",
-                            {
-                                "Fn::Join": [
-                                    "/",
-                                    [
-                                        {
-                                            "Ref": "ResolverBucket"
-                                        },
-                                        {
-                                            "Ref": "ResolverRootKey"
-                                        },
-                                        {
-                                            "Fn::Join": [
-                                                ".",
-                                                [
-                                                    "Team",
-                                                    "zooms",
                                                     "response",
                                                     {
                                                         "Ref": "DeploymentTimestamp"
