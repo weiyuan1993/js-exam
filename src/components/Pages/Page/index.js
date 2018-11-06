@@ -56,7 +56,8 @@ class Page extends Component {
     const fullCode = `${newCode} ${question.test}`;
     try {
       const { code } = transform(fullCode, {
-        presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react']
+        presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react'],
+        plugins: ['proposal-object-rest-spread']
       });
       actions.changeCode({ compiledCode: code, rawCode: newCode, type });
     } catch (e) {
