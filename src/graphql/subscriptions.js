@@ -1,84 +1,438 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
+export const onCreateRoom = `subscription OnCreateRoom {
+  onCreateRoom {
+    id
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+    subjectId
+    description
+    status
+    host {
+      id
+      userId
+      name
+    }
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onUpdateRoom = `subscription OnUpdateRoom {
+  onUpdateRoom {
+    id
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+    subjectId
+    description
+    status
+    host {
+      id
+      userId
+      name
+    }
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onDeleteRoom = `subscription OnDeleteRoom {
+  onDeleteRoom {
+    id
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+    subjectId
+    description
+    status
+    host {
+      id
+      userId
+      name
+    }
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onCreateUser = `subscription OnCreateUser {
+  onCreateUser {
+    id
+    userId
+    name
+    rooms {
+      id
+      subjectId
+      description
+      status
+    }
+    teams {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+export const onUpdateUser = `subscription OnUpdateUser {
+  onUpdateUser {
+    id
+    userId
+    name
+    rooms {
+      id
+      subjectId
+      description
+      status
+    }
+    teams {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+export const onDeleteUser = `subscription OnDeleteUser {
+  onDeleteUser {
+    id
+    userId
+    name
+    rooms {
+      id
+      subjectId
+      description
+      status
+    }
+    teams {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+export const onCreateTeam = `subscription OnCreateTeam {
+  onCreateTeam {
+    id
+    name
+    description
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+    questionSet {
+      items {
+        id
+        name
+        description
+      }
+      nextToken
+    }
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+  }
+}
+`;
+export const onUpdateTeam = `subscription OnUpdateTeam {
+  onUpdateTeam {
+    id
+    name
+    description
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+    questionSet {
+      items {
+        id
+        name
+        description
+      }
+      nextToken
+    }
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+  }
+}
+`;
+export const onDeleteTeam = `subscription OnDeleteTeam {
+  onDeleteTeam {
+    id
+    name
+    description
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+    questionSet {
+      items {
+        id
+        name
+        description
+      }
+      nextToken
+    }
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+  }
+}
+`;
 export const onCreateTest = `subscription OnCreateTest {
   onCreateTest {
     id
-    teamId
+    room {
+      id
+      subjectId
+      description
+      status
+    }
+    team {
+      id
+      name
+      description
+    }
     subjectId
-    interviewerIds
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
     progress
     description
     testDate
     timeBegin
     timeEnd
+    questionSource {
+      id
+      name
+      content
+      test
+    }
     records {
       items {
         id
         subjectId
-        interviewerId
         timeBegin
         timeEnd
         history
-        result
       }
       nextToken
     }
-    complete
+    status
   }
 }
 `;
 export const onUpdateTest = `subscription OnUpdateTest {
   onUpdateTest {
     id
-    teamId
+    room {
+      id
+      subjectId
+      description
+      status
+    }
+    team {
+      id
+      name
+      description
+    }
     subjectId
-    interviewerIds
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
     progress
     description
     testDate
     timeBegin
     timeEnd
+    questionSource {
+      id
+      name
+      content
+      test
+    }
     records {
       items {
         id
         subjectId
-        interviewerId
         timeBegin
         timeEnd
         history
-        result
       }
       nextToken
     }
-    complete
+    status
   }
 }
 `;
 export const onDeleteTest = `subscription OnDeleteTest {
   onDeleteTest {
     id
-    teamId
+    room {
+      id
+      subjectId
+      description
+      status
+    }
+    team {
+      id
+      name
+      description
+    }
     subjectId
-    interviewerIds
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
     progress
     description
     testDate
     timeBegin
     timeEnd
+    questionSource {
+      id
+      name
+      content
+      test
+    }
     records {
       items {
         id
         subjectId
-        interviewerId
         timeBegin
         timeEnd
         history
-        result
       }
       nextToken
     }
-    complete
+    status
   }
 }
 `;
@@ -86,31 +440,40 @@ export const onCreateRecord = `subscription OnCreateRecord {
   onCreateRecord {
     id
     subjectId
-    interviewerId
+    interviewer {
+      id
+      userId
+      name
+    }
     timeBegin
     timeEnd
     history
-    result
+    result {
+      input
+      output
+      testCaseResults
+    }
     question {
-      items {
-        id
-        name
-        content
-        test
-      }
-      nextToken
+      id
+      name
+      content
+      test
     }
     test {
       id
-      teamId
       subjectId
-      interviewerIds
       progress
       description
       testDate
       timeBegin
       timeEnd
-      complete
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
     }
   }
 }
@@ -119,31 +482,40 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
   onUpdateRecord {
     id
     subjectId
-    interviewerId
+    interviewer {
+      id
+      userId
+      name
+    }
     timeBegin
     timeEnd
     history
-    result
+    result {
+      input
+      output
+      testCaseResults
+    }
     question {
-      items {
-        id
-        name
-        content
-        test
-      }
-      nextToken
+      id
+      name
+      content
+      test
     }
     test {
       id
-      teamId
       subjectId
-      interviewerIds
       progress
       description
       testDate
       timeBegin
       timeEnd
-      complete
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
     }
   }
 }
@@ -152,47 +524,71 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
   onDeleteRecord {
     id
     subjectId
-    interviewerId
+    interviewer {
+      id
+      userId
+      name
+    }
     timeBegin
     timeEnd
     history
-    result
+    result {
+      input
+      output
+      testCaseResults
+    }
     question {
-      items {
-        id
-        name
-        content
-        test
-      }
-      nextToken
+      id
+      name
+      content
+      test
     }
     test {
       id
-      teamId
       subjectId
-      interviewerIds
       progress
       description
       testDate
       timeBegin
       timeEnd
-      complete
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
     }
+  }
+}
+`;
+export const onCreateResult = `subscription OnCreateResult {
+  onCreateResult {
+    input
+    output
+    testCaseResults
+  }
+}
+`;
+export const onUpdateResult = `subscription OnUpdateResult {
+  onUpdateResult {
+    input
+    output
+    testCaseResults
+  }
+}
+`;
+export const onDeleteResult = `subscription OnDeleteResult {
+  onDeleteResult {
+    input
+    output
+    testCaseResults
   }
 }
 `;
 export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
   onCreateQuestionSnapshot {
     id
-    record {
-      id
-      subjectId
-      interviewerId
-      timeBegin
-      timeEnd
-      history
-      result
-    }
     name
     content
     test
@@ -202,15 +598,6 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
 export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
   onUpdateQuestionSnapshot {
     id
-    record {
-      id
-      subjectId
-      interviewerId
-      timeBegin
-      timeEnd
-      history
-      result
-    }
     name
     content
     test
@@ -220,15 +607,6 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
 export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
   onDeleteQuestionSnapshot {
     id
-    record {
-      id
-      subjectId
-      interviewerId
-      timeBegin
-      timeEnd
-      history
-      result
-    }
     name
     content
     test
@@ -249,14 +627,11 @@ export const onCreateQuestionSet = `subscription OnCreateQuestionSet {
         name
         content
         test
-        created
-        updated
       }
       nextToken
     }
     name
-    created
-    updated
+    description
   }
 }
 `;
@@ -274,14 +649,11 @@ export const onUpdateQuestionSet = `subscription OnUpdateQuestionSet {
         name
         content
         test
-        created
-        updated
       }
       nextToken
     }
     name
-    created
-    updated
+    description
   }
 }
 `;
@@ -299,14 +671,11 @@ export const onDeleteQuestionSet = `subscription OnDeleteQuestionSet {
         name
         content
         test
-        created
-        updated
       }
       nextToken
     }
     name
-    created
-    updated
+    description
   }
 }
 `;
@@ -316,14 +685,11 @@ export const onCreateQuestion = `subscription OnCreateQuestion {
     questionSet {
       id
       name
-      created
-      updated
+      description
     }
     name
     content
     test
-    created
-    updated
   }
 }
 `;
@@ -333,14 +699,11 @@ export const onUpdateQuestion = `subscription OnUpdateQuestion {
     questionSet {
       id
       name
-      created
-      updated
+      description
     }
     name
     content
     test
-    created
-    updated
   }
 }
 `;
@@ -350,65 +713,11 @@ export const onDeleteQuestion = `subscription OnDeleteQuestion {
     questionSet {
       id
       name
-      created
-      updated
+      description
     }
     name
     content
     test
-    created
-    updated
-  }
-}
-`;
-export const onCreateTeam = `subscription OnCreateTeam {
-  onCreateTeam {
-    id
-    name
-    description
-    questionSet {
-      items {
-        id
-        name
-        created
-        updated
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const onUpdateTeam = `subscription OnUpdateTeam {
-  onUpdateTeam {
-    id
-    name
-    description
-    questionSet {
-      items {
-        id
-        name
-        created
-        updated
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const onDeleteTeam = `subscription OnDeleteTeam {
-  onDeleteTeam {
-    id
-    name
-    description
-    questionSet {
-      items {
-        id
-        name
-        created
-        updated
-      }
-      nextToken
-    }
   }
 }
 `;

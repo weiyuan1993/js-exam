@@ -1,5 +1,5 @@
 projects:
-  jsexamgraphql:
+  innovap3jsexam:
     schemaPath: src\graphql\schema.json
     includes:
       - src\graphql\**\*.js
@@ -10,7 +10,7 @@ projects:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src\graphql
-        graphQLApiId: ihf7546gnjdn3l4vrswqrefyry
+        graphQLApiId: 54dfdtawendfreypwvh2sfpxt4
       endpoints:
         prod: >-
-          https://tburnzut3bbtlhr3bot2ibfboy.appsync-api.us-east-1.amazonaws.com/graphql
+          https://7hiay4be35bi5b2jujxw4lkfmu.appsync-api.us-east-1.amazonaws.com/graphql

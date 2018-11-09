@@ -1,32 +1,32 @@
 {
 	"providers": {
 		"awscloudformation": {
-			"AuthRoleName": "jackiefork-20181031171353-authRole",
-			"UnauthRoleArn": "arn:aws:iam::917699728562:role/jackiefork-20181031171353-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::917699728562:role/jackiefork-20181031171353-authRole",
+			"AuthRoleName": "jsexam-20181109111143-authRole",
+			"UnauthRoleArn": "arn:aws:iam::917699728562:role/jsexam-20181109111143-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::917699728562:role/jsexam-20181109111143-authRole",
 			"Region": "us-east-1",
-			"DeploymentBucketName": "jackiefork-20181031171353-deployment",
-			"UnauthRoleName": "jackiefork-20181031171353-unauthRole",
-			"StackName": "jackiefork-20181031171353",
-			"StackId": "arn:aws:cloudformation:us-east-1:917699728562:stack/jackiefork-20181031171353/62fe1a20-dced-11e8-8f9f-500c28604cae"
+			"DeploymentBucketName": "jsexam-20181109111143-deployment",
+			"UnauthRoleName": "jsexam-20181109111143-unauthRole",
+			"StackName": "jsexam-20181109111143",
+			"StackId": "arn:aws:cloudformation:us-east-1:917699728562:stack/jsexam-20181109111143/34ec91c0-e3cd-11e8-9351-500c286e4435"
 		}
 	},
 	"api": {
-		"jsexamgraphql": {
+		"innovap3jsexam": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
 				"securityType": "API_KEY",
-				"GraphQLAPIIdOutput": "ihf7546gnjdn3l4vrswqrefyry",
-				"GraphQLAPIEndpointOutput": "https://tburnzut3bbtlhr3bot2ibfboy.appsync-api.us-east-1.amazonaws.com/graphql",
-				"GraphQLAPIKeyOutput": "da2-iiuiurtf6bhvvmma2iedy7ndwm"
+				"GraphQLAPIIdOutput": "54dfdtawendfreypwvh2sfpxt4",
+				"GraphQLAPIEndpointOutput": "https://7hiay4be35bi5b2jujxw4lkfmu.appsync-api.us-east-1.amazonaws.com/graphql",
+				"GraphQLAPIKeyOutput": "da2-z3ajxf267jcg5lzlafb3ljbsxe"
 			},
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/jackiefork-20181031171353-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-				"logicalId": "apijsexamgraphql"
+				"s3TemplateURL": "https://s3.amazonaws.com/jsexam-20181109111143-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apiinnovap3jsexam"
 			},
-			"lastPushTimeStamp": "2018-10-31T09:26:09.306Z",
-			"lastPushDirHash": "EDOCSxshEsV8X1CPPZHf4cFnnbU="
+			"lastPushTimeStamp": "2018-11-09T03:30:40.056Z",
+			"lastPushDirHash": "wzdckfyb4SnJxykuHqDF7TImf0Y="
 		}
 	}
 }

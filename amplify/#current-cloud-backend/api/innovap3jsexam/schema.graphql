@@ -1,0 +1,76 @@
+type Room @model {
+  id: ID!
+  test: Test @connection(name: "RoomTests")
+  subjectId: String #could be email
+  description: String
+  status: String #open/completed/closed
+  host: User 
+  users: [User] @connection(name: "RoomUsers") # host & observers
+}
+type User @model {
+  id: ID!
+  userId: String
+  name: String
+  rooms: Room @connection(name: "RoomUsers") # after leave the room, must clear the value
+  teams: Team @connection(name: "TeamUsers")
+}
+
+type Team @model {
+  id: ID!
+  name: String
+  description: String
+  users: [User] @connection(name: "TeamUsers")
+  questionSet: [QuestionSet] @connection(name: "TeamQuestionSets") # currenly one team has one question set
+  test: Test @connection(name: "TeamTest")
+}
+type Test @model {
+  id: ID!
+  room: Room @connection(name: "RoomTests")
+  team: Team @connection(name: "TeamTest")  
+  subjectId: String #could be email
+  users: [User] @connection(name: "RoomUsers") # host & observers
+  progress: Int
+  description: String
+  testDate: String #YYYY-MM-DD
+  timeBegin: Int
+  timeEnd: Int 
+  questionSource: [QuestionSnapshot] #questionContainer (for host to select question), after the test, remove it
+  records: [Record] @connection(name: "TestRecords")
+  status: String #open/inprogress/completed/closed
+}
+type Record @model {
+  id: ID!
+  subjectId: String #could be email
+  interviewer: User
+  timeBegin: Int
+  timeEnd: Int
+  history: String # todo
+  result: Result
+  question: QuestionSnapshot
+  test: Test @connection(name: "TestRecords")
+}
+type Result @model {
+  input: String #code area
+  output: String #code output
+  testCaseResults: String #how many passed, how many failed
+}
+type QuestionSnapshot @model {
+  id: ID!
+  name: String
+  content: String
+  test: String
+}
+type QuestionSet @model { #question set for host to pick in a test
+  id: ID! 
+  team: Team @connection(name: "TeamQuestionSets")
+  questions: [Question] @connection(name: "QuestionSetQuestions")
+  name: String
+  description: String
+}
+type Question @model {
+  id: ID!
+  questionSet: QuestionSet @connection(name: "QuestionSetQuestions")
+  name: String
+  content: String
+  test: String
+}

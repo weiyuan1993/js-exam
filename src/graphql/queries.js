@@ -1,30 +1,266 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
+export const getRoom = `query GetRoom($id: ID!) {
+  getRoom(id: $id) {
+    id
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+    subjectId
+    description
+    status
+    host {
+      id
+      userId
+      name
+    }
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const listRooms = `query ListRooms(
+  $filter: ModelRoomFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      test {
+        id
+        subjectId
+        progress
+        description
+        testDate
+        timeBegin
+        timeEnd
+        questionSource {
+          id
+          name
+          content
+          test
+        }
+        status
+      }
+      subjectId
+      description
+      status
+      host {
+        id
+        userId
+        name
+      }
+      users {
+        items {
+          id
+          userId
+          name
+        }
+        nextToken
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getUser = `query GetUser($id: ID!) {
+  getUser(id: $id) {
+    id
+    userId
+    name
+    rooms {
+      id
+      subjectId
+      description
+      status
+    }
+    teams {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+export const listUsers = `query ListUsers(
+  $filter: ModelUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      userId
+      name
+      rooms {
+        id
+        subjectId
+        description
+        status
+      }
+      teams {
+        id
+        name
+        description
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getTeam = `query GetTeam($id: ID!) {
+  getTeam(id: $id) {
+    id
+    name
+    description
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
+    questionSet {
+      items {
+        id
+        name
+        description
+      }
+      nextToken
+    }
+    test {
+      id
+      subjectId
+      progress
+      description
+      testDate
+      timeBegin
+      timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
+    }
+  }
+}
+`;
+export const listTeams = `query ListTeams(
+  $filter: ModelTeamFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      description
+      users {
+        items {
+          id
+          userId
+          name
+        }
+        nextToken
+      }
+      questionSet {
+        items {
+          id
+          name
+          description
+        }
+        nextToken
+      }
+      test {
+        id
+        subjectId
+        progress
+        description
+        testDate
+        timeBegin
+        timeEnd
+        questionSource {
+          id
+          name
+          content
+          test
+        }
+        status
+      }
+    }
+    nextToken
+  }
+}
+`;
 export const getTest = `query GetTest($id: ID!) {
   getTest(id: $id) {
     id
-    teamId
+    room {
+      id
+      subjectId
+      description
+      status
+    }
+    team {
+      id
+      name
+      description
+    }
     subjectId
-    interviewerIds
+    users {
+      items {
+        id
+        userId
+        name
+      }
+      nextToken
+    }
     progress
     description
     testDate
     timeBegin
     timeEnd
+    questionSource {
+      id
+      name
+      content
+      test
+    }
     records {
       items {
         id
         subjectId
-        interviewerId
         timeBegin
         timeEnd
         history
-        result
       }
       nextToken
     }
-    complete
+    status
   }
 }
 `;
@@ -36,27 +272,48 @@ export const listTests = `query ListTests(
   listTests(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      teamId
+      room {
+        id
+        subjectId
+        description
+        status
+      }
+      team {
+        id
+        name
+        description
+      }
       subjectId
-      interviewerIds
+      users {
+        items {
+          id
+          userId
+          name
+        }
+        nextToken
+      }
       progress
       description
       testDate
       timeBegin
       timeEnd
+      questionSource {
+        id
+        name
+        content
+        test
+      }
       records {
         items {
           id
           subjectId
-          interviewerId
           timeBegin
           timeEnd
           history
-          result
         }
         nextToken
       }
-      complete
+      status
     }
     nextToken
   }
@@ -66,31 +323,40 @@ export const getRecord = `query GetRecord($id: ID!) {
   getRecord(id: $id) {
     id
     subjectId
-    interviewerId
+    interviewer {
+      id
+      userId
+      name
+    }
     timeBegin
     timeEnd
     history
-    result
+    result {
+      input
+      output
+      testCaseResults
+    }
     question {
-      items {
-        id
-        name
-        content
-        test
-      }
-      nextToken
+      id
+      name
+      content
+      test
     }
     test {
       id
-      teamId
       subjectId
-      interviewerIds
       progress
       description
       testDate
       timeBegin
       timeEnd
-      complete
+      questionSource {
+        id
+        name
+        content
+        test
+      }
+      status
     }
   }
 }
@@ -104,32 +370,64 @@ export const listRecords = `query ListRecords(
     items {
       id
       subjectId
-      interviewerId
+      interviewer {
+        id
+        userId
+        name
+      }
       timeBegin
       timeEnd
       history
-      result
+      result {
+        input
+        output
+        testCaseResults
+      }
       question {
-        items {
-          id
-          name
-          content
-          test
-        }
-        nextToken
+        id
+        name
+        content
+        test
       }
       test {
         id
-        teamId
         subjectId
-        interviewerIds
         progress
         description
         testDate
         timeBegin
         timeEnd
-        complete
+        questionSource {
+          id
+          name
+          content
+          test
+        }
+        status
       }
+    }
+    nextToken
+  }
+}
+`;
+export const getResult = `query GetResult($id: ID!) {
+  getResult(id: $id) {
+    input
+    output
+    testCaseResults
+  }
+}
+`;
+export const listResults = `query ListResults(
+  $filter: ModelResultFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listResults(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      input
+      output
+      testCaseResults
     }
     nextToken
   }
@@ -138,15 +436,6 @@ export const listRecords = `query ListRecords(
 export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
   getQuestionSnapshot(id: $id) {
     id
-    record {
-      id
-      subjectId
-      interviewerId
-      timeBegin
-      timeEnd
-      history
-      result
-    }
     name
     content
     test
@@ -161,15 +450,6 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
   listQuestionSnapshots(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      record {
-        id
-        subjectId
-        interviewerId
-        timeBegin
-        timeEnd
-        history
-        result
-      }
       name
       content
       test
@@ -192,14 +472,11 @@ export const getQuestionSet = `query GetQuestionSet($id: ID!) {
         name
         content
         test
-        created
-        updated
       }
       nextToken
     }
     name
-    created
-    updated
+    description
   }
 }
 `;
@@ -222,14 +499,11 @@ export const listQuestionSets = `query ListQuestionSets(
           name
           content
           test
-          created
-          updated
         }
         nextToken
       }
       name
-      created
-      updated
+      description
     }
     nextToken
   }
@@ -241,14 +515,11 @@ export const getQuestion = `query GetQuestion($id: ID!) {
     questionSet {
       id
       name
-      created
-      updated
+      description
     }
     name
     content
     test
-    created
-    updated
   }
 }
 `;
@@ -263,55 +534,11 @@ export const listQuestions = `query ListQuestions(
       questionSet {
         id
         name
-        created
-        updated
+        description
       }
       name
       content
       test
-      created
-      updated
-    }
-    nextToken
-  }
-}
-`;
-export const getTeam = `query GetTeam($id: ID!) {
-  getTeam(id: $id) {
-    id
-    name
-    description
-    questionSet {
-      items {
-        id
-        name
-        created
-        updated
-      }
-      nextToken
-    }
-  }
-}
-`;
-export const listTeams = `query ListTeams(
-  $filter: ModelTeamFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listTeams(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      name
-      description
-      questionSet {
-        items {
-          id
-          name
-          created
-          updated
-        }
-        nextToken
-      }
     }
     nextToken
   }

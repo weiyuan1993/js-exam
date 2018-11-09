@@ -78,16 +78,16 @@
 				}
 			}
 		},
-		"apijsexamgraphql": {
+		"apiinnovap3jsexam": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/jackiefork-20181031171353-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"TemplateURL": "https://s3.amazonaws.com/jsexam-20181109111143-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"Parameters": {
-					"AppSyncApiName": "jsexamgraphql",
-					"schemaGraphql": "s3://jackiefork-20181031171353-deployment/amplify-appsync-files/schema.graphql.1540977803317",
-					"ResolverBucket": "jackiefork-20181031171353-deployment",
+					"AppSyncApiName": "innovap3jsexam",
+					"schemaGraphql": "s3://jsexam-20181109111143-deployment/amplify-appsync-files/schema.graphql.1541734085041",
+					"ResolverBucket": "jsexam-20181109111143-deployment",
 					"ResolverRootKey": "amplify-appsync-files",
-					"DeploymentTimestamp": "1540977803317"
+					"DeploymentTimestamp": "1541734085041"
 				}
 			}
 		}
