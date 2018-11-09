@@ -12,8 +12,8 @@ type Room @model {
 type User @model {
   id: ID!
   name: String
-  rooms: Room @connection(name: "RoomUsers") # after leave the room, must clear the value
-  teams: Team @connection(name: "TeamUsers")
+  room: Room @connection(name: "RoomUsers") # after leave the room, must clear the value
+  team: Team @connection(name: "TeamUsers")
 }
 type Team @model {
   id: ID!
