@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import 'antd/dist/antd.css';
-import reducer from './reducers';
+
+import reducer from 'app/reducers';
 import App from './App';
 import './index.css';
 
