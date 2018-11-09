@@ -4,10 +4,12 @@
   "private": true,
   "homepage": "https://jeno5980515.github.io/js-exam/",
   "devDependencies": {
-    "react-scripts": "2.0.5"
+    "react-scripts": "2.0.5",
+    "babel-loader": "^8.0.4"
   },
   "dependencies": {
     "antd": "^3.10.2",
+    "aws-amplify": "^1.1.9",
     "blueimp-md5": "^2.10.0",
     "brace": "^0.11.1",
     "buble": "^0.19.6",
