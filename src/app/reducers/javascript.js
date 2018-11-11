@@ -1,5 +1,5 @@
 const code = (state = { index: 0 }, action) => {
-  switch (action.type) {
+  switch (action.type.toUpperCase()) {
     case 'JAVASCRIPT/CODE/RESET':
       return state;
     case 'JAVASCRIPT/CODE/CHANGE':

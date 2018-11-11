@@ -19,7 +19,7 @@ const wrapCode = (code = '') => {
   });
 };
 
-const runCode = ({ code, wrappedConsole, onTapeUpdate }) => {
+const runCode = ({ code, wrappedConsole = console, onTapeUpdate }) => {
   let script = null;
   let context = null;
   const clock = sinon.useFakeTimers();

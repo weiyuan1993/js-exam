@@ -1,18 +1,14 @@
 import React from 'react';
 import { Select } from 'antd';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-
-import { changeCategory } from 'app/actions/category';
 
 import { getCategories } from 'app/questions/index';
 
 const categories = getCategories();
 const { Option } = Select;
 
-const CategorySelector = ({ actions, index }) => (
+const CategorySelector = ({ index, onChange }) => (
   <Select
-    onChange={actions.changeCategory}
+    onChange={onChange}
     defaultValue={index}
     style={{ minWidth: 200 }}
   >
@@ -20,17 +16,4 @@ const CategorySelector = ({ actions, index }) => (
   </Select>
 );
 
-export default withRouter(connect(
-  (state) => {
-    return {
-      index: state.category.index
-    };
-  },
-  (dispatch) => {
-    return {
-      actions: {
-        changeCategory: index => dispatch(changeCategory(index))
-      }
-    };
-  }
-)(CategorySelector));
+export default CategorySelector;

@@ -1,16 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import LoginPage from 'app/pages/LoginPage';
-import ExamPage from 'app/pages/ExamPage';
+import Admin from 'app/routes/Admin';
+import Guest from 'app/routes/Guest';
 
 const { PUBLIC_URL } = process.env;
 
 const App = () => (
   <Router basename={PUBLIC_URL}>
     <div>
-      <Route exact path="/" component={ExamPage} />
-      <Route exact path="/login" component={LoginPage} />
+      <Switch>
+        <Route path="/admin" component={Admin} />
+        <Route path="/" component={Guest} />
+      </Switch>
     </div>
   </Router>
 );
