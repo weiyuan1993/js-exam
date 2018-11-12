@@ -4,10 +4,12 @@
   "private": true,
   "homepage": "https://jeno5980515.github.io/js-exam/",
   "devDependencies": {
-    "react-scripts": "2.0.5",
-    "babel-loader": "^8.0.4"
+    "babel-loader": "^8.0.4",
+    "react-scripts": "2.0.5"
   },
   "dependencies": {
+    "@material-ui/core": "^3.4.0",
+    "@material-ui/icons": "^3.0.1",
     "antd": "^3.10.2",
     "aws-amplify": "^1.1.9",
     "blueimp-md5": "^2.10.0",
@@ -17,6 +19,8 @@
     "gh-pages": "^2.0.0",
     "history": "^4.7.2",
     "moment": "^2.22.2",
+    "mui-datatables": "^2.0.0-beta-38",
+    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-ace": "^6.2.0",
     "react-dom": "^16.5.2",

@@ -19,3 +19,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# jackie temp
+.eslintrc.json
+.jshintrc
+schema_20181108.graphql

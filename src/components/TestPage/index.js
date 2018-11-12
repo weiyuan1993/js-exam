@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+//simpe ui compoents
+import RoomList from './roomList.js';
+
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import awsExportConfig from '../../aws-exports.js';
+import awsExportConfig from '../../aws-exports.js'; 
 
 import Amplify, {
   API,
@@ -12,6 +15,8 @@ import Amplify, {
 // import * as subscriptions from './graphql/subscriptions';
 
 Amplify.configure(awsExportConfig);
+
+
 
 const listRooms = async () => {
   console.log('listing room');
@@ -117,6 +122,7 @@ class TestPage extends Component {
     return (
       <div>
         <TestBar></TestBar>
+        <div><RoomList></RoomList></div>
       </div>
     );
   }

@@ -15,7 +15,8 @@ const App = () => (
       <Route exact path="/js-exam/test" component={TestPage} />
       <Route exact path="/js-exam/" component={MainPage} />
       <Route path="/js-exam/login" component={LoginPage} />
-      <Route exact path="/" component={() => <Redirect to="/js-exam"/>}/>
+      {/* <Route exact path="/" component={() => <Redirect to="/js-exam"/>}/> */}
+      <Route exact path="/" component={() => <Redirect to="/js-exam/test"/>}/>
     </div>
   </Router>
 );
