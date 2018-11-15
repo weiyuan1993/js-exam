@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 
 import { changeCode } from 'app/actions/code';
+import { resetConsole } from 'app/actions/console';
 
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { getStateInformation } from 'app/utils/stateHelper';
@@ -62,6 +63,7 @@ class Page extends Component {
       });
       actions.changeCode({ compiledCode: code, rawCode: newCode, type });
     } catch (e) {
+      actions.resetConsole();
       this.wrappedConsole.log(e);
       actions.changeCode({ rawCode: newCode, type });
     }
@@ -87,6 +89,7 @@ export default withRouter(connect(
   (dispatch) => {
     return {
       actions: {
+        resetConsole: () => dispatch(resetConsole()),
         changeCode: args => dispatch(changeCode({ ...args, type: (args.type || 'javascript').toUpperCase() })),
         _dispatch: dispatch
       }
