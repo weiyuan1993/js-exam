@@ -12,7 +12,6 @@ import { getStateInformation } from 'app/utils/stateHelper';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
-
 const getPageComponent = (args) => {
   switch (args.index) {
     case 1: {
