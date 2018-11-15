@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { renderToString } from 'react-dom/server';
 import sinon from 'sinon';
 import vm from 'vm';
 import spy from './spy';
@@ -39,7 +40,8 @@ const runCode = ({ code, wrappedConsole, onTapeUpdate }) => {
     React,
     ReactDOM,
     root: document.getElementById('result'),
-    answer: document.getElementById('answer')
+    answer: document.getElementById('answer'),
+    renderToString
   };
   try {
     script = new vm.Script(wrapCode(code));

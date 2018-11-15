@@ -48,11 +48,6 @@ const DATA = [
   },
 ]
 
-ReactDOM.render(
-  <App />,
-  root
-);
-
 `,
     test: `
 class AnswerApp extends React.Component {
@@ -92,6 +87,18 @@ ReactDOM.render(
   <AnswerApp />,
   answer
 );
+
+try {
+  renderToString(
+    <App />
+  );
+  ReactDOM.render(
+    <App/>,
+    root
+  )
+} catch (e) {
+  console.log(e)
+}
 
 `
   },
