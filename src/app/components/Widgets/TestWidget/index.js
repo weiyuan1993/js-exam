@@ -2,7 +2,7 @@ import React from 'react';
 import AceEditor from 'react-ace';
 import styles from './TestWidget.module.scss';
 
-const TestWidget = ({ data }) => (
+const TestWidget = ({ data, readOnly = true, handleCodeChange = () => {} }) => (
   <div
     className={`${styles['test-widget']}`}
   >
@@ -11,8 +11,9 @@ const TestWidget = ({ data }) => (
       mode="javascript"
       theme="textmate"
       value={data}
-      readOnly
+      readOnly={readOnly}
       tabSize={2}
+      onChange={handleCodeChange}
     />
   </div>
 );

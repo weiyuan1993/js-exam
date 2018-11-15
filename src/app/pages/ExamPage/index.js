@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 
-import { changeCode } from 'app/actions/code';
+import { resetQuestion, changeQuestion, changeCode } from 'app/actions/code';
+import { changeCategory } from 'app/actions/category';
 import { resetConsole } from 'app/actions/console';
 
 import createWrappedConsole from 'app/utils/consoleFactory';
@@ -32,28 +33,24 @@ class Page extends Component {
   }
 
   componentDidMount() {
-    const { state, history } = this.props;
-    if (!state.login.isLogin) {
+    const { isLogin, history, code } = this.props;
+    if (!isLogin) {
       history.push('/login');
       return;
     }
-    const { code } = getStateInformation(state);
     this.handleCodeChange(code);
   }
 
   componentDidUpdate(prevProps) {
-    const { state: previousState } = prevProps;
-    const { state } = this.props;
-    const { categoryIndex: previousCategoryIndex } = getStateInformation(previousState);
-    const { categoryIndex, code } = getStateInformation(state);
+    const { categoryIndex: previousCategoryIndex } = prevProps;
+    const { categoryIndex, code } = this.props;
     if (previousCategoryIndex !== categoryIndex) {
       this.handleCodeChange(code);
     }
   }
 
   handleCodeChange = (newCode) => {
-    const { actions, state } = this.props;
-    const { question, type } = getStateInformation(state);
+    const { actions, type, question } = this.props;
     const fullCode = `${newCode} ${question.test}`;
     try {
       const { code } = transform(fullCode, {
@@ -68,21 +65,70 @@ class Page extends Component {
     }
   }
 
+
+  onReset = (type) => {
+    const { actions } = this.props;
+    actions.resetQuestion(type);
+  }
+
+  onChangeCategory = (index) => {
+    const { actions } = this.props;
+    actions.changeCategory(index);
+  }
+
+  onChangeQuestion = ({ index, type }) => {
+    const { actions } = this.props;
+    actions.changeQuestion({ index, type });
+  }
+
   render() {
-    const { state } = this.props;
-    const { handleCodeChange, wrappedConsole } = this;
+    const {
+      categoryIndex
+    } = this.props;
+    const {
+      handleCodeChange,
+      wrappedConsole,
+      onReset,
+      onChangeCategory,
+      onChangeQuestion
+    } = this;
     return (
-      <React.Fragment>
-        { getPageComponent({ index: state.category.index, handleCodeChange, wrappedConsole }) }
-      </React.Fragment>
+      <>
+        {
+          getPageComponent({
+            index: categoryIndex,
+            handleCodeChange,
+            wrappedConsole,
+            onReset,
+            onChangeCategory,
+            onChangeQuestion,
+            ...this.props
+          })
+        }
+      </>
     );
   }
 }
 
 export default withRouter(connect(
   (state) => {
+    const {
+      code,
+      questionIndex,
+      compiledCode,
+      categoryIndex,
+      type,
+      question
+    } = getStateInformation(state);
     return {
-      state
+      compiledCode,
+      questionIndex,
+      code,
+      console: state.console,
+      categoryIndex,
+      type,
+      question,
+      isLogin: state.login.isLogin
     };
   },
   (dispatch) => {
@@ -90,7 +136,10 @@ export default withRouter(connect(
       actions: {
         resetConsole: () => dispatch(resetConsole()),
         changeCode: args => dispatch(changeCode({ ...args, type: (args.type || 'javascript').toUpperCase() })),
-        _dispatch: dispatch
+        _dispatch: dispatch,
+        resetQuestion: type => dispatch(resetQuestion({ type: type.toUpperCase() })),
+        changeCategory: index => dispatch(changeCategory(index)),
+        changeQuestion: ({ index, type }) => dispatch(changeQuestion({ index, type }))
       }
     };
   }

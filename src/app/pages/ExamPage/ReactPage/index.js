@@ -17,11 +17,13 @@ import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 
 import { resetConsole } from 'app/actions/console';
 
-import { getStateInformation } from 'app/utils/stateHelper';
 import debouncedRunCode from 'app/utils/runCode';
+
+import { getQuestions } from 'app/questions/index';
 
 import styles from './ReactPage.module.scss';
 
+const questions = getQuestions('react');
 
 class ReactPage extends Component {
   constructor(props) {
@@ -48,8 +50,13 @@ class ReactPage extends Component {
   render() {
     const {
       code,
+      questionIndex,
+      categoryIndex,
       handleCodeChange,
-      console: _console
+      console: _console,
+      onReset,
+      onChangeCategory,
+      onChangeQuestion
     } = this.props;
     const layout = [
       {
@@ -83,7 +90,15 @@ class ReactPage extends Component {
             <AnswerWidget />
           </GridItem>
           <GridItem key="control">
-            <ControlWidget type="react" />
+            <ControlWidget
+              type="react"
+              onReset={() => onReset('react')}
+              onChangeCategory={onChangeCategory}
+              onChangeQuestion={index => onChangeQuestion({ type: 'react', index })}
+              questionList={questions}
+              categoryIndex={categoryIndex}
+              questionIndex={questionIndex}
+            />
           </GridItem>
           <GridItem key="result">
             <ResultWidget />
@@ -98,13 +113,8 @@ class ReactPage extends Component {
 }
 
 export default withRouter(connect(
-  (state) => {
-    const { code, questionIndex, compiledCode } = getStateInformation(state);
+  () => {
     return {
-      compiledCode,
-      questionIndex,
-      code,
-      console: state.console
     };
   },
   (dispatch) => {

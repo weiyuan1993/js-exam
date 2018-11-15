@@ -20,7 +20,6 @@ import { resetConsole } from 'app/actions/console';
 import { getQuestions } from 'app/questions/index';
 
 import debouncedRunCode from 'app/utils/runCode';
-import { getStateInformation } from 'app/utils/stateHelper';
 
 import styles from './JavaScriptPage.module.scss';
 
@@ -53,9 +52,13 @@ class JavaScriptPage extends Component {
     const {
       code,
       questionIndex,
+      categoryIndex,
       handleCodeChange,
       tape,
-      console: _console
+      console: _console,
+      onReset,
+      onChangeCategory,
+      onChangeQuestion
     } = this.props;
     const { test } = questions[questionIndex];
     const layout = [
@@ -90,7 +93,14 @@ class JavaScriptPage extends Component {
             <TestWidget data={test} />
           </GridItem>
           <GridItem key="control">
-            <ControlWidget type="javascript" />
+            <ControlWidget
+              onReset={() => onReset('javascript')}
+              onChangeCategory={onChangeCategory}
+              onChangeQuestion={index => onChangeQuestion({ type: 'javascript', index })}
+              questionList={questions}
+              categoryIndex={categoryIndex}
+              questionIndex={questionIndex}
+            />
           </GridItem>
           <GridItem key="tape">
             <TapeWidget data={tape} />
@@ -106,13 +116,8 @@ class JavaScriptPage extends Component {
 
 export default withRouter(connect(
   (state) => {
-    const { code, questionIndex, compiledCode } = getStateInformation(state);
     return {
-      compiledCode,
-      questionIndex,
-      code,
-      tape: state.tape,
-      console: state.console
+      tape: state.tape
     };
   },
   (dispatch) => {
