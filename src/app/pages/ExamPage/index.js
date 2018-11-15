@@ -62,9 +62,9 @@ class Page extends Component {
       });
       actions.changeCode({ compiledCode: code, rawCode: newCode, type });
     } catch (e) {
+      actions.changeCode({ rawCode: newCode, type });
       actions.resetConsole();
       this.wrappedConsole.log(e);
-      actions.changeCode({ rawCode: newCode, type });
     }
   }
 
