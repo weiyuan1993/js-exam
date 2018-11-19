@@ -7,35 +7,37 @@ export const getRoom = `query GetRoom($id: ID!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
     subjectId
     description
     status
     host {
       id
-      userId
       name
     }
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
+    questionSource {
+      items {
+        id
+        name
+        content
+        test
+      }
+      nextToken
+    }
+    questionSourceStr
+    progress
   }
 }
 `;
@@ -50,52 +52,55 @@ export const listRooms = `query ListRooms(
       test {
         id
         subjectId
-        progress
         description
-        testDate
         timeBegin
         timeEnd
-        questionSource {
-          id
-          name
-          content
-          test
-        }
         status
+        tags
       }
       subjectId
       description
       status
       host {
         id
-        userId
         name
       }
       users {
         items {
           id
-          userId
           name
         }
         nextToken
       }
+      questionSource {
+        items {
+          id
+          name
+          content
+          test
+        }
+        nextToken
+      }
+      questionSourceStr
+      progress
     }
     nextToken
   }
 }
 `;
-export const getUser = `query GetUser($id: ID!) {
-  getUser(id: $id) {
+export const getJeUser = `query GetJeUser($id: ID!) {
+  getJEUser(id: $id) {
     id
-    userId
     name
-    rooms {
+    room {
       id
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
-    teams {
+    team {
       id
       name
       description
@@ -103,23 +108,24 @@ export const getUser = `query GetUser($id: ID!) {
   }
 }
 `;
-export const listUsers = `query ListUsers(
-  $filter: ModelUserFilterInput
+export const listJeUsers = `query ListJeUsers(
+  $filter: ModelJEUserFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listJEUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      userId
       name
-      rooms {
+      room {
         id
         subjectId
         description
         status
+        questionSourceStr
+        progress
       }
-      teams {
+      team {
         id
         name
         description
@@ -137,7 +143,6 @@ export const getTeam = `query GetTeam($id: ID!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
@@ -147,24 +152,9 @@ export const getTeam = `query GetTeam($id: ID!) {
         id
         name
         description
+        tags
       }
       nextToken
-    }
-    test {
-      id
-      subjectId
-      progress
-      description
-      testDate
-      timeBegin
-      timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
-      status
     }
   }
 }
@@ -182,7 +172,6 @@ export const listTeams = `query ListTeams(
       users {
         items {
           id
-          userId
           name
         }
         nextToken
@@ -192,24 +181,9 @@ export const listTeams = `query ListTeams(
           id
           name
           description
+          tags
         }
         nextToken
-      }
-      test {
-        id
-        subjectId
-        progress
-        description
-        testDate
-        timeBegin
-        timeEnd
-        questionSource {
-          id
-          name
-          content
-          test
-        }
-        status
       }
     }
     nextToken
@@ -224,6 +198,8 @@ export const getTest = `query GetTest($id: ID!) {
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
     team {
       id
@@ -234,22 +210,13 @@ export const getTest = `query GetTest($id: ID!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
-    progress
     description
-    testDate
     timeBegin
     timeEnd
-    questionSource {
-      id
-      name
-      content
-      test
-    }
     records {
       items {
         id
@@ -261,6 +228,7 @@ export const getTest = `query GetTest($id: ID!) {
       nextToken
     }
     status
+    tags
   }
 }
 `;
@@ -277,6 +245,8 @@ export const listTests = `query ListTests(
         subjectId
         description
         status
+        questionSourceStr
+        progress
       }
       team {
         id
@@ -287,22 +257,13 @@ export const listTests = `query ListTests(
       users {
         items {
           id
-          userId
           name
         }
         nextToken
       }
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       records {
         items {
           id
@@ -314,6 +275,7 @@ export const listTests = `query ListTests(
         nextToken
       }
       status
+      tags
     }
     nextToken
   }
@@ -325,7 +287,6 @@ export const getRecord = `query GetRecord($id: ID!) {
     subjectId
     interviewer {
       id
-      userId
       name
     }
     timeBegin
@@ -345,18 +306,11 @@ export const getRecord = `query GetRecord($id: ID!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
   }
 }
@@ -372,7 +326,6 @@ export const listRecords = `query ListRecords(
       subjectId
       interviewer {
         id
-        userId
         name
       }
       timeBegin
@@ -392,18 +345,11 @@ export const listRecords = `query ListRecords(
       test {
         id
         subjectId
-        progress
         description
-        testDate
         timeBegin
         timeEnd
-        questionSource {
-          id
-          name
-          content
-          test
-        }
         status
+        tags
       }
     }
     nextToken
@@ -439,6 +385,14 @@ export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
     name
     content
     test
+    room {
+      id
+      subjectId
+      description
+      status
+      questionSourceStr
+      progress
+    }
   }
 }
 `;
@@ -453,6 +407,14 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
       name
       content
       test
+      room {
+        id
+        subjectId
+        description
+        status
+        questionSourceStr
+        progress
+      }
     }
     nextToken
   }
@@ -469,14 +431,17 @@ export const getQuestionSet = `query GetQuestionSet($id: ID!) {
     questions {
       items {
         id
+        type
         name
         content
         test
+        tags
       }
       nextToken
     }
     name
     description
+    tags
   }
 }
 `;
@@ -496,14 +461,17 @@ export const listQuestionSets = `query ListQuestionSets(
       questions {
         items {
           id
+          type
           name
           content
           test
+          tags
         }
         nextToken
       }
       name
       description
+      tags
     }
     nextToken
   }
@@ -512,14 +480,17 @@ export const listQuestionSets = `query ListQuestionSets(
 export const getQuestion = `query GetQuestion($id: ID!) {
   getQuestion(id: $id) {
     id
+    type
     questionSet {
       id
       name
       description
+      tags
     }
     name
     content
     test
+    tags
   }
 }
 `;
@@ -531,14 +502,42 @@ export const listQuestions = `query ListQuestions(
   listQuestions(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      type
       questionSet {
         id
         name
         description
+        tags
       }
       name
       content
       test
+      tags
+    }
+    nextToken
+  }
+}
+`;
+export const getAuthedModelForOwner = `query GetAuthedModelForOwner($id: ID!) {
+  getAuthedModelForOwner(id: $id) {
+    id
+    content
+  }
+}
+`;
+export const listAuthedModelForOwners = `query ListAuthedModelForOwners(
+  $filter: ModelAuthedModelForOwnerFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listAuthedModelForOwners(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      content
     }
     nextToken
   }

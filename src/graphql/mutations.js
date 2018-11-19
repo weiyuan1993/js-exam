@@ -7,35 +7,37 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
     subjectId
     description
     status
     host {
       id
-      userId
       name
     }
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
+    questionSource {
+      items {
+        id
+        name
+        content
+        test
+      }
+      nextToken
+    }
+    questionSourceStr
+    progress
   }
 }
 `;
@@ -45,35 +47,37 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
     subjectId
     description
     status
     host {
       id
-      userId
       name
     }
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
+    questionSource {
+      items {
+        id
+        name
+        content
+        test
+      }
+      nextToken
+    }
+    questionSourceStr
+    progress
   }
 }
 `;
@@ -83,50 +87,53 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
     subjectId
     description
     status
     host {
       id
-      userId
       name
     }
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
+    questionSource {
+      items {
+        id
+        name
+        content
+        test
+      }
+      nextToken
+    }
+    questionSourceStr
+    progress
   }
 }
 `;
-export const createUser = `mutation CreateUser($input: CreateUserInput!) {
-  createUser(input: $input) {
+export const createJeUser = `mutation CreateJeUser($input: CreateJEUserInput!) {
+  createJEUser(input: $input) {
     id
-    userId
     name
-    rooms {
+    room {
       id
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
-    teams {
+    team {
       id
       name
       description
@@ -134,18 +141,19 @@ export const createUser = `mutation CreateUser($input: CreateUserInput!) {
   }
 }
 `;
-export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
-  updateUser(input: $input) {
+export const updateJeUser = `mutation UpdateJeUser($input: UpdateJEUserInput!) {
+  updateJEUser(input: $input) {
     id
-    userId
     name
-    rooms {
+    room {
       id
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
-    teams {
+    team {
       id
       name
       description
@@ -153,18 +161,19 @@ export const updateUser = `mutation UpdateUser($input: UpdateUserInput!) {
   }
 }
 `;
-export const deleteUser = `mutation DeleteUser($input: DeleteUserInput!) {
-  deleteUser(input: $input) {
+export const deleteJeUser = `mutation DeleteJeUser($input: DeleteJEUserInput!) {
+  deleteJEUser(input: $input) {
     id
-    userId
     name
-    rooms {
+    room {
       id
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
-    teams {
+    team {
       id
       name
       description
@@ -180,7 +189,6 @@ export const createTeam = `mutation CreateTeam($input: CreateTeamInput!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
@@ -190,24 +198,9 @@ export const createTeam = `mutation CreateTeam($input: CreateTeamInput!) {
         id
         name
         description
+        tags
       }
       nextToken
-    }
-    test {
-      id
-      subjectId
-      progress
-      description
-      testDate
-      timeBegin
-      timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
-      status
     }
   }
 }
@@ -220,7 +213,6 @@ export const updateTeam = `mutation UpdateTeam($input: UpdateTeamInput!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
@@ -230,24 +222,9 @@ export const updateTeam = `mutation UpdateTeam($input: UpdateTeamInput!) {
         id
         name
         description
+        tags
       }
       nextToken
-    }
-    test {
-      id
-      subjectId
-      progress
-      description
-      testDate
-      timeBegin
-      timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
-      status
     }
   }
 }
@@ -260,7 +237,6 @@ export const deleteTeam = `mutation DeleteTeam($input: DeleteTeamInput!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
@@ -270,24 +246,9 @@ export const deleteTeam = `mutation DeleteTeam($input: DeleteTeamInput!) {
         id
         name
         description
+        tags
       }
       nextToken
-    }
-    test {
-      id
-      subjectId
-      progress
-      description
-      testDate
-      timeBegin
-      timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
-      status
     }
   }
 }
@@ -300,6 +261,8 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
     team {
       id
@@ -310,22 +273,13 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
-    progress
     description
-    testDate
     timeBegin
     timeEnd
-    questionSource {
-      id
-      name
-      content
-      test
-    }
     records {
       items {
         id
@@ -337,6 +291,7 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       nextToken
     }
     status
+    tags
   }
 }
 `;
@@ -348,6 +303,8 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
     team {
       id
@@ -358,22 +315,13 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
-    progress
     description
-    testDate
     timeBegin
     timeEnd
-    questionSource {
-      id
-      name
-      content
-      test
-    }
     records {
       items {
         id
@@ -385,6 +333,7 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       nextToken
     }
     status
+    tags
   }
 }
 `;
@@ -396,6 +345,8 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       subjectId
       description
       status
+      questionSourceStr
+      progress
     }
     team {
       id
@@ -406,22 +357,13 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
     users {
       items {
         id
-        userId
         name
       }
       nextToken
     }
-    progress
     description
-    testDate
     timeBegin
     timeEnd
-    questionSource {
-      id
-      name
-      content
-      test
-    }
     records {
       items {
         id
@@ -433,6 +375,7 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       nextToken
     }
     status
+    tags
   }
 }
 `;
@@ -442,7 +385,6 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     subjectId
     interviewer {
       id
-      userId
       name
     }
     timeBegin
@@ -462,18 +404,11 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
   }
 }
@@ -484,7 +419,6 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     subjectId
     interviewer {
       id
-      userId
       name
     }
     timeBegin
@@ -504,18 +438,11 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
   }
 }
@@ -526,7 +453,6 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     subjectId
     interviewer {
       id
-      userId
       name
     }
     timeBegin
@@ -546,18 +472,11 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     test {
       id
       subjectId
-      progress
       description
-      testDate
       timeBegin
       timeEnd
-      questionSource {
-        id
-        name
-        content
-        test
-      }
       status
+      tags
     }
   }
 }
@@ -592,6 +511,14 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
     name
     content
     test
+    room {
+      id
+      subjectId
+      description
+      status
+      questionSourceStr
+      progress
+    }
   }
 }
 `;
@@ -601,6 +528,14 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
     name
     content
     test
+    room {
+      id
+      subjectId
+      description
+      status
+      questionSourceStr
+      progress
+    }
   }
 }
 `;
@@ -610,6 +545,14 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
     name
     content
     test
+    room {
+      id
+      subjectId
+      description
+      status
+      questionSourceStr
+      progress
+    }
   }
 }
 `;
@@ -624,14 +567,17 @@ export const createQuestionSet = `mutation CreateQuestionSet($input: CreateQuest
     questions {
       items {
         id
+        type
         name
         content
         test
+        tags
       }
       nextToken
     }
     name
     description
+    tags
   }
 }
 `;
@@ -646,14 +592,17 @@ export const updateQuestionSet = `mutation UpdateQuestionSet($input: UpdateQuest
     questions {
       items {
         id
+        type
         name
         content
         test
+        tags
       }
       nextToken
     }
     name
     description
+    tags
   }
 }
 `;
@@ -668,56 +617,89 @@ export const deleteQuestionSet = `mutation DeleteQuestionSet($input: DeleteQuest
     questions {
       items {
         id
+        type
         name
         content
         test
+        tags
       }
       nextToken
     }
     name
     description
+    tags
   }
 }
 `;
 export const createQuestion = `mutation CreateQuestion($input: CreateQuestionInput!) {
   createQuestion(input: $input) {
     id
+    type
     questionSet {
       id
       name
       description
+      tags
     }
     name
     content
     test
+    tags
   }
 }
 `;
 export const updateQuestion = `mutation UpdateQuestion($input: UpdateQuestionInput!) {
   updateQuestion(input: $input) {
     id
+    type
     questionSet {
       id
       name
       description
+      tags
     }
     name
     content
     test
+    tags
   }
 }
 `;
 export const deleteQuestion = `mutation DeleteQuestion($input: DeleteQuestionInput!) {
   deleteQuestion(input: $input) {
     id
+    type
     questionSet {
       id
       name
       description
+      tags
     }
     name
     content
     test
+    tags
+  }
+}
+`;
+export const createAuthedModelForOwner = `mutation CreateAuthedModelForOwner($input: CreateAuthedModelForOwnerInput!) {
+  createAuthedModelForOwner(input: $input) {
+    id
+    content
+  }
+}
+`;
+export const updateAuthedModelForOwner = `mutation UpdateAuthedModelForOwner($input: UpdateAuthedModelForOwnerInput!) {
+  updateAuthedModelForOwner(input: $input) {
+    id
+    content
+  }
+}
+`;
+export const deleteAuthedModelForOwner = `mutation DeleteAuthedModelForOwner($input: DeleteAuthedModelForOwnerInput!) {
+  deleteAuthedModelForOwner(input: $input) {
+    id
+    content
   }
 }
 `;

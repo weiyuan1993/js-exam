@@ -6,15 +6,30 @@ export function changeCode({ compiledCode , rawCode }) {
   };
 }
 
-export function changeQuestion(index) {
+// export function changeQuestion(index) {
+//   return {
+//     type: 'QUESTION/CHANGE',
+//     index
+//   };
+// }
+
+export function changeQuestion({id, question}) {
   return {
     type: 'QUESTION/CHANGE',
-    index
+    index: id,
+    question: question
   };
 }
 
 export function resetQuestion(index) {
   return {
     type: 'QUESTION/RESET'
+  };
+}
+
+export function updateQuestionList(questions) {
+  return {
+    type: 'QUESTION_LIST/UPDATE',
+    questions
   };
 }

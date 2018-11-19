@@ -1,7 +1,13 @@
 {
     "AppSyncApiName": "innovap3jsexam",
-    "schemaGraphql": "s3://jsexam-20181109111143-deployment/amplify-appsync-files/schema.graphql.1541734085041",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcognitof2f15a0e",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "schemaGraphql": "s3://jsexam-20181109111143-deployment/amplify-appsync-files/schema.graphql.1542355793559",
     "ResolverBucket": "jsexam-20181109111143-deployment",
     "ResolverRootKey": "amplify-appsync-files",
-    "DeploymentTimestamp": "1541734085041"
+    "DeploymentTimestamp": "1542355793559"
 }

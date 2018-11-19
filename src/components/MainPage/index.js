@@ -6,7 +6,7 @@ import 'brace/mode/javascript';
 import 'brace/theme/textmate';
 import 'brace/theme/monokai';
 import AceEditor from 'react-ace';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import { Button } from 'antd';
 
 import QuestionSelector from './QuestionSelector';
@@ -45,10 +45,10 @@ class MainPage extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.isLogin) {
-      this.props.history.push('/js-exam/login');
-      return;
-    }
+    // if (!this.props.isLogin) {
+    //   this.props.history.push('/js-exam/login');
+    //   return;
+    // }
     const { rawCode } = this.props ;
     this.handleCodeChange(rawCode);
   }
@@ -167,6 +167,8 @@ class MainPage extends Component {
 export default withRouter(connect(
   state => {
     const { code : codeObj } = state ;
+    // console.log("#state to props: state", state);
+    // console.log("#state to props: state",  codeObj);
     const { index } = codeObj ;
     const compiledCode = codeObj.compiledCode ;
     const rawCode = ( codeObj[index] && codeObj[index].code ) || questions[index].content ;

@@ -4,25 +4,26 @@ type Room {
   subjectId: String
   description: String
   status: String
-  host: User
-  users(filter: ModelUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserConnection
+  host: JEUser
+  users(filter: ModelJEUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelJEUserConnection
+  questionSource(filter: ModelQuestionSnapshotFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelQuestionSnapshotConnection
+  questionSourceStr: [String]
+  progress: Int
 }
 
-type User {
+type JEUser {
   id: ID!
-  userId: String
   name: String
-  rooms: Room
-  teams: Team
+  room: Room
+  team: Team
 }
 
 type Team {
   id: ID!
   name: String
   description: String
-  users(filter: ModelUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserConnection
+  users(filter: ModelJEUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelJEUserConnection
   questionSet(filter: ModelQuestionSetFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelQuestionSetConnection
-  test: Test
 }
 
 type Test {
@@ -30,21 +31,19 @@ type Test {
   room: Room
   team: Team
   subjectId: String
-  users(filter: ModelUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelUserConnection
-  progress: Int
+  users(filter: ModelJEUserFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelJEUserConnection
   description: String
-  testDate: String
   timeBegin: Int
   timeEnd: Int
-  questionSource: [QuestionSnapshot]
   records(filter: ModelRecordFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelRecordConnection
   status: String
+  tags: [String]
 }
 
 type Record {
   id: ID!
   subjectId: String
-  interviewer: User
+  interviewer: JEUser
   timeBegin: Int
   timeEnd: Int
   history: String
@@ -64,6 +63,7 @@ type QuestionSnapshot {
   name: String
   content: String
   test: String
+  room: Room
 }
 
 type QuestionSet {
@@ -72,14 +72,22 @@ type QuestionSet {
   questions(filter: ModelQuestionFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelQuestionConnection
   name: String
   description: String
+  tags: [String]
 }
 
 type Question {
   id: ID!
+  type: String
   questionSet: QuestionSet
   name: String
   content: String
   test: String
+  tags: [String]
+}
+
+type AuthedModelForOwner {
+  id: ID!
+  content: String
 }
 
 enum ModelSortDirection {
@@ -152,6 +160,8 @@ input ModelRoomFilterInput {
   subjectId: ModelStringFilterInput
   description: ModelStringFilterInput
   status: ModelStringFilterInput
+  questionSourceStr: ModelStringFilterInput
+  progress: ModelIntFilterInput
   and: [ModelRoomFilterInput]
   or: [ModelRoomFilterInput]
   not: ModelRoomFilterInput
@@ -160,8 +170,8 @@ input ModelRoomFilterInput {
 type Query {
   getRoom(id: ID!): Room
   listRooms(filter: ModelRoomFilterInput, limit: Int, nextToken: String): ModelRoomConnection
-  getUser(id: ID!): User
-  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
+  getJEUser(id: ID!): JEUser
+  listJEUsers(filter: ModelJEUserFilterInput, limit: Int, nextToken: String): ModelJEUserConnection
   getTeam(id: ID!): Team
   listTeams(filter: ModelTeamFilterInput, limit: Int, nextToken: String): ModelTeamConnection
   getTest(id: ID!): Test
@@ -176,12 +186,17 @@ type Query {
   listQuestionSets(filter: ModelQuestionSetFilterInput, limit: Int, nextToken: String): ModelQuestionSetConnection
   getQuestion(id: ID!): Question
   listQuestions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String): ModelQuestionConnection
+  getAuthedModelForOwner(id: ID!): AuthedModelForOwner
+  listAuthedModelForOwners(filter: ModelAuthedModelForOwnerFilterInput, limit: Int, nextToken: String): ModelAuthedModelForOwnerConnection
 }
 
 input CreateRoomInput {
+  id: ID
   subjectId: String
   description: String
   status: String
+  questionSourceStr: [String]
+  progress: Int
   roomTestId: ID
 }
 
@@ -190,6 +205,8 @@ input UpdateRoomInput {
   subjectId: String
   description: String
   status: String
+  questionSourceStr: [String]
+  progress: Int
   roomTestId: ID
 }
 
@@ -201,9 +218,9 @@ type Mutation {
   createRoom(input: CreateRoomInput!): Room
   updateRoom(input: UpdateRoomInput!): Room
   deleteRoom(input: DeleteRoomInput!): Room
-  createUser(input: CreateUserInput!): User
-  updateUser(input: UpdateUserInput!): User
-  deleteUser(input: DeleteUserInput!): User
+  createJEUser(input: CreateJEUserInput!): JEUser
+  updateJEUser(input: UpdateJEUserInput!): JEUser
+  deleteJEUser(input: DeleteJEUserInput!): JEUser
   createTeam(input: CreateTeamInput!): Team
   updateTeam(input: UpdateTeamInput!): Team
   deleteTeam(input: DeleteTeamInput!): Team
@@ -225,15 +242,18 @@ type Mutation {
   createQuestion(input: CreateQuestionInput!): Question
   updateQuestion(input: UpdateQuestionInput!): Question
   deleteQuestion(input: DeleteQuestionInput!): Question
+  createAuthedModelForOwner(input: CreateAuthedModelForOwnerInput!): AuthedModelForOwner
+  updateAuthedModelForOwner(input: UpdateAuthedModelForOwnerInput!): AuthedModelForOwner
+  deleteAuthedModelForOwner(input: DeleteAuthedModelForOwnerInput!): AuthedModelForOwner
 }
 
 type Subscription {
   onCreateRoom: Room @aws_subscribe(mutations: ["createRoom"])
   onUpdateRoom: Room @aws_subscribe(mutations: ["updateRoom"])
   onDeleteRoom: Room @aws_subscribe(mutations: ["deleteRoom"])
-  onCreateUser: User @aws_subscribe(mutations: ["createUser"])
-  onUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
-  onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"])
+  onCreateJEUser: JEUser @aws_subscribe(mutations: ["createJEUser"])
+  onUpdateJEUser: JEUser @aws_subscribe(mutations: ["updateJEUser"])
+  onDeleteJEUser: JEUser @aws_subscribe(mutations: ["deleteJEUser"])
   onCreateTeam: Team @aws_subscribe(mutations: ["createTeam"])
   onUpdateTeam: Team @aws_subscribe(mutations: ["updateTeam"])
   onDeleteTeam: Team @aws_subscribe(mutations: ["deleteTeam"])
@@ -255,38 +275,39 @@ type Subscription {
   onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
   onUpdateQuestion: Question @aws_subscribe(mutations: ["updateQuestion"])
   onDeleteQuestion: Question @aws_subscribe(mutations: ["deleteQuestion"])
+  onCreateAuthedModelForOwner: AuthedModelForOwner @aws_subscribe(mutations: ["createAuthedModelForOwner"])
+  onUpdateAuthedModelForOwner: AuthedModelForOwner @aws_subscribe(mutations: ["updateAuthedModelForOwner"])
+  onDeleteAuthedModelForOwner: AuthedModelForOwner @aws_subscribe(mutations: ["deleteAuthedModelForOwner"])
 }
 
-type ModelUserConnection {
-  items: [User]
+type ModelJEUserConnection {
+  items: [JEUser]
   nextToken: String
 }
 
-input ModelUserFilterInput {
+input ModelJEUserFilterInput {
   id: ModelIDFilterInput
-  userId: ModelStringFilterInput
   name: ModelStringFilterInput
-  and: [ModelUserFilterInput]
-  or: [ModelUserFilterInput]
-  not: ModelUserFilterInput
+  and: [ModelJEUserFilterInput]
+  or: [ModelJEUserFilterInput]
+  not: ModelJEUserFilterInput
 }
 
-input CreateUserInput {
-  userId: String
+input CreateJEUserInput {
+  id: ID
   name: String
-  userRoomsId: ID
-  userTeamsId: ID
+  jEUserRoomId: ID
+  jEUserTeamId: ID
 }
 
-input UpdateUserInput {
+input UpdateJEUserInput {
   id: ID!
-  userId: String
   name: String
-  userRoomsId: ID
-  userTeamsId: ID
+  jEUserRoomId: ID
+  jEUserTeamId: ID
 }
 
-input DeleteUserInput {
+input DeleteJEUserInput {
   id: ID
 }
 
@@ -305,16 +326,15 @@ input ModelTeamFilterInput {
 }
 
 input CreateTeamInput {
+  id: ID
   name: String
   description: String
-  teamTestId: ID
 }
 
 input UpdateTeamInput {
   id: ID!
   name: String
   description: String
-  teamTestId: ID
 }
 
 input DeleteTeamInput {
@@ -329,40 +349,36 @@ type ModelTestConnection {
 input ModelTestFilterInput {
   id: ModelIDFilterInput
   subjectId: ModelStringFilterInput
-  progress: ModelIntFilterInput
   description: ModelStringFilterInput
-  testDate: ModelStringFilterInput
   timeBegin: ModelIntFilterInput
   timeEnd: ModelIntFilterInput
   status: ModelStringFilterInput
+  tags: ModelStringFilterInput
   and: [ModelTestFilterInput]
   or: [ModelTestFilterInput]
   not: ModelTestFilterInput
 }
 
 input CreateTestInput {
+  id: ID
   subjectId: String
-  progress: Int
   description: String
-  testDate: String
   timeBegin: Int
   timeEnd: Int
   status: String
+  tags: [String]
   testRoomId: ID
-  testTeamId: ID
 }
 
 input UpdateTestInput {
   id: ID!
   subjectId: String
-  progress: Int
   description: String
-  testDate: String
   timeBegin: Int
   timeEnd: Int
   status: String
+  tags: [String]
   testRoomId: ID
-  testTeamId: ID
 }
 
 input DeleteTestInput {
@@ -386,6 +402,7 @@ input ModelRecordFilterInput {
 }
 
 input CreateRecordInput {
+  id: ID
   subjectId: String
   timeBegin: Int
   timeEnd: Int
@@ -452,9 +469,11 @@ input ModelQuestionSnapshotFilterInput {
 }
 
 input CreateQuestionSnapshotInput {
+  id: ID
   name: String
   content: String
   test: String
+  questionSnapshotRoomId: ID
 }
 
 input UpdateQuestionSnapshotInput {
@@ -462,6 +481,7 @@ input UpdateQuestionSnapshotInput {
   name: String
   content: String
   test: String
+  questionSnapshotRoomId: ID
 }
 
 input DeleteQuestionSnapshotInput {
@@ -477,14 +497,17 @@ input ModelQuestionSetFilterInput {
   id: ModelIDFilterInput
   name: ModelStringFilterInput
   description: ModelStringFilterInput
+  tags: ModelStringFilterInput
   and: [ModelQuestionSetFilterInput]
   or: [ModelQuestionSetFilterInput]
   not: ModelQuestionSetFilterInput
 }
 
 input CreateQuestionSetInput {
+  id: ID
   name: String
   description: String
+  tags: [String]
   questionSetTeamId: ID
 }
 
@@ -492,6 +515,7 @@ input UpdateQuestionSetInput {
   id: ID!
   name: String
   description: String
+  tags: [String]
   questionSetTeamId: ID
 }
 
@@ -506,29 +530,63 @@ type ModelQuestionConnection {
 
 input ModelQuestionFilterInput {
   id: ModelIDFilterInput
+  type: ModelStringFilterInput
   name: ModelStringFilterInput
   content: ModelStringFilterInput
   test: ModelStringFilterInput
+  tags: ModelStringFilterInput
   and: [ModelQuestionFilterInput]
   or: [ModelQuestionFilterInput]
   not: ModelQuestionFilterInput
 }
 
 input CreateQuestionInput {
+  id: ID
+  type: String
   name: String
   content: String
   test: String
+  tags: [String]
   questionQuestionSetId: ID
 }
 
 input UpdateQuestionInput {
   id: ID!
+  type: String
   name: String
   content: String
   test: String
+  tags: [String]
   questionQuestionSetId: ID
 }
 
 input DeleteQuestionInput {
+  id: ID
+}
+
+type ModelAuthedModelForOwnerConnection {
+  items: [AuthedModelForOwner]
+  nextToken: String
+}
+
+input ModelAuthedModelForOwnerFilterInput {
+  id: ModelIDFilterInput
+  content: ModelStringFilterInput
+  and: [ModelAuthedModelForOwnerFilterInput]
+  or: [ModelAuthedModelForOwnerFilterInput]
+  not: ModelAuthedModelForOwnerFilterInput
+}
+
+input CreateAuthedModelForOwnerInput {
+  id: ID
+  content: String
+}
+
+input UpdateAuthedModelForOwnerInput {
+  id: ID!
+  content: String
+}
+
+input DeleteAuthedModelForOwnerInput {
   id: ID
 }

@@ -5,7 +5,7 @@
   "query": {
       "expression": "#connectionAttribute = :connectionAttribute",
       "expressionNames": {
-          "#connectionAttribute": "userTeamsId"
+          "#connectionAttribute": "jEUserTeamId"
     },
       "expressionValues": {
           ":connectionAttribute": {
@@ -33,5 +33,5 @@ null
   #else
 null
   #end,
-  "index": "gsi-TeamUsers"
+  "index": "gsi-TeamJEUsers"
 }

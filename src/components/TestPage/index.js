@@ -13,10 +13,9 @@ import Amplify, {
 } from 'aws-amplify';
 
 // import * as subscriptions from './graphql/subscriptions';
+import { Auth } from 'aws-amplify';
 
 Amplify.configure(awsExportConfig);
-
-
 
 const listRooms = async () => {
   console.log('listing room');
@@ -44,7 +43,7 @@ const listQuestions = async () => {
     }
   }`;
   const result = await API.graphql(graphqlOperation(listQuestionsOp));
-  alert(JSON.stringify(result));
+  // alert(JSON.stringify(result));
 };
 
 const createRoom = async () => {
@@ -85,6 +84,23 @@ const createQuestion = async () => {
   alert(JSON.stringify(result));
 };
 
+const createAuthedModelForOwner = async () => {
+  console.log('add AuthedModelForOwner');
+  const params = {
+    input: {
+      content: 'AuthedModelForOwner content ' + (new Date().toISOString()),
+    }
+  };
+  const createAuthedModelForOwnerOp = `mutation CreateAuthedModelForOwner($input: CreateAuthedModelForOwnerInput!) {
+    createAuthedModelForOwner(input: $input) {
+      id
+      content
+    }
+  }`;
+  const result = await API.graphql(graphqlOperation(createAuthedModelForOwnerOp, params));
+  alert(JSON.stringify(result));
+};
+
 const TestBar = () => {
   return (
     <div>
@@ -92,10 +108,91 @@ const TestBar = () => {
       <button type="button" onClick={listQuestions}>listQuestions</button>
       <button type="button" onClick={createRoom}>createRoom</button>
       <button type="button" onClick={createQuestion}>createQuestion</button>
+      <button type="button" onClick={createAuthedModelForOwner}>createAuthedModelForOwner</button>
     </div>
   );
 };
 
+let cognitoUser;
+//cognito
+// const username="jackieaws2018";
+// const username = "Subject_1542079447498";
+const username = "Subject_1542080684558";
+const password="Innova@p3";
+const signIn = async () => {
+  Auth.signIn(username, password)
+  .then(user => {
+    console.log('#user', user);
+    cognitoUser = user;
+  })
+  .catch(err => console.log(err));
+};
+const signout = async () => {
+  Auth.signOut()
+    .then(data => console.log(data))
+    .catch(err => console.log(err));
+};
+const signup = async () => {
+  const username="Subject_"+(new Date).getTime();
+  const password="Innova@p3";  
+  const email = 'jackie@test.com';
+  Auth.signUp({
+    username,
+    password,
+    attributes: {
+      email,          // optional
+      // phone_number,   // optional - E.164 number convention
+      // other custom attributes 
+    },
+    validationData: []  //optional
+  })
+    .then(data => console.log('#signup', data))
+    .catch(err => console.log(err));
+};
+//this code should be used after admin logged in
+const signupAdmin = async () => {
+  const username = "Subject_" + (new Date).getTime();
+  const password = "Innova@p3";
+  const email = 'jackie@admin.com';
+  console.log('#signupAdmin', Auth);
+  Auth.signUp({
+    username,
+    password,
+    attributes: {
+      email,          // optional
+      // phone_number,   // optional - E.164 number convention
+      // other custom attributes 
+      'custom:role': 'admin'
+    },
+    validationData: []  //optional
+  })
+    .then(data => console.log('#signup admin', data))
+    .catch(err => console.log(err));
+};
+const getSession = () => {
+  if (cognitoUser != null) {
+    cognitoUser.getSession(function (err, session) {
+      if (err) {
+        alert(err);
+        return;
+      }
+      console.log('session: ' + JSON.stringify(session));
+      console.log('session validity: ' + session.isValid());
+      window.cognitoSession = session;
+    });
+  }
+};
+const CognitoBar = () => {
+  return (
+    <div>
+      <button type="button" onClick={signIn}>signIn</button>
+      <button type="button" onClick={signout}>signout</button>
+      <button type="button" onClick={signup}>signup</button>
+      <button type="button" onClick={signupAdmin}>signupAdmin</button>
+      <button type="button" onClick={getSession}>getSession</button>
+    </div>
+  );
+};
 class TestPage extends Component {
   constructor(props) {
     super(props);
@@ -122,7 +219,8 @@ class TestPage extends Component {
     return (
       <div>
         <TestBar></TestBar>
-        <div><RoomList></RoomList></div>
+        <CognitoBar></CognitoBar>
+        {/* <div><RoomList></RoomList></div> */}
       </div>
     );
   }
