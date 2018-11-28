@@ -90,10 +90,10 @@
 							"Outputs.UserPoolId"
 						]
 					},
-					"schemaGraphql": "s3://jsexam-20181109111143-deployment/amplify-appsync-files/schema.graphql.1542355793559",
+					"schemaGraphql": "s3://jsexam-20181109111143-deployment/amplify-appsync-files/schema.graphql.1543392251990",
 					"ResolverBucket": "jsexam-20181109111143-deployment",
 					"ResolverRootKey": "amplify-appsync-files",
-					"DeploymentTimestamp": "1542355793559"
+					"DeploymentTimestamp": "1543392251990"
 				}
 			}
 		},

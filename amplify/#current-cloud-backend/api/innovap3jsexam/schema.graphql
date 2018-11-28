@@ -43,7 +43,7 @@ type Record @model {
   interviewer: JEUser
   timeBegin: Int
   timeEnd: Int
-  history: String # todo
+  history: [String] # todo
   result: Result
   question: QuestionSnapshot
   test: Test @connection(name: "TestRecords")
@@ -61,6 +61,7 @@ type Result @model {
 }
 type QuestionSnapshot @model {
   id: ID!
+  type: String # eg. javascript
   name: String
   content: String
   test: String

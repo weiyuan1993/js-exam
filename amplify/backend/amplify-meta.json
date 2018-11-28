@@ -28,8 +28,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/jsexam-20181109111143-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apiinnovap3jsexam"
 			},
-			"lastPushTimeStamp": "2018-11-16T08:12:28.073Z",
-			"lastPushDirHash": "bd99k0mk+sLGmAmbZSOpX92Yyq8="
+			"lastPushTimeStamp": "2018-11-28T08:07:41.596Z",
+			"lastPushDirHash": "rN/fQ+Vsd4FqYdcFXg9Hut4N038="
 		}
 	},
 	"auth": {
@@ -40,7 +40,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/jsexam-20181109111143-deployment/amplify-cfn-templates/auth/cognitof2f15a0e-cloudformation-template.yml",
 				"logicalId": "authcognitof2f15a0e"
 			},
-			"lastPushTimeStamp": "2018-11-16T08:12:23.159Z",
+			"lastPushTimeStamp": "2018-11-28T08:07:36.889Z",
 			"output": {
 				"AppClientSecret": "18bt0id8jafb8i6nj2m1cbfab3ugpgblg6rvc5bu4siot95983gk",
 				"UserPoolId": "us-east-1_iZaYY7v3Z",
@@ -61,7 +61,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/jsexam-20181109111143-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2018-11-16T08:12:23.173Z",
+			"lastPushTimeStamp": "2018-11-28T08:07:36.896Z",
 			"output": {
 				"S3BucketSecureURL": "https://innovap3-js-exam-dev.s3.amazonaws.com",
 				"WebsiteURL": "http://innovap3-js-exam-dev.s3-website-us-east-1.amazonaws.com",

@@ -46,7 +46,7 @@ type Record {
   interviewer: JEUser
   timeBegin: Int
   timeEnd: Int
-  history: String
+  history: [String]
   result: Result
   question: QuestionSnapshot
   test: Test
@@ -60,6 +60,7 @@ type Result {
 
 type QuestionSnapshot {
   id: ID!
+  type: String
   name: String
   content: String
   test: String
@@ -406,7 +407,7 @@ input CreateRecordInput {
   subjectId: String
   timeBegin: Int
   timeEnd: Int
-  history: String
+  history: [String]
   recordTestId: ID
 }
 
@@ -415,7 +416,7 @@ input UpdateRecordInput {
   subjectId: String
   timeBegin: Int
   timeEnd: Int
-  history: String
+  history: [String]
   recordTestId: ID
 }
 
@@ -460,6 +461,7 @@ type ModelQuestionSnapshotConnection {
 
 input ModelQuestionSnapshotFilterInput {
   id: ModelIDFilterInput
+  type: ModelStringFilterInput
   name: ModelStringFilterInput
   content: ModelStringFilterInput
   test: ModelStringFilterInput
@@ -470,6 +472,7 @@ input ModelQuestionSnapshotFilterInput {
 
 input CreateQuestionSnapshotInput {
   id: ID
+  type: String
   name: String
   content: String
   test: String
@@ -478,6 +481,7 @@ input CreateQuestionSnapshotInput {
 
 input UpdateQuestionSnapshotInput {
   id: ID!
+  type: String
   name: String
   content: String
   test: String
