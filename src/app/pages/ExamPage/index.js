@@ -81,7 +81,6 @@ class Page extends Component {
     }
   }
 
-
   onReset = (type) => {
     const { actions } = this.props;
     actions.resetQuestion(type);
@@ -104,10 +103,6 @@ class Page extends Component {
   }
 
   subscribeOnCreateQuestionSnapshot() {
-    console.log('subscribeOnCreateQuestionSnapshot');
-    // const result = await API.graphql(graphqlOperation(subscriptions.onUpdateRoom));
-
-    // Subscribe to creation of Todo
     this.subscriptionDispatchQuestion = API.graphql(
       graphqlOperation(subscriptions.onCreateQuestionSnapshot)
     ).subscribe({
@@ -117,8 +112,6 @@ class Page extends Component {
           const { type, name, content: code, test } = result.value.data.onCreateQuestionSnapshot
           this.remoteChangeQuestion({ type, name, code, test })
         }
-        // let questionSnapshot = result.value.data.onCreateQuestionSnapshot;
-        // this.changeQuestion({ id: questionSnapshot.id, question: questionSnapshot });
       }
     });
   };

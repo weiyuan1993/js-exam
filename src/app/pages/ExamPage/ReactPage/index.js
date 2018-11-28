@@ -40,7 +40,6 @@ class ReactPage extends Component {
   shouldComponentUpdate(nextProps) {
     const { compiledCode: previousCompiledCode } = this.props;
     const { compiledCode, wrappedConsole, actions } = nextProps;
-    console.log('#shouldComponentUpdate', previousCompiledCode == compiledCode)    
     if (previousCompiledCode !== compiledCode) {
       actions.resetConsole();
       debouncedRunCode({ code: compiledCode, wrappedConsole });
@@ -60,7 +59,6 @@ class ReactPage extends Component {
       onChangeQuestion,
       remoteQuestion
     } = this.props;
-    console.log('#javascript page render', remoteQuestion)
     const { test } = remoteQuestion || questions[questionIndex];
     const layout = [
       {

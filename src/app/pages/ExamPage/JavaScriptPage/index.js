@@ -34,29 +34,16 @@ class JavaScriptPage extends Component {
   componentDidMount() {
     const { compiledCode, wrappedConsole, actions } = this.props;
     actions.resetConsole();
-    // debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: actions.addTape });
-    debouncedRunCode({
-      code: compiledCode, wrappedConsole, onTapeUpdate: (args) => {
-        console.log('#debouncedRunCode args1', args)
-        actions.addTape(args);
-      }
-    });
+    debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: actions.addTape });
   }
 
   shouldComponentUpdate(nextProps) {
     const { compiledCode: previousCompiledCode } = this.props;
     const { compiledCode, wrappedConsole, actions } = nextProps;
-    console.log('#shouldComponentUpdate debouncedRunCode', previousCompiledCode == compiledCode, previousCompiledCode && previousCompiledCode.substr(0,100), compiledCode && compiledCode.substr(0,100))
     if (previousCompiledCode !== compiledCode) {
-      console.log('#debouncedRunCode before')
       actions.resetConsole();
       actions.resetTape();
-      // debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: actions.addTape });
-      debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: (args) => {
-        console.log('#debouncedRunCode args2', args)
-          actions.addTape(args); 
-        }
-      });
+      debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: actions.addTape });
     }
     return true;
   }
@@ -75,8 +62,6 @@ class JavaScriptPage extends Component {
       remoteQuestion
     } = this.props;
     const { test } = remoteQuestion || questions[questionIndex];
-    console.log('#javascript page render', test)
-    console.log('#javascript page render tape', tape)
     const layout = [
       {
         key: 'code', x: 0, y: 0, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500

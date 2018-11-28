@@ -27,7 +27,6 @@ const runCode = ({ code, wrappedConsole = console, onTapeUpdate }) => {
   let test = null;
   if (onTapeUpdate) {
     test = getPatchedTape(onTapeUpdate);
-    console.log('#runcode ontapeupdate test', test)
   }
   // should hijack setTimeout before pass to sandbox
   const sandbox = {

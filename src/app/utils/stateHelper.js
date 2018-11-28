@@ -13,9 +13,7 @@ const getStateInformation = (state) => {
   const remoteQuestion = state[type].remoteQuestion;
   if (remoteQuestion) {
     code = (remoteQuestion && remoteQuestion.code) || code;
-    // compiledCode = ''; //cause component update
   }
-  console.log('#getStateInformation', remoteQuestion)
   return {
     type,
     categoryIndex,

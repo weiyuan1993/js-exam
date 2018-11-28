@@ -45,8 +45,6 @@ Amplify.configure(AwsConfig);
 //   });
 
 const Question = ({ match }) => {
-  console.log('#Question Admin/Question', match);
-  // return (<div>test</div>);
   return (
     <Switch>
       <Route path={`${match.path}/add`} component={QuestionAddPage} />
@@ -58,7 +56,6 @@ const Question = ({ match }) => {
 };
 
 const Admin = ({ match }) => {
-  console.log('#match Admin', match);
   return (
     <Switch>
       <Route path={`${match.path}/question`} render={Question} />
@@ -69,4 +66,3 @@ const Admin = ({ match }) => {
 
 export default (Admin);
 // export default withAuthenticator(Admin);
-// export default (() => (<div> this is admin </div>));
