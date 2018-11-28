@@ -11,7 +11,7 @@ import Grid from 'app/components/Grid';
 import GridItem from 'app/components/Grid/GridItem';
 import ConsoleWidget from 'app/components/Widgets/ConsoleWidget';
 import CodeWidget from 'app/components/Widgets/CodeWidget';
-import ControlWidget from 'app/components/Widgets/ControlWidget';
+import ControlWidget from '../ControlWidget';
 import ResultWidget from 'app/components/Widgets/ResultWidget';
 import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 

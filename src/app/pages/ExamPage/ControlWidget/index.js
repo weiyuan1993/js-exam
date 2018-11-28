@@ -22,7 +22,7 @@ const ControlWidget = ({
   questionList
 }) => (
   <div className={styles.control}>
-    <CategorySelector
+    {/* <CategorySelector
       onChange={onChangeCategory}
       index={categoryIndex}
     />
@@ -30,7 +30,7 @@ const ControlWidget = ({
       onChange={onChangeQuestion}
       index={questionIndex}
       list={questionList}
-    />
+    /> */}
     <Button type="danger" onClick={onReset}>Reset</Button>
   </div>
 );
