@@ -30,6 +30,7 @@ export const onCreateRoom = `subscription OnCreateRoom {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -70,6 +71,7 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -110,6 +112,7 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -397,6 +400,7 @@ export const onCreateRecord = `subscription OnCreateRecord {
     }
     question {
       id
+      type
       name
       content
       test
@@ -431,6 +435,7 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
     }
     question {
       id
+      type
       name
       content
       test
@@ -465,6 +470,7 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
     }
     question {
       id
+      type
       name
       content
       test
@@ -508,6 +514,7 @@ export const onDeleteResult = `subscription OnDeleteResult {
 export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
   onCreateQuestionSnapshot {
     id
+    type
     name
     content
     test
@@ -525,6 +532,7 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
 export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
   onUpdateQuestionSnapshot {
     id
+    type
     name
     content
     test
@@ -542,6 +550,7 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
 export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
   onDeleteQuestionSnapshot {
     id
+    type
     name
     content
     test

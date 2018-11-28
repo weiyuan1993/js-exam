@@ -30,6 +30,7 @@ export const getRoom = `query GetRoom($id: ID!) {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -75,6 +76,7 @@ export const listRooms = `query ListRooms(
       questionSource {
         items {
           id
+          type
           name
           content
           test
@@ -299,6 +301,7 @@ export const getRecord = `query GetRecord($id: ID!) {
     }
     question {
       id
+      type
       name
       content
       test
@@ -338,6 +341,7 @@ export const listRecords = `query ListRecords(
       }
       question {
         id
+        type
         name
         content
         test
@@ -382,6 +386,7 @@ export const listResults = `query ListResults(
 export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
   getQuestionSnapshot(id: $id) {
     id
+    type
     name
     content
     test
@@ -404,6 +409,7 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
   listQuestionSnapshots(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      type
       name
       content
       test

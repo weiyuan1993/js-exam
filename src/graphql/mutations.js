@@ -30,6 +30,7 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -70,6 +71,7 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -110,6 +112,7 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
     questionSource {
       items {
         id
+        type
         name
         content
         test
@@ -397,6 +400,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     }
     question {
       id
+      type
       name
       content
       test
@@ -431,6 +435,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     }
     question {
       id
+      type
       name
       content
       test
@@ -465,6 +470,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     }
     question {
       id
+      type
       name
       content
       test
@@ -508,6 +514,7 @@ export const deleteResult = `mutation DeleteResult($input: DeleteResultInput!) {
 export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: CreateQuestionSnapshotInput!) {
   createQuestionSnapshot(input: $input) {
     id
+    type
     name
     content
     test
@@ -525,6 +532,7 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
 export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: UpdateQuestionSnapshotInput!) {
   updateQuestionSnapshot(input: $input) {
     id
+    type
     name
     content
     test
@@ -542,6 +550,7 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
 export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: DeleteQuestionSnapshotInput!) {
   deleteQuestionSnapshot(input: $input) {
     id
+    type
     name
     content
     test
