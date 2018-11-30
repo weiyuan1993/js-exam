@@ -1,6 +1,7 @@
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
+import * as subscriptions from '../../graphql/subscriptions.js';
 
 Amplify.configure(awsExportConfig);
 
@@ -17,10 +18,10 @@ const createRecord = async () => {
   );
   return data.createRecord;
 };
-const updateRecord = async (newHistory) => {
+const updateRecord = async (oldHistory, newHistory) => {
   const params = {
     input: {
-      history: newHistory
+      history: [...oldHistory, newHistory]
     }
   };
   const result = await API.graphql(
@@ -29,4 +30,24 @@ const updateRecord = async (newHistory) => {
   return result;
 };
 
-export { createRecord, updateRecord };
+const subscribeOnCreateRecord = async (callback) => {
+  API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
+    next: ({ value }) => {
+      callback(value);
+    }
+  });
+};
+
+const subscribeOnUpdateRecord = async (callback) => {
+  API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
+    next: ({ value }) => {
+      callback(value);
+    }
+  });
+};
+export {
+  createRecord,
+  updateRecord,
+  subscribeOnCreateRecord,
+  subscribeOnUpdateRecord
+};

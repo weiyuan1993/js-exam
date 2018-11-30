@@ -19,7 +19,7 @@ import { getCategories } from 'app/questions/index';
 import debouncedRunCode from 'app/utils/runCode';
 
 import { listQuestions, getQuestion } from 'app/utils/question';
-
+import { subscribeOnUpdateRecord } from 'app/utils/record';
 import ControlWidget from '../ControlWidget';
 import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
@@ -47,6 +47,9 @@ class JavaScriptPage extends Component {
     this.setState({ isLoading: true });
     const result = await listQuestions('javascript');
     this.setState({ questionList: result.data.listQuestions.items, isLoading: false });
+    this.onChangeQuestion(0);
+    this.subscribeOnUpdateRecord();
+    
     debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
   }
 
@@ -106,7 +109,7 @@ class JavaScriptPage extends Component {
 
   onDispatchQuestion = async () => {
     const {
-      name, 
+      name,
       type,
       tags,
       code,
@@ -141,6 +144,21 @@ class JavaScriptPage extends Component {
       id
     });
   }
+
+  subscribeOnUpdateRecord = async () => {
+    try {
+      subscribeOnUpdateRecord(({ data }) => {
+        const { id, history } = data.onUpdateRecord;
+        const { recordId } = this.state;
+        if (id === recordId) {
+          console.log(data.onUpdateRecord);
+          this.setState({ code: history[0] });
+        }
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  };
 
   render() {
     const {

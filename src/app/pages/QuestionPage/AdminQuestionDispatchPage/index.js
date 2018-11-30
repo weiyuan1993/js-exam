@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 
 import { updateQuestion, dispatchQuestion } from 'app/utils/question';
 
-import { createRecord, updateRecord } from 'app/utils/record';
+import {
+  createRecord,
+  subscribeOnCreateRecord,
+  subscribeOnUpdateRecord
+} from 'app/utils/record';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
@@ -19,17 +23,14 @@ const getPageComponent = (args) => {
 };
 
 class Page extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { category: 0 };
-  }
-
   state = {
-    category:0,
-    recordId:""
-  }
+    category: 0,
+    recordId: ''
+  };
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.subscribeOnCreateRecord();
+  }
 
   onChangeCategory = (index) => {
     this.setState({ category: index });
@@ -45,7 +46,8 @@ class Page extends Component {
 
   onDispatchQuestion = async (data) => {
     try {
-      await dispatchQuestion(data);
+      const result = await dispatchQuestion(data);
+
       this.createRecordForExam();
     } catch (e) {
       alert(e.message);
@@ -54,23 +56,42 @@ class Page extends Component {
 
   createRecordForExam = async () => {
     try {
-      await createRecord();
+      const result = await createRecord();
+      this.setState({ recordId: result.id });
+      console.log(this.state.recordId);
     } catch (e) {
       alert(e.message);
     }
   };
 
-  subscribeOnUpdateRecord = async () => {};
+  subscribeOnCreateRecord = async () => {
+    try {
+      subscribeOnCreateRecord(({ data }) => {
+        const { id, history } = data.onCreateRecord;
+        const { recordId } = this.state;
+        if (id === recordId) {
+          console.log(data.onCreateRecord);
+        }
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+
+  onChangeCode = async () => {};
 
   render() {
-    const { category } = this.state;
+    const { category, recordId } = this.state;
     return (
       <React.Fragment>
         {getPageComponent({
           index: category,
+          recordId,
           onSubmit: this.onSubmit,
           onDispatchQuestion: this.onDispatchQuestion,
           onChangeCategory: this.onChangeCategory,
+          onChangeCode: this.onChangeCode,
           categoryIndex: category
         })}
       </React.Fragment>
