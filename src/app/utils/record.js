@@ -7,6 +7,8 @@ Amplify.configure(awsExportConfig);
 const createRecord = async () => {
   const params = {
     input: {
+      subjectId: 'interviewee01',
+      history: [],
       timeBegin: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
   };
@@ -24,7 +26,6 @@ const updateRecord = async (newHistory) => {
   const result = await API.graphql(
     graphqlOperation(mutations.updateRecord, params)
   );
-  console.log(result);
   return result;
 };
 
