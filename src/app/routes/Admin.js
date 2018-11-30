@@ -6,7 +6,7 @@ import AwsConfig from 'aws-exports';
 
 import QuestionAddPage from 'app/pages/QuestionPage/AddPage';
 import QuestionEditPage from 'app/pages/QuestionPage/EditPage';
-import AdminQuestionDispatchPage from 'app/pages/QuestionPage/AdminQuestionDispatchPage/index_new';
+import AdminQuestionDispatchPage from 'app/pages/QuestionPage/AdminQuestionDispatchPage';
 import NotFoundPage from 'app/pages/NotFoundPage';
 
 Amplify.configure(AwsConfig);
@@ -20,7 +20,6 @@ Amplify.configure(AwsConfig);
 // })
 //   .then(data => console.log(data))
 //   .catch(err => console.log(err));
-
 
 // class Admin extends Component {
 //   state = {
@@ -49,7 +48,10 @@ const Question = ({ match }) => {
     <Switch>
       <Route path={`${match.path}/add`} component={QuestionAddPage} />
       <Route path={`${match.path}/edit`} component={QuestionEditPage} />
-      <Route path={`${match.path}/dispatch`} component={AdminQuestionDispatchPage} />
+      <Route
+        path={`${match.path}/dispatch`}
+        component={AdminQuestionDispatchPage}
+      />
       <Route component={NotFoundPage} />
     </Switch>
   );
@@ -64,5 +66,5 @@ const Admin = ({ match }) => {
   );
 };
 
-export default (Admin);
+export default Admin;
 // export default withAuthenticator(Admin);
