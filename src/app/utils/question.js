@@ -5,6 +5,7 @@ import Amplify, {
 
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
+import * as subscriptions from '../../graphql/subscriptions.js';
 
 Amplify.configure(awsExportConfig);
 
@@ -102,7 +103,7 @@ const updateQuestion = async (data) => {
   return result;
 };
 
-const dispatchQuestion = async function(question) {
+const dispatchQuestion = async (question) => {
   console.log('dispatchQuestion / updateQuestionSnapshot');
   const params = {
     input: {
@@ -117,10 +118,25 @@ const dispatchQuestion = async function(question) {
   alert(JSON.stringify(result));
 };
 
+const subscribeOnCreateQuestionSnapshot = (callback) => {
+  return API.graphql(
+    graphqlOperation(subscriptions.onCreateQuestionSnapshot)
+  ).subscribe({
+    next: (result) => {
+      if (result) {
+        console.log("#onCreateQuestionSnapshot", result);
+        const { type, name, content: code, test } = result.value.data.onCreateQuestionSnapshot
+        callback({ type, name, code, test });
+      }
+    }
+  });
+}
+
 export {
   listQuestions,
   createQuestion,
   getQuestion,
   updateQuestion,
-  dispatchQuestion
+  dispatchQuestion,
+  subscribeOnCreateQuestionSnapshot
 };

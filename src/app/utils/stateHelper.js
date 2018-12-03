@@ -11,9 +11,9 @@ const getStateInformation = (state) => {
   let { index, compiledCode } = state[type];
   let code = (state[type][index] && state[type][index].code) || questions[questionIndex].content;
   const remoteQuestion = state[type].remoteQuestion;
-  if (remoteQuestion) {
-    code = (remoteQuestion && remoteQuestion.code) || code;
-  }
+  // if (remoteQuestion) {
+  //   code = (remoteQuestion && remoteQuestion.code) || code;
+  // }
   return {
     type,
     categoryIndex,

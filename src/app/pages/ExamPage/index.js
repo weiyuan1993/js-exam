@@ -36,6 +36,14 @@ const getPageComponent = (args) => {
 };
 
 class Page extends Component {
+  state = {
+    categoryIndex:0,
+    code:'',
+    compiledCode:'',
+    test:'',
+    tape:'',
+    console:''
+  }
   constructor(props) {
     super(props);
     const { actions } = this.props;
@@ -66,17 +74,19 @@ class Page extends Component {
   }
 
   handleCodeChange = (newCode) => {
-    const { actions, type, question } = this.props;
-    const fullCode = `${newCode} ${question.test}`;
+    // const { actions, type, question } = this.props;
+    const {test} = this.state;
+    const fullCode = `${newCode} ${test}`;
     try {
-      const { code } = transform(fullCode, {
+      const { code:compiledCode } = transform(fullCode, {
         presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react'],
         plugins: ['proposal-object-rest-spread']
       });
-      actions.changeCode({ compiledCode: code, rawCode: newCode, type });
+      this.setState({compiledCode,code:newCode})
+      // actions.changeCode({ compiledCode: code, rawCode: newCode, type });
     } catch (e) {
-      actions.changeCode({ rawCode: newCode, type });
-      actions.resetConsole();
+      // actions.changeCode({ rawCode: newCode, type });
+      // actions.resetConsole();
       this.wrappedConsole.log(e);
     }
   }
@@ -89,6 +99,7 @@ class Page extends Component {
   onChangeCategory = (index) => {
     const { actions } = this.props;
     actions.changeCategory(index);
+    this.setState({categoryIndex:index})
   }
   
   onChangeQuestion = ({ index, type }) => {
@@ -110,7 +121,12 @@ class Page extends Component {
         if (result) {
           console.log("#subscribeOnCreateQuestionSnapshot", result);
           const { type, name, content: code, test } = result.value.data.onCreateQuestionSnapshot
-          this.remoteChangeQuestion({ type, name, code, test })
+          //this.remoteChangeQuestion({ type, name, code, test });
+          this.setState({
+            code,
+            test
+          })
+          this.handleCodeChange(code);
         }
       }
     });
@@ -118,8 +134,11 @@ class Page extends Component {
 
   render() {
     const {
-      categoryIndex
-    } = this.props;
+      categoryIndex,
+      code,
+      compiledCode,
+      test
+    } = this.state;
     const {
       handleCodeChange,
       wrappedConsole,
@@ -138,7 +157,10 @@ class Page extends Component {
             onReset,
             onChangeCategory,
             onChangeQuestion,
-            ...this.props
+            ...this.props,
+            code,
+            compiledCode,
+            test
           })
         }
       </>
@@ -157,16 +179,11 @@ export default withRouter(connect(
       question,
       remoteQuestion
     } = getStateInformation(state);
+    console.log(state)
     return {
-      compiledCode,
-      questionIndex,
-      code,
+
       console: state.console,
-      categoryIndex,
-      type,
-      question: remoteQuestion || question,
-      isLogin: state.login.isLogin,
-      remoteQuestion
+
     };
   },
   (dispatch) => {
