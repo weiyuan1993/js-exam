@@ -14,8 +14,7 @@ import TestWidget from 'app/components/Widgets/TestWidget';
 import TapeWidget from 'app/components/Widgets/TapeWidget';
 import ControlWidget from '../ControlWidget';
 
-// import { addTape, resetTape } from 'app/actions/tape';
-import { resetConsole } from 'app/actions/console';
+// import { resetConsole } from 'app/actions/console';
 
 import debouncedRunCode from 'app/utils/runCode';
 
@@ -28,16 +27,16 @@ class JavaScriptPage extends Component {
   }
 
   componentDidMount() {
-    const { compiledCode, wrappedConsole, actions, addTape } = this.props;
-    actions.resetConsole();
+    const { compiledCode, wrappedConsole, resetConsole, addTape } = this.props;
+    resetConsole();
     debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: addTape });
   }
 
   shouldComponentUpdate(nextProps) {
-    const { compiledCode: previousCompiledCode, addTape, resetTape } = this.props;
-    const { compiledCode, wrappedConsole, actions } = nextProps;
+    const { compiledCode: previousCompiledCode, resetConsole, addTape, resetTape } = this.props;
+    const { compiledCode, wrappedConsole } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      actions.resetConsole();
+      resetConsole();
       resetTape();
       debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: addTape });
     }
@@ -101,15 +100,4 @@ class JavaScriptPage extends Component {
   }
 }
 
-export default withRouter(connect(
-  null,
-  (dispatch) => {
-    return {
-      actions: {
-        // resetTape: () => dispatch(resetTape()),
-        // addTape: data => dispatch(addTape(data)),
-        resetConsole: () => dispatch(resetConsole())
-      }
-    };
-  }
-)(JavaScriptPage));
+export default withRouter(JavaScriptPage);

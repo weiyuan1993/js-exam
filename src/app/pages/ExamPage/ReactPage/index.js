@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import 'brace';
 import 'brace/mode/jsx';
@@ -15,15 +14,11 @@ import ControlWidget from '../ControlWidget';
 import ResultWidget from 'app/components/Widgets/ResultWidget';
 import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 
-import { resetConsole } from 'app/actions/console';
 
 import debouncedRunCode from 'app/utils/runCode';
 
-import { getQuestions } from 'app/questions/index';
-
 import styles from './ReactPage.module.scss';
 
-const questions = getQuestions('react');
 
 class ReactPage extends Component {
   constructor(props) {
@@ -32,16 +27,16 @@ class ReactPage extends Component {
   }
 
   componentDidMount() {
-    const { compiledCode, wrappedConsole, actions } = this.props;
-    actions.resetConsole();
+    const { compiledCode, wrappedConsole, resetConsole } = this.props;
+    resetConsole();
     debouncedRunCode({ code: compiledCode, wrappedConsole });
   }
 
   shouldComponentUpdate(nextProps) {
     const { compiledCode: previousCompiledCode } = this.props;
-    const { compiledCode, wrappedConsole, actions } = nextProps;
+    const { compiledCode, wrappedConsole, resetConsole } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      actions.resetConsole();
+      resetConsole();
       debouncedRunCode({ code: compiledCode, wrappedConsole });
     }
     return true;
@@ -103,13 +98,4 @@ class ReactPage extends Component {
   }
 }
 
-export default withRouter(connect(
-  null,
-  (dispatch) => {
-    return {
-      actions: {
-        resetConsole: () => dispatch(resetConsole())
-      }
-    };
-  }
-)(ReactPage));
+export default withRouter(ReactPage);

@@ -108,7 +108,7 @@ const dispatchQuestion = async (question) => {
   const result = await API.graphql(
     graphqlOperation(mutations.createQuestionSnapshot, params)
   );
-  alert(JSON.stringify(result));
+  alert(`Successfully dispatched a question "${result.data.createQuestionSnapshot.name}"!`);
 };
 
 const subscribeOnCreateQuestionSnapshot = async (callback) => {

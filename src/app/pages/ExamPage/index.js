@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 
-import { resetConsole } from 'app/actions/console';
+// import { resetConsole } from 'app/actions/console';
 
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
-import {
-  subscribeOnCreateRecord,
-  updateRecord
-} from 'app/utils/record';
+import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
@@ -34,14 +31,17 @@ class Page extends Component {
     test: '',
     tape: [],
     recordId: '',
+    console: []
   };
 
-  wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
+  constructor(props) {
+    super(props);
+    this.wrappedConsole = createWrappedConsole(console, this.addConsole);
+  }
 
   componentDidMount() {
     this.subscribeOnDispatchQuestion();
     this.subscribeOnCreateRecord();
-
   }
 
   componentDidUpdate(prevProps) {
@@ -57,7 +57,7 @@ class Page extends Component {
   }
 
   handleCodeChange = (newCode) => {
-    const { test, recordId } = this.state;
+    const { test } = this.state;
     const fullCode = `${newCode} ${test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
@@ -69,10 +69,9 @@ class Page extends Component {
         plugins: ['proposal-object-rest-spread']
       });
       this.setState({ compiledCode, code: newCode });
-
     } catch (e) {
       this.setState({ code: newCode });
-      this.props.actions.resetConsole();
+      this.resetConsole();
       this.wrappedConsole.log(e);
     }
   };
@@ -83,7 +82,6 @@ class Page extends Component {
     this.handleCodeChange(questionContent);
   };
 
-
   addTape = (newTape) => {
     const { tape } = this.state;
     this.setState({ tape: [...tape, newTape] });
@@ -91,6 +89,15 @@ class Page extends Component {
 
   resetTape = () => {
     this.setState({ tape: [] });
+  };
+
+  addConsole = (...args) => {
+    const { console: _console } = this.state;
+    this.setState({ console: [..._console, ...args] });
+  };
+
+  resetConsole = () => {
+    this.setState({ console: [] });
   };
 
   subscribeOnCreateRecord = async () => {
@@ -104,8 +111,7 @@ class Page extends Component {
     } catch (e) {
       alert(e.message);
     }
-  }
-
+  };
 
   subscribeOnDispatchQuestion = async () => {
     subscribeOnCreateQuestionSnapshot(({ data }) => {
@@ -119,7 +125,7 @@ class Page extends Component {
       const { questionContent } = this.state;
       this.handleCodeChange(questionContent);
     });
-  }
+  };
 
   render() {
     const {
@@ -127,7 +133,8 @@ class Page extends Component {
       wrappedConsole,
       onReset,
       addTape,
-      resetTape
+      resetTape,
+      resetConsole
     } = this;
     return (
       <>
@@ -137,6 +144,7 @@ class Page extends Component {
           onReset,
           addTape,
           resetTape,
+          resetConsole,
           ...this.state,
           ...this.props
         })}
@@ -145,20 +153,5 @@ class Page extends Component {
   }
 }
 
-export default withRouter(
-  connect(
-    (state) => {
-      return {
-        console: state.console
-      };
-    },
-    (dispatch) => {
-      return {
-        actions: {
-          resetConsole: () => dispatch(resetConsole()),
-          _dispatch: dispatch
-        }
-      };
-    }
-  )(Page)
-);
+export default withRouter(Page);
+
