@@ -23,19 +23,18 @@ const getPageComponent = (args) => {
 };
 
 class Page extends Component {
-  state = {
-    categoryIndex: 0,
-    code: '',
-    compiledCode: '',
-    questionContent: '',
-    test: '',
-    tape: [],
-    recordId: '',
-    console: []
-  };
-
   constructor(props) {
     super(props);
+    this.state = {
+      categoryIndex: 0,
+      code: '',
+      compiledCode: '',
+      questionContent: '',
+      test: '',
+      tape: [],
+      recordId: '',
+      console: []
+    };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
 
@@ -154,4 +153,3 @@ class Page extends Component {
 }
 
 export default withRouter(Page);
-

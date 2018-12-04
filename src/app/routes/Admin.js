@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Amplify from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
@@ -10,38 +10,6 @@ import AdminQuestionDispatchPage from 'app/pages/QuestionPage/AdminQuestionDispa
 import NotFoundPage from 'app/pages/NotFoundPage';
 
 Amplify.configure(AwsConfig);
-
-// Auth.signUp({
-//   username: 'Admin',
-//   password: 'Admin@123456',
-//   attributes: {
-//     email: 'test@innova.com'
-//   }
-// })
-//   .then(data => console.log(data))
-//   .catch(err => console.log(err));
-
-// class Admin extends Component {
-//   state = {
-//     isLoading: true
-//   }
-
-//   render() {
-//     const { isLoading, isLogin } = this.state;
-//     const { match } = this.props;
-//     return (
-//       <Switch>
-//         <Route path={`${match.path}/question`} component={QuestionPage} />
-//         <Route component={NotFoundPage} />
-//       </Switch>
-//     );
-//   }
-// }
-
-// const session = Amplify.Auth.currentSession()
-//   .then(s => {
-//     console.log(s.getAccessToken().getJwtToken());
-//   });
 
 const Question = ({ match }) => {
   return (
@@ -66,5 +34,4 @@ const Admin = ({ match }) => {
   );
 };
 
-export default Admin;
-// export default withAuthenticator(Admin);
+export default withAuthenticator(Admin);
