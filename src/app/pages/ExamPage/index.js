@@ -7,6 +7,10 @@ import { resetConsole } from 'app/actions/console';
 
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
+import {
+  subscribeOnCreateRecord,
+  updateRecord
+} from 'app/utils/record';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
@@ -28,13 +32,16 @@ class Page extends Component {
     compiledCode: '',
     questionContent: '',
     test: '',
-    tape: []
+    tape: [],
+    recordId: '',
   };
 
   wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
 
   componentDidMount() {
     this.subscribeOnDispatchQuestion();
+    this.subscribeOnCreateRecord();
+
   }
 
   componentDidUpdate(prevProps) {
@@ -50,7 +57,7 @@ class Page extends Component {
   }
 
   handleCodeChange = (newCode) => {
-    const { test } = this.state;
+    const { test, recordId } = this.state;
     const fullCode = `${newCode} ${test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
@@ -62,6 +69,7 @@ class Page extends Component {
         plugins: ['proposal-object-rest-spread']
       });
       this.setState({ compiledCode, code: newCode });
+
     } catch (e) {
       this.setState({ code: newCode });
       this.props.actions.resetConsole();
@@ -75,6 +83,7 @@ class Page extends Component {
     this.handleCodeChange(questionContent);
   };
 
+
   addTape = (newTape) => {
     const { tape } = this.state;
     this.setState({ tape: [...tape, newTape] });
@@ -84,15 +93,29 @@ class Page extends Component {
     this.setState({ tape: [] });
   };
 
-  subscribeOnDispatchQuestion() {
-    subscribeOnCreateQuestionSnapshot(({ type, code, test }) => {
+  subscribeOnCreateRecord = async () => {
+    try {
+      subscribeOnCreateRecord(({ data }) => {
+        const { id } = data.onCreateRecord;
+        this.setState({
+          recordId: id
+        });
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+
+  subscribeOnDispatchQuestion = async () => {
+    subscribeOnCreateQuestionSnapshot(({ data }) => {
+      const { type, content: code, test } = data.onCreateQuestionSnapshot;
       this.setState({
         categoryIndex: type === 'javascript' ? 0 : 1,
         code,
         test,
         questionContent: code
       });
-      console.log(this.state)
       const { questionContent } = this.state;
       this.handleCodeChange(questionContent);
     });

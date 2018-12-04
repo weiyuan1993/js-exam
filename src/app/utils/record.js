@@ -18,10 +18,12 @@ const createRecord = async () => {
   );
   return data.createRecord;
 };
-const updateRecord = async (oldHistory, newHistory) => {
+const updateRecord = async (id, newHistory) => {
   const params = {
     input: {
-      history: [...oldHistory, newHistory]
+      id,
+      history: [newHistory],
+      timeEnd: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
   };
   const result = await API.graphql(

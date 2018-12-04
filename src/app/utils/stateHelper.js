@@ -8,12 +8,10 @@ const getStateInformation = (state) => {
   const questionIndex = state[type].index;
   const questions = getQuestions(type);
   const question = questions[questionIndex];
-  let { index, compiledCode } = state[type];
-  let code = (state[type][index] && state[type][index].code) || questions[questionIndex].content;
+  const { index, compiledCode } = state[type];
+  const code = (state[type][index] && state[type][index].code) || questions[questionIndex].content;
   const remoteQuestion = state[type].remoteQuestion;
-  // if (remoteQuestion) {
-  //   code = (remoteQuestion && remoteQuestion.code) || code;
-  // }
+
   return {
     type,
     categoryIndex,
@@ -26,6 +24,4 @@ const getStateInformation = (state) => {
   };
 };
 
-export {
-  getStateInformation
-};
+export default getStateInformation;

@@ -58,7 +58,6 @@ class Page extends Component {
     try {
       const result = await createRecord();
       this.setState({ recordId: result.id });
-      console.log(this.state.recordId);
     } catch (e) {
       alert(e.message);
     }
