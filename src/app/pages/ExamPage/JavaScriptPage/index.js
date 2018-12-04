@@ -14,16 +14,12 @@ import TestWidget from 'app/components/Widgets/TestWidget';
 import TapeWidget from 'app/components/Widgets/TapeWidget';
 import ControlWidget from '../ControlWidget';
 
-import { addTape, resetTape } from 'app/actions/tape';
+// import { addTape, resetTape } from 'app/actions/tape';
 import { resetConsole } from 'app/actions/console';
-
-import { getQuestions } from 'app/questions/index';
 
 import debouncedRunCode from 'app/utils/runCode';
 
 import styles from './JavaScriptPage.module.scss';
-
-const questions = getQuestions('javascript');
 
 class JavaScriptPage extends Component {
   constructor(props) {
@@ -32,18 +28,18 @@ class JavaScriptPage extends Component {
   }
 
   componentDidMount() {
-    const { compiledCode, wrappedConsole, actions } = this.props;
+    const { compiledCode, wrappedConsole, actions, addTape } = this.props;
     actions.resetConsole();
-    debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: actions.addTape });
+    debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: addTape });
   }
 
   shouldComponentUpdate(nextProps) {
-    const { compiledCode: previousCompiledCode } = this.props;
+    const { compiledCode: previousCompiledCode, addTape, resetTape } = this.props;
     const { compiledCode, wrappedConsole, actions } = nextProps;
     if (previousCompiledCode !== compiledCode) {
       actions.resetConsole();
-      actions.resetTape();
-      debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: actions.addTape });
+      resetTape();
+      debouncedRunCode({ code: compiledCode, wrappedConsole, onTapeUpdate: addTape });
     }
     return true;
   }
@@ -52,15 +48,10 @@ class JavaScriptPage extends Component {
     const {
       code,
       test,
-      questionIndex,
-      categoryIndex,
       handleCodeChange,
       tape,
       console: _console,
       onReset,
-      onChangeCategory,
-      onChangeQuestion,
-      remoteQuestion
     } = this.props;
     const layout = [
       {
@@ -96,11 +87,6 @@ class JavaScriptPage extends Component {
           <GridItem key="control">
             <ControlWidget
               onReset={() => onReset('javascript')}
-              onChangeCategory={onChangeCategory}
-              onChangeQuestion={index => onChangeQuestion({ type: 'javascript', index })}
-              questionList={questions}
-              categoryIndex={categoryIndex}
-              questionIndex={questionIndex}
             />
           </GridItem>
           <GridItem key="tape">
@@ -116,16 +102,12 @@ class JavaScriptPage extends Component {
 }
 
 export default withRouter(connect(
-  (state) => {
-    return {
-      tape: state.tape
-    };
-  },
+  null,
   (dispatch) => {
     return {
       actions: {
-        resetTape: () => dispatch(resetTape()),
-        addTape: data => dispatch(addTape(data)),
+        // resetTape: () => dispatch(resetTape()),
+        // addTape: data => dispatch(addTape(data)),
         resetConsole: () => dispatch(resetConsole())
       }
     };

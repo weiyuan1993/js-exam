@@ -1,7 +1,4 @@
-import Amplify, {
-  API,
-  graphqlOperation
-} from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
@@ -33,11 +30,7 @@ const listQuestions = async (type) => {
 
 const createQuestion = async (data) => {
   const {
-    tags,
-    name,
-    code: content,
-    test,
-    type
+    tags, name, code: content, test, type
   } = data;
   const params = {
     input: {
@@ -78,10 +71,7 @@ const getQuestion = async (data) => {
 
 const updateQuestion = async (data) => {
   const {
-    id,
-    content,
-    test,
-    tags
+    id, content, test, tags
   } = data;
   const params = {
     input: {
@@ -111,10 +101,12 @@ const dispatchQuestion = async (question) => {
       name: question.name,
       content: question.content,
       test: question.test,
-      questionSnapshotRoomId: "demoRoom1"
+      questionSnapshotRoomId: 'demoRoom1'
     }
   };
-  const result = await API.graphql(graphqlOperation(mutations.createQuestionSnapshot, params));
+  const result = await API.graphql(
+    graphqlOperation(mutations.createQuestionSnapshot, params)
+  );
   alert(JSON.stringify(result));
 };
 
@@ -124,13 +116,17 @@ const subscribeOnCreateQuestionSnapshot = (callback) => {
   ).subscribe({
     next: (result) => {
       if (result) {
-        console.log("#onCreateQuestionSnapshot", result);
-        const { type, name, content: code, test } = result.value.data.onCreateQuestionSnapshot
-        callback({ type, name, code, test });
+        console.log('#onCreateQuestionSnapshot', result);
+        const {
+          type,
+          content: code,
+          test
+        } = result.value.data.onCreateQuestionSnapshot;
+        callback({ type, code, test });
       }
     }
   });
-}
+};
 
 export {
   listQuestions,

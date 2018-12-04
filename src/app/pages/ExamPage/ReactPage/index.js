@@ -50,16 +50,10 @@ class ReactPage extends Component {
   render() {
     const {
       code,
-      questionIndex,
-      categoryIndex,
       handleCodeChange,
       console: _console,
       onReset,
-      onChangeCategory,
-      onChangeQuestion,
-      remoteQuestion
     } = this.props;
-    const { test } = remoteQuestion || questions[questionIndex];
     const layout = [
       {
         key: 'code', x: 0, y: 0, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
@@ -95,11 +89,6 @@ class ReactPage extends Component {
             <ControlWidget
               type="react"
               onReset={() => onReset('react')}
-              onChangeCategory={onChangeCategory}
-              onChangeQuestion={index => onChangeQuestion({ type: 'react', index })}
-              questionList={questions}
-              categoryIndex={categoryIndex}
-              questionIndex={questionIndex}
             />
           </GridItem>
           <GridItem key="result">
@@ -115,10 +104,7 @@ class ReactPage extends Component {
 }
 
 export default withRouter(connect(
-  () => {
-    return {
-    };
-  },
+  null,
   (dispatch) => {
     return {
       actions: {

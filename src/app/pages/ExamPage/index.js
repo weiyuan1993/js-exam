@@ -3,29 +3,15 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 
-import { resetQuestion, changeQuestion, changeCode, remoteChangeQuestion } from 'app/actions/code';
-import { changeCategory } from 'app/actions/category';
 import { resetConsole } from 'app/actions/console';
 
 import createWrappedConsole from 'app/utils/consoleFactory';
-import { getStateInformation } from 'app/utils/stateHelper';
-
+import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
-import Amplify, {
-  API,
-  graphqlOperation
-} from 'aws-amplify';
-
-import awsExportConfig from '../../../aws-exports.js';
-
-import * as subscriptions from '../../../graphql/subscriptions.js';
-
-Amplify.configure(awsExportConfig);
-
 const getPageComponent = (args) => {
-  switch (args.index) {
+  switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
     }
@@ -37,32 +23,18 @@ const getPageComponent = (args) => {
 
 class Page extends Component {
   state = {
-    categoryIndex:0,
-    code:'',
-    compiledCode:'',
-    test:'',
-    tape:'',
-    console:''
-  }
-  constructor(props) {
-    super(props);
-    const { actions } = this.props;
-    const { _dispatch: dispatch } = actions;
-    this.wrappedConsole = createWrappedConsole(console, dispatch);
-  }
+    categoryIndex: 0,
+    code: '',
+    compiledCode: '',
+    questionContent: '',
+    test: '',
+    tape: []
+  };
+
+  wrappedConsole = createWrappedConsole(console, this.props.actions._dispatch);
 
   componentDidMount() {
-    const { isLogin, history, code } = this.props;
-    // if (!isLogin) {
-    //   history.push('/login');
-    //   return;
-    // }
-    this.handleCodeChange(code);
-    this.subscribeOnCreateQuestionSnapshot();
-  }
-
-  componentWillUnmount() {
-    this.subscriptionDispatchQuestion.unsubscribe();
+    this.subscribeOnDispatchQuestion();
   }
 
   componentDidUpdate(prevProps) {
@@ -73,130 +45,97 @@ class Page extends Component {
     }
   }
 
+  componentWillUnmount() {
+    // this.subscriptionDispatchQuestion.unsubscribe();
+  }
+
   handleCodeChange = (newCode) => {
-    // const { actions, type, question } = this.props;
-    const {test} = this.state;
+    const { test } = this.state;
     const fullCode = `${newCode} ${test}`;
     try {
-      const { code:compiledCode } = transform(fullCode, {
-        presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react'],
+      const { code: compiledCode } = transform(fullCode, {
+        presets: [
+          'es2015',
+          ['stage-2', { decoratorsBeforeExport: true }],
+          'react'
+        ],
         plugins: ['proposal-object-rest-spread']
       });
-      this.setState({compiledCode,code:newCode})
-      // actions.changeCode({ compiledCode: code, rawCode: newCode, type });
+      this.setState({ compiledCode, code: newCode });
     } catch (e) {
-      // actions.changeCode({ rawCode: newCode, type });
-      // actions.resetConsole();
+      this.setState({ code: newCode });
+      this.props.actions.resetConsole();
       this.wrappedConsole.log(e);
     }
-  }
-
-  onReset = (type) => {
-    const { actions } = this.props;
-    actions.resetQuestion(type);
-  }
-
-  onChangeCategory = (index) => {
-    const { actions } = this.props;
-    actions.changeCategory(index);
-    this.setState({categoryIndex:index})
-  }
-  
-  onChangeQuestion = ({ index, type }) => {
-    const { actions } = this.props;
-    actions.changeQuestion({ index, type });
-  }
-  
-  remoteChangeQuestion({ type, name, code, test }) {
-    const { actions } = this.props;
-    actions.changeCategory(type == 'javascript' ? 0 : 1);
-    actions.remoteChangeQuestion({ type, name, code, test });
-  }
-
-  subscribeOnCreateQuestionSnapshot() {
-    this.subscriptionDispatchQuestion = API.graphql(
-      graphqlOperation(subscriptions.onCreateQuestionSnapshot)
-    ).subscribe({
-      next: (result) => {
-        if (result) {
-          console.log("#subscribeOnCreateQuestionSnapshot", result);
-          const { type, name, content: code, test } = result.value.data.onCreateQuestionSnapshot
-          //this.remoteChangeQuestion({ type, name, code, test });
-          this.setState({
-            code,
-            test
-          })
-          this.handleCodeChange(code);
-        }
-      }
-    });
   };
 
+  onReset = (type) => {
+    const { questionContent } = this.state;
+    this.setState({ code: questionContent });
+    this.handleCodeChange(questionContent);
+  };
+
+  addTape = (newTape) => {
+    const { tape } = this.state;
+    this.setState({ tape: [...tape, newTape] });
+  };
+
+  resetTape = () => {
+    this.setState({ tape: [] });
+  };
+
+  subscribeOnDispatchQuestion() {
+    subscribeOnCreateQuestionSnapshot(({ type, code, test }) => {
+      this.setState({
+        categoryIndex: type === 'javascript' ? 0 : 1,
+        code,
+        test,
+        questionContent: code
+      });
+      console.log(this.state)
+      const { questionContent } = this.state;
+      this.handleCodeChange(questionContent);
+    });
+  }
+
   render() {
-    const {
-      categoryIndex,
-      code,
-      compiledCode,
-      test
-    } = this.state;
     const {
       handleCodeChange,
       wrappedConsole,
       onReset,
-      onChangeCategory,
-      onChangeQuestion,
-      onDispatchQuestion
+      addTape,
+      resetTape
     } = this;
     return (
       <>
-        {
-          getPageComponent({
-            index: categoryIndex,
-            handleCodeChange,
-            wrappedConsole,
-            onReset,
-            onChangeCategory,
-            onChangeQuestion,
-            ...this.props,
-            code,
-            compiledCode,
-            test
-          })
-        }
+        {getPageComponent({
+          handleCodeChange,
+          wrappedConsole,
+          onReset,
+          addTape,
+          resetTape,
+          ...this.state,
+          ...this.props
+        })}
       </>
     );
   }
 }
 
-export default withRouter(connect(
-  (state) => {
-    const {
-      code,
-      questionIndex,
-      compiledCode,
-      categoryIndex,
-      type,
-      question,
-      remoteQuestion
-    } = getStateInformation(state);
-    console.log(state)
-    return {
-
-      console: state.console,
-
-    };
-  },
-  (dispatch) => {
-    return {
-      actions: {
-        resetConsole: () => dispatch(resetConsole()),
-        changeCode: args => dispatch(changeCode({ ...args, type: (args.type || 'javascript').toUpperCase() })),
-        _dispatch: dispatch,
-        resetQuestion: type => dispatch(resetQuestion({ type: type.toUpperCase() })),
-        changeCategory: index => dispatch(changeCategory(index)),
-        changeQuestion: ({ index, type }) => dispatch(changeQuestion({ index, type })),
-        remoteChangeQuestion: ({ type, name, code, test }) => dispatch(remoteChangeQuestion({ type, name, code, test }))
-      }
-    };
-  }
-)(Page));
+export default withRouter(
+  connect(
+    (state) => {
+      return {
+        console: state.console
+      };
+    },
+    (dispatch) => {
+      return {
+        actions: {
+          resetConsole: () => dispatch(resetConsole()),
+          _dispatch: dispatch
+        }
+      };
+    }
+  )(Page)
+);
