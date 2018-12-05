@@ -5,6 +5,7 @@ import { updateQuestion, dispatchQuestion } from 'app/utils/question';
 import {
   createRecord,
   subscribeOnCreateRecord,
+  subscribeOnUpdateRecord,
 } from 'app/utils/record';
 
 import ReactPage from './ReactPage';
@@ -24,11 +25,13 @@ const getPageComponent = (args) => {
 class Page extends Component {
   state = {
     category: 0,
-    recordId: ''
+    recordId: '',
+    code: '',
   };
 
   componentDidMount() {
-    // this.subscribeOnCreateRecord();
+    this.subscribeOnCreateRecord();
+    this.subscribeOnUpdateRecord();
   }
 
   onChangeCategory = (index) => {
@@ -56,24 +59,53 @@ class Page extends Component {
     try {
       const result = await createRecord();
       this.setState({ recordId: result.id });
-      console.log(this.state.recordId)
     } catch (e) {
       alert(e.message);
     }
   };
 
+  subscribeOnCreateRecord = async () => {
+    try {
+      subscribeOnCreateRecord(({ data }) => {
+        const { id } = data.onCreateRecord;
+        this.setState({ recordId: id });
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  subscribeOnUpdateRecord = async () => {
+    try {
+      subscribeOnUpdateRecord(({ data }) => {
+        const { id, history } = data.onUpdateRecord;
+        const { recordId } = this.state;
+        if (id === recordId) {
+          const [code] = history;
+          this.setState({ code });
+        }
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+
+  onChangeCode = async () => {};
+
   render() {
-    const { category, recordId } = this.state;
+    const { category, recordId, code } = this.state;
     return (
       <React.Fragment>
         {getPageComponent({
           index: category,
           recordId,
+          code,
           onSubmit: this.onSubmit,
           onDispatchQuestion: this.onDispatchQuestion,
           onChangeCategory: this.onChangeCategory,
           onChangeCode: this.onChangeCode,
-          categoryIndex: category
+          categoryIndex: category,
         })}
       </React.Fragment>
     );

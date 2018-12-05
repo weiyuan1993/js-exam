@@ -55,9 +55,18 @@ class Page extends Component {
     // this.subscriptionDispatchQuestion.unsubscribe();
   }
 
+  updateRecordAction= async (recordId, newCode) => {
+    try {
+      const result = await updateRecord(recordId, newCode);
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
   handleCodeChange = (newCode) => {
-    const { test } = this.state;
+    const { test, recordId } = this.state;
     const fullCode = `${newCode} ${test}`;
+
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -68,6 +77,9 @@ class Page extends Component {
         plugins: ['proposal-object-rest-spread']
       });
       this.setState({ compiledCode, code: newCode });
+      if (recordId !== '') {
+        this.updateRecordAction(recordId, newCode);
+      }
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();

@@ -21,7 +21,6 @@ import ControlWidget from '../ControlWidget';
 import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
 
-
 class JavaScriptPage extends Component {
   constructor(props) {
     super(props);
@@ -40,6 +39,7 @@ class JavaScriptPage extends Component {
   }
 
   async componentDidMount() {
+    console.log(this.props);
     const { compiledCode } = this.state;
     this.setState({ isLoading: true });
     const result = await listQuestions('javascript');

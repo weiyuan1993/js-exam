@@ -53,7 +53,6 @@ const createQuestion = async (data) => {
     }
   }`;
   const result = await API.graphql(graphqlOperation(query, params));
-  console.log(result);
   return result;
 };
 
@@ -95,7 +94,6 @@ const updateQuestion = async (data) => {
 };
 
 const dispatchQuestion = async (question) => {
-  console.log('dispatchQuestion / updateQuestionSnapshot');
   const params = {
     input: {
       type: question.type,

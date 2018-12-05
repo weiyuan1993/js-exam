@@ -18,6 +18,7 @@ const createRecord = async () => {
   );
   return data.createRecord;
 };
+
 const updateRecord = async (id, newHistory) => {
   const params = {
     input: {
