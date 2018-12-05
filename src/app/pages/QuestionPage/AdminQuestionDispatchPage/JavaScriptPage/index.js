@@ -13,9 +13,6 @@ import CodeWidget from 'app/components/Widgets/CodeWidget';
 import TestWidget from 'app/components/Widgets/TestWidget';
 import TapeWidget from 'app/components/Widgets/TapeWidget';
 
-import { changeCategory } from 'app/actions/category';
-
-import { getCategories } from 'app/questions/index';
 import debouncedRunCode from 'app/utils/runCode';
 
 import { listQuestions, getQuestion } from 'app/utils/question';
@@ -149,7 +146,8 @@ class JavaScriptPage extends Component {
     try {
       subscribeOnUpdateRecord(({ data }) => {
         const { id, history } = data.onUpdateRecord;
-        const { recordId } = this.state;
+        const { recordId } = this.props;
+        console.log(data)
         if (id === recordId) {
           console.log(data.onUpdateRecord);
           this.setState({ code: history[0] });

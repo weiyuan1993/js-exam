@@ -9,7 +9,6 @@ import styles from './ControlWidget.module.scss';
 const ControlWidget = ({
   categoryIndex,
   questionIndex,
-  onSubmit,
   onDispatchQuestion,
   onChangeCategory,
   onChangeQuestion,
@@ -20,10 +19,9 @@ const ControlWidget = ({
     <QuestionSelector onChange={onChangeQuestion} index={questionIndex} list={questionList} />
     <Button
       type="danger"
-      // onClick={onSubmit}
       onClick={onDispatchQuestion}
     >
-      Dispatch Question
+    Dispatch Question
     </Button>
   </div>
 );

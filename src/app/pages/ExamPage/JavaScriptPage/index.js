@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import 'brace';
 import 'brace/mode/javascript';
@@ -13,8 +12,6 @@ import CodeWidget from 'app/components/Widgets/CodeWidget';
 import TestWidget from 'app/components/Widgets/TestWidget';
 import TapeWidget from 'app/components/Widgets/TapeWidget';
 import ControlWidget from '../ControlWidget';
-
-// import { resetConsole } from 'app/actions/console';
 
 import debouncedRunCode from 'app/utils/runCode';
 

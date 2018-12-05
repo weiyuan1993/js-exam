@@ -5,7 +5,6 @@ import { updateQuestion, dispatchQuestion } from 'app/utils/question';
 import {
   createRecord,
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord
 } from 'app/utils/record';
 
 import ReactPage from './ReactPage';
@@ -29,7 +28,7 @@ class Page extends Component {
   };
 
   componentDidMount() {
-    this.subscribeOnCreateRecord();
+    // this.subscribeOnCreateRecord();
   }
 
   onChangeCategory = (index) => {
@@ -46,39 +45,22 @@ class Page extends Component {
 
   onDispatchQuestion = async (data) => {
     try {
-      const result = await dispatchQuestion(data);
-
-      this.createRecordForExam();
+      await dispatchQuestion(data);
+      this.createRecord();
     } catch (e) {
       alert(e.message);
     }
   };
 
-  createRecordForExam = async () => {
+  createRecord = async () => {
     try {
       const result = await createRecord();
       this.setState({ recordId: result.id });
+      console.log(this.state.recordId)
     } catch (e) {
       alert(e.message);
     }
   };
-
-  subscribeOnCreateRecord = async () => {
-    try {
-      subscribeOnCreateRecord(({ data }) => {
-        const { id, history } = data.onCreateRecord;
-        const { recordId } = this.state;
-        if (id === recordId) {
-          console.log(data.onCreateRecord);
-        }
-      });
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-
-  onChangeCode = async () => {};
 
   render() {
     const { category, recordId } = this.state;
