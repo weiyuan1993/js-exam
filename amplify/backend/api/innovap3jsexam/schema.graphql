@@ -43,11 +43,13 @@ type Record @model {
   interviewer: JEUser
   timeBegin: Int
   timeEnd: Int
-  history: String # todo
-  result: Result
-  question: QuestionSnapshot
-  test: Test @connection(name: "TestRecords")
+  history: [String] # todo
+  # result: Result
+  # question: QuestionSnapshot @connection(name: "RecordQuestionSnapShot")
+  test: Test @connection(name: "TestRecords"),
+  syncCode: String
 }
+
 # type Subscription {
 # 	onUpdateTodoID(id: ID): Todo
 # 		@aws_subscribe(mutations: ["updateTodo"])
@@ -65,6 +67,7 @@ type QuestionSnapshot @model {
   name: String
   content: String
   test: String
+  # record: Record @connection(name: "RecordQuestionSnapShot")
   room: Room @connection(name: "RoomQuestionSnapshots") #belong to a room QuestionContainer (for host to select question), after the test, remove it
 }
 type QuestionSet @model { #question set for host to pick in a test
@@ -84,11 +87,18 @@ type Question @model {
   test: String
   tags: [String]
 }
-type AuthedModelForOwner @model @auth(rules: [
-  { allow: owner },
-  { allow: groups, groups: ["admin"] }
-]) { #Unauthenticated User
-  id: ID!
-  content: String
-}
+# type AuthedModelForOwner @model @auth(rules: [
+#   { allow: owner },
+#   { allow: groups, groups: ["admin"] }
+# ]) { #Unauthenticated User
+#   id: ID!
+#   content: String
+# }
+# type AuthedModelForOwner2 @model @auth(rules: [
+#   { allow: owner },
+#   { allow: groups, groups: ["admin"] }
+# ]) { #Unauthenticated User
+#   id: ID!
+#   content: String
+# }
 
