@@ -7,7 +7,7 @@ import * as subscriptions from '../../graphql/subscriptions';
 
 Amplify.configure(awsExportConfig);
 
-const listQuestions = async (type) => {
+const listQuestions = async type => {
   const query = `
     query {
       listQuestions (
@@ -29,10 +29,8 @@ const listQuestions = async (type) => {
   return result;
 };
 
-const createQuestion = async (data) => {
-  const {
-    tags, name, code: content, test, type
-  } = data;
+const createQuestion = async data => {
+  const { tags, name, code: content, test, type } = data;
   const params = {
     input: {
       name,
@@ -56,7 +54,7 @@ const createQuestion = async (data) => {
   return result;
 };
 
-const getQuestion = async (data) => {
+const getQuestion = async data => {
   const { id } = data;
   const query = `query {
     getQuestion(id: "${id}") {
@@ -69,10 +67,8 @@ const getQuestion = async (data) => {
   return result;
 };
 
-const updateQuestion = async (data) => {
-  const {
-    id, content, test, tags
-  } = data;
+const updateQuestion = async data => {
+  const { id, content, test, tags } = data;
   const params = {
     input: {
       id,
@@ -93,7 +89,7 @@ const updateQuestion = async (data) => {
   return result;
 };
 
-const dispatchQuestion = async (question) => {
+const dispatchQuestion = async question => {
   const params = {
     input: {
       type: question.type,
@@ -103,16 +99,18 @@ const dispatchQuestion = async (question) => {
       questionSnapshotRoomId: 'demoRoom1'
     }
   };
-  const result = await API.graphql(
+  const { data } = await API.graphql(
     graphqlOperation(mutations.createQuestionSnapshot, params)
   );
-  alert(`Successfully dispatched a question "${result.data.createQuestionSnapshot.name}"!`);
+  return data.createQuestionSnapshot;
 };
 
-const subscribeOnCreateQuestionSnapshot = async (callback) => {
-  API.graphql(graphqlOperation(subscriptions.onCreateQuestionSnapshot)).subscribe({
+const subscribeOnCreateQuestionSnapshot = callback => {
+  API.graphql(
+    graphqlOperation(subscriptions.onCreateQuestionSnapshot)
+  ).subscribe({
     next: ({ value }) => {
-      callback(value);
+      callback(value.data.onCreateQuestionSnapshot);
     }
   });
 };

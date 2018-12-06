@@ -111,8 +111,8 @@ class Page extends Component {
   };
 
   subscribeOnDispatchQuestion = () => {
-    subscribeOnCreateQuestionSnapshot(({ data }) => {
-      const { type, content: code, test } = data.onCreateQuestionSnapshot;
+    subscribeOnCreateQuestionSnapshot(data => {
+      const { type, content: code, test } = data;
       this.setState({
         categoryIndex: type === 'javascript' ? 0 : 1,
         code,

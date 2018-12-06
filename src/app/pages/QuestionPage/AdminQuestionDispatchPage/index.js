@@ -10,6 +10,8 @@ import {
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
+import { message } from 'antd';
+
 const getPageComponent = args => {
   switch (args.index) {
     case 1: {
@@ -37,31 +39,24 @@ class Page extends Component {
 
   onDispatchQuestion = async data => {
     try {
-      await dispatchQuestion(data);
+      const result = await dispatchQuestion(data);
       this.createRecord();
+      message.success(`Dispatching the question "${result.name}" successfully!`);
     } catch (e) {
-      alert(e.message);
+      message.error(e.message, 2);
     }
   };
 
   createRecord = async () => {
-    try {
-      const result = await createRecord();
-      this.setState({ recordId: result.id });
-    } catch (e) {
-      alert(e.message);
-    }
+    const result = await createRecord();
+    this.setState({ recordId: result.id });
   };
 
   subscribeOnCreateRecord = async () => {
-    try {
-      subscribeOnCreateRecord(data => {
-        const { id } = data;
-        this.setState({ recordId: id });
-      });
-    } catch (e) {
-      alert(e.message);
-    }
+    subscribeOnCreateRecord(data => {
+      const { id } = data;
+      this.setState({ recordId: id });
+    });
   };
 
   render() {
