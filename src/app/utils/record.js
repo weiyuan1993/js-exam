@@ -18,7 +18,6 @@ const createRecord = async () => {
   );
   return data.createRecord;
 };
-
 const updateRecord = async (id, newHistory) => {
   const params = {
     input: {
@@ -36,7 +35,7 @@ const updateRecord = async (id, newHistory) => {
 const subscribeOnCreateRecord = async (callback) => {
   API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
     next: ({ value }) => {
-      callback(value);
+      callback(value.data.onCreateRecord);
     }
   });
 };
@@ -44,7 +43,7 @@ const subscribeOnCreateRecord = async (callback) => {
 const subscribeOnUpdateRecord = async (callback) => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
     next: ({ value }) => {
-      callback(value);
+      callback(value.data.onUpdateRecord);
     }
   });
 };

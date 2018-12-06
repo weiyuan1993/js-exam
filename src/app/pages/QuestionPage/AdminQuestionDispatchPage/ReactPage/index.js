@@ -16,11 +16,11 @@ import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 
 import { listQuestions, getQuestion } from 'app/utils/question';
 import debouncedRunCode from 'app/utils/runCode';
+import { subscribeOnUpdateRecord } from 'app/utils/record';
 
 import ControlWidget from '../ControlWidget';
 import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
-
 
 class ReactPage extends Component {
   constructor(props) {
@@ -42,7 +42,11 @@ class ReactPage extends Component {
     const { compiledCode } = this.state;
     this.setState({ isLoading: true });
     const result = await listQuestions('react');
-    this.setState({ questionList: result.data.listQuestions.items, isLoading: false });
+    this.setState({
+      questionList: result.data.listQuestions.items,
+      isLoading: false
+    });
+    this.subscribeOnUpdateRecord();
     debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
   }
 
@@ -50,9 +54,7 @@ class ReactPage extends Component {
     const { compiledCode: previousCompiledCode } = this.state;
     const { compiledCode } = nextState;
     if (previousCompiledCode !== compiledCode) {
-      // this.setState({ tape: [] }, () => {
-      debouncedRunCode({ code: compiledCode });
-      // });
+      debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
     }
     return true;
   }
@@ -62,48 +64,27 @@ class ReactPage extends Component {
     const fullCode = `${code} ${test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
-        presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react'],
+        presets: [
+          'es2015',
+          ['stage-2', { decoratorsBeforeExport: true }],
+          'react'
+        ],
         plugins: ['proposal-object-rest-spread']
       });
       this.setState({ compiledCode });
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
-  onTagUpdate = (tags) => {
+  onTagUpdate = tags => {
     this.setState({ tags });
-  }
-
-  onSubmit = async () => {
-    const {
-      tags,
-      code,
-      test,
-      id
-    } = this.state;
-    const { onSubmit } = this.props;
-    this.setState({ isLoading: true });
-    await onSubmit({
-      id,
-      tags,
-      code,
-      test
-    });
-    this.setState({ isLoading: false });
-  }
+  };
 
   onDispatchQuestion = async () => {
-    const {
-      name,
-      type,
-      tags,
-      code,
-      test,
-      id
-    } = this.state;
+    const { name, type, tags, code, test, id } = this.state;
     const { onDispatchQuestion } = this.props;
-    console.log('onDispatchQuestion!', this.state)
+    console.log('onDispatchQuestion!', this.state);
     this.setState({ isLoading: true });
     await onDispatchQuestion({
       name,
@@ -112,9 +93,9 @@ class ReactPage extends Component {
       test
     });
     this.setState({ isLoading: false });
-  }
+  };
 
-  onChangeQuestion = async (index) => {
+  onChangeQuestion = async index => {
     const { questionList } = this.state;
     const { id, name, type } = questionList[index];
     this.setState({ isLoading: true, index });
@@ -129,45 +110,92 @@ class ReactPage extends Component {
       isLoading: false,
       id
     });
-  }
+  };
+
+  subscribeOnUpdateRecord = () => {
+    subscribeOnUpdateRecord(data => {
+      const { id, history } = data;
+      const { recordId } = this.props;
+      if (id === recordId) {
+        console.log(data);
+        this.setState({ code: history[0] });
+      }
+    });
+  };
 
   render() {
-    const {
-      test,
-      code,
-      tags,
-      isLoading,
-      questionList,
-      index
-    } = this.state;
+    const { test, code, tags, isLoading, questionList, index } = this.state;
     const { onChangeCategory, categoryIndex } = this.props;
     const layout = [
       {
-        key: 'code', x: 0, y: 0, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'code',
+        x: 0,
+        y: 0,
+        width: window.innerWidth / 2,
+        height: window.innerHeight / 2,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
       },
       {
-        key: 'test', x: 0, y: 1, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, maxWidth: 700
+        key: 'test',
+        x: 0,
+        y: 1,
+        width: window.innerWidth / 2,
+        height: window.innerHeight / 2,
+        minWidth: 100,
+        maxWidth: 700
       },
       {
-        key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
+        key: 'control',
+        x: 1,
+        y: 0,
+        width: window.innerWidth / 2,
+        height: this.controlHeight,
+        static: true
       },
       {
-        key: 'result', x: 1, y: 1, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2 - 100, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'result',
+        x: 1,
+        y: 1,
+        width: window.innerWidth / 2,
+        height: (window.innerHeight - this.controlHeight) / 2 - 100,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
       },
       {
-        key: 'answer', x: 1, y: 2, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2 - 100, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'answer',
+        x: 1,
+        y: 2,
+        width: window.innerWidth / 2,
+        height: (window.innerHeight - this.controlHeight) / 2 - 100,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
       },
       {
-        key: 'tag', x: 1, y: 3, width: window.innerWidth / 2, height: 200, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
-      },
+        key: 'tag',
+        x: 1,
+        y: 3,
+        width: window.innerWidth / 2,
+        height: 200,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
+      }
     ];
     return (
-      <div className={styles.app}>    
+      <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
             <GridItem key="code">
               <CodeWidget
-                handleCodeChange={(newCode) => {
+                handleCodeChange={newCode => {
                   this.setState({ code: newCode }, this.onCodeChange);
                 }}
                 data={code}
@@ -177,7 +205,7 @@ class ReactPage extends Component {
             </GridItem>
             <GridItem key="test">
               <CodeWidget
-                handleCodeChange={(newCode) => {
+                handleCodeChange={newCode => {
                   this.setState({ test: newCode }, this.onCodeChange);
                 }}
                 data={test}
@@ -192,7 +220,6 @@ class ReactPage extends Component {
               <ControlWidget
                 type="react"
                 onChangeName={name => this.setState({ name })}
-                // onSubmit={this.onSubmit}
                 onDispatchQuestion={this.onDispatchQuestion}
                 onChangeCategory={onChangeCategory}
                 categoryIndex={categoryIndex}
@@ -205,7 +232,7 @@ class ReactPage extends Component {
               <ResultWidget />
             </GridItem>
             <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={this.onTagUpdate}/>
+              <TagWidget data={tags} onTagUpdate={this.onTagUpdate} />
             </GridItem>
           </Grid>
         </Spin>

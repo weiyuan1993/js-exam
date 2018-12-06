@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 
-import { updateQuestion, dispatchQuestion } from 'app/utils/question';
+import { dispatchQuestion } from 'app/utils/question';
 
 import {
   createRecord,
-  subscribeOnCreateRecord,
-  subscribeOnUpdateRecord,
+  subscribeOnCreateRecord
 } from 'app/utils/record';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
-const getPageComponent = (args) => {
+const getPageComponent = args => {
   switch (args.index) {
     case 1: {
       return <ReactPage {...args} />;
@@ -25,28 +24,18 @@ const getPageComponent = (args) => {
 class Page extends Component {
   state = {
     category: 0,
-    recordId: '',
-    code: '',
+    recordId: ''
   };
 
   componentDidMount() {
     this.subscribeOnCreateRecord();
-    this.subscribeOnUpdateRecord();
   }
 
-  onChangeCategory = (index) => {
+  onChangeCategory = index => {
     this.setState({ category: index });
   };
 
-  onSubmit = async (data) => {
-    try {
-      await updateQuestion(data);
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  onDispatchQuestion = async (data) => {
+  onDispatchQuestion = async data => {
     try {
       await dispatchQuestion(data);
       this.createRecord();
@@ -66,8 +55,8 @@ class Page extends Component {
 
   subscribeOnCreateRecord = async () => {
     try {
-      subscribeOnCreateRecord(({ data }) => {
-        const { id } = data.onCreateRecord;
+      subscribeOnCreateRecord(data => {
+        const { id } = data;
         this.setState({ recordId: id });
       });
     } catch (e) {
@@ -75,33 +64,13 @@ class Page extends Component {
     }
   };
 
-  subscribeOnUpdateRecord = async () => {
-    try {
-      subscribeOnUpdateRecord(({ data }) => {
-        const { id, history } = data.onUpdateRecord;
-        const { recordId } = this.state;
-        if (id === recordId) {
-          const [code] = history;
-          this.setState({ code });
-        }
-      });
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-
-  onChangeCode = async () => {};
-
   render() {
-    const { category, recordId, code } = this.state;
+    const { category, recordId } = this.state;
     return (
       <React.Fragment>
         {getPageComponent({
           index: category,
           recordId,
-          code,
-          onSubmit: this.onSubmit,
           onDispatchQuestion: this.onDispatchQuestion,
           onChangeCategory: this.onChangeCategory,
           onChangeCode: this.onChangeCode,

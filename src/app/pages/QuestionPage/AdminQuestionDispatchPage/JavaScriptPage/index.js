@@ -39,14 +39,16 @@ class JavaScriptPage extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.props);
     const { compiledCode } = this.state;
     this.setState({ isLoading: true });
     const result = await listQuestions('javascript');
-    this.setState({ questionList: result.data.listQuestions.items, isLoading: false });
+    this.setState({
+      questionList: result.data.listQuestions.items,
+      isLoading: false
+    });
     this.onChangeQuestion(0);
     this.subscribeOnUpdateRecord();
-    
+
     debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
   }
 
@@ -61,60 +63,39 @@ class JavaScriptPage extends Component {
     return true;
   }
 
-  addTape = (data) => {
+  addTape = data => {
     const { tape } = this.state;
     this.setState({
       tape: [...tape, data]
     });
-  }
+  };
 
-  onTagUpdate = (tags) => {
+  onTagUpdate = tags => {
     this.setState({ tags });
-  }
+  };
 
   onCodeChange = () => {
     const { code, test } = this.state;
     const fullCode = `${code} ${test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
-        presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react'],
+        presets: [
+          'es2015',
+          ['stage-2', { decoratorsBeforeExport: true }],
+          'react'
+        ],
         plugins: ['proposal-object-rest-spread']
       });
       this.setState({ compiledCode });
     } catch (e) {
       console.log(e);
     }
-  }
-
-  onSubmit = async () => {
-    const {
-      tags,
-      code,
-      test,
-      id
-    } = this.state;
-    const { onSubmit } = this.props;
-    this.setState({ isLoading: true });
-    await onSubmit({
-      id,
-      tags,
-      code,
-      test
-    });
-    this.setState({ isLoading: false });
-  }
+  };
 
   onDispatchQuestion = async () => {
-    const {
-      name,
-      type,
-      tags,
-      code,
-      test,
-      id
-    } = this.state;
+    const { name, type, tags, code, test, id } = this.state;
     const { onDispatchQuestion } = this.props;
-    console.log('onDispatchQuestion!', this.state)
+    console.log('onDispatchQuestion!', this.state);
     this.setState({ isLoading: true });
     await onDispatchQuestion({
       name,
@@ -123,9 +104,9 @@ class JavaScriptPage extends Component {
       test
     });
     this.setState({ isLoading: false });
-  }
+  };
 
-  onChangeQuestion = async (index) => {
+  onChangeQuestion = async index => {
     const { questionList } = this.state;
     const { id, name, type } = questionList[index];
     this.setState({ isLoading: true, index });
@@ -140,22 +121,17 @@ class JavaScriptPage extends Component {
       isLoading: false,
       id
     });
-  }
+  };
 
-  subscribeOnUpdateRecord = async () => {
-    try {
-      subscribeOnUpdateRecord(({ data }) => {
-        const { id, history } = data.onUpdateRecord;
-        const { recordId } = this.props;
-        console.log(data)
-        if (id === recordId) {
-          console.log(data.onUpdateRecord);
-          this.setState({ code: history[0] });
-        }
-      });
-    } catch (e) {
-      alert(e.message);
-    }
+  subscribeOnUpdateRecord = () => {
+    subscribeOnUpdateRecord(data => {
+      const { id, history } = data;
+      const { recordId } = this.props;
+      if (id === recordId) {
+        console.log(data);
+        this.setState({ code: history[0] });
+      }
+    });
   };
 
   render() {
@@ -171,20 +147,55 @@ class JavaScriptPage extends Component {
     const { onChangeCategory, categoryIndex } = this.props;
     const layout = [
       {
-        key: 'code', x: 0, y: 0, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'code',
+        x: 0,
+        y: 0,
+        width: window.innerWidth / 2,
+        height: window.innerHeight / 2,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
       },
       {
-        key: 'test', x: 0, y: 1, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, maxWidth: 700
+        key: 'test',
+        x: 0,
+        y: 1,
+        width: window.innerWidth / 2,
+        height: window.innerHeight / 2,
+        minWidth: 100,
+        maxWidth: 700
       },
       {
-        key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
+        key: 'control',
+        x: 1,
+        y: 0,
+        width: window.innerWidth / 2,
+        height: this.controlHeight,
+        static: true
       },
       {
-        key: 'tape', x: 1, y: 1, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'tape',
+        x: 1,
+        y: 1,
+        width: window.innerWidth / 2,
+        height: (window.innerHeight - this.controlHeight) / 2,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
       },
       {
-        key: 'tag', x: 1, y: 2, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
-      },
+        key: 'tag',
+        x: 1,
+        y: 2,
+        width: window.innerWidth / 2,
+        height: (window.innerHeight - this.controlHeight) / 2,
+        minWidth: 100,
+        minHeight: 100,
+        maxWidth: 700,
+        maxHeight: 500
+      }
     ];
     return (
       <div className={styles.app}>
@@ -192,7 +203,7 @@ class JavaScriptPage extends Component {
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
             <GridItem key="code">
               <CodeWidget
-                handleCodeChange={(newCode) => {
+                handleCodeChange={newCode => {
                   this.setState({ code: newCode }, this.onCodeChange);
                 }}
                 data={code}
@@ -202,7 +213,7 @@ class JavaScriptPage extends Component {
             </GridItem>
             <GridItem key="test">
               <TestWidget
-                handleCodeChange={(newTest) => {
+                handleCodeChange={newTest => {
                   this.setState({ test: newTest }, this.onCodeChange);
                 }}
                 data={test}
@@ -213,7 +224,6 @@ class JavaScriptPage extends Component {
               <ControlWidget
                 type="javascript"
                 onChangeName={name => this.setState({ name })}
-                // onSubmit={this.onSubmit}
                 onDispatchQuestion={this.onDispatchQuestion}
                 onChangeCategory={onChangeCategory}
                 categoryIndex={categoryIndex}

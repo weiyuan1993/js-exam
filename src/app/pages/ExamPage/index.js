@@ -11,7 +11,7 @@ import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
-const getPageComponent = (args) => {
+const getPageComponent = args => {
   switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
@@ -43,28 +43,19 @@ class Page extends Component {
     this.subscribeOnCreateRecord();
   }
 
-  componentDidUpdate(prevProps) {
-    const { categoryIndex: previousCategoryIndex } = prevProps;
-    const { categoryIndex, code } = this.props;
-    if (previousCategoryIndex !== categoryIndex) {
-      this.handleCodeChange(code);
-    }
-  }
-
   componentWillUnmount() {
     // this.subscriptionDispatchQuestion.unsubscribe();
   }
 
-  updateRecordAction= async (recordId, newCode) => {
-    try {
-      const result = await updateRecord(recordId, newCode);
-    } catch (e) {
-      alert(e.message);
+  updateRecordAction = async newCode => {
+    const { recordId } = this.state;
+    if (recordId !== '') {
+      await updateRecord(recordId, newCode);
     }
-  }
+  };
 
-  handleCodeChange = (newCode) => {
-    const { test, recordId } = this.state;
+  handleCodeChange = newCode => {
+    const { test } = this.state;
     const fullCode = `${newCode} ${test}`;
 
     try {
@@ -77,23 +68,22 @@ class Page extends Component {
         plugins: ['proposal-object-rest-spread']
       });
       this.setState({ compiledCode, code: newCode });
-      if (recordId !== '') {
-        this.updateRecordAction(recordId, newCode);
-      }
+      this.updateRecordAction(newCode);
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
+      this.updateRecordAction(newCode);
     }
   };
 
-  onReset = (type) => {
+  onReset = type => {
     const { questionContent } = this.state;
     this.setState({ code: questionContent });
     this.handleCodeChange(questionContent);
   };
 
-  addTape = (newTape) => {
+  addTape = newTape => {
     const { tape } = this.state;
     this.setState({ tape: [...tape, newTape] });
   };
@@ -111,20 +101,16 @@ class Page extends Component {
     this.setState({ console: [] });
   };
 
-  subscribeOnCreateRecord = async () => {
-    try {
-      subscribeOnCreateRecord(({ data }) => {
-        const { id } = data.onCreateRecord;
-        this.setState({
-          recordId: id
-        });
+  subscribeOnCreateRecord = () => {
+    subscribeOnCreateRecord(data => {
+      const { id } = data;
+      this.setState({
+        recordId: id
       });
-    } catch (e) {
-      alert(e.message);
-    }
+    });
   };
 
-  subscribeOnDispatchQuestion = async () => {
+  subscribeOnDispatchQuestion = () => {
     subscribeOnCreateQuestionSnapshot(({ data }) => {
       const { type, content: code, test } = data.onCreateQuestionSnapshot;
       this.setState({
