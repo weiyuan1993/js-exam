@@ -125,9 +125,9 @@ class JavaScriptPage extends Component {
 
   subscribeOnUpdateRecord = () => {
     subscribeOnUpdateRecord(data => {
-      const { id, history } = data;
-      const { recordId } = this.props;
-      if (id === recordId) {
+      const { id, history, subjectId } = data;
+      const { recordId, interviewerName } = this.props;
+      if (id === recordId && interviewerName === subjectId) {
         console.log(data);
         this.setState({ code: history[0] });
       }

@@ -5,9 +5,11 @@ Sentry.init({
 });
 
 const initErrorLogging = () => {
-  window.onerror = (e) => {
-    Sentry.captureException(e);
-  };
+  if (process.env.NODE_ENV === 'production') {
+    window.onerror = e => {
+      Sentry.captureException(e);
+    };
+  }
 };
 
 export {

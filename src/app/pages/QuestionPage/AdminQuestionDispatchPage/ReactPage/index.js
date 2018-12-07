@@ -114,9 +114,9 @@ class ReactPage extends Component {
 
   subscribeOnUpdateRecord = () => {
     subscribeOnUpdateRecord(data => {
-      const { id, history } = data;
-      const { recordId } = this.props;
-      if (id === recordId) {
+      const { id, history, subjectId } = data;
+      const { recordId, interviewerName } = this.props;
+      if (id === recordId, subjectId === interviewerName) {
         console.log(data);
         this.setState({ code: history[0] });
       }
