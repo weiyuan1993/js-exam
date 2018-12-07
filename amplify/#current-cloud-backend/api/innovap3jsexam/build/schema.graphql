@@ -47,9 +47,8 @@ type Record {
   timeBegin: Int
   timeEnd: Int
   history: [String]
-  result: Result
-  question: QuestionSnapshot
   test: Test
+  syncCode: String
 }
 
 type Result {
@@ -84,11 +83,6 @@ type Question {
   content: String
   test: String
   tags: [String]
-}
-
-type AuthedModelForOwner {
-  id: ID!
-  content: String
 }
 
 enum ModelSortDirection {
@@ -187,8 +181,6 @@ type Query {
   listQuestionSets(filter: ModelQuestionSetFilterInput, limit: Int, nextToken: String): ModelQuestionSetConnection
   getQuestion(id: ID!): Question
   listQuestions(filter: ModelQuestionFilterInput, limit: Int, nextToken: String): ModelQuestionConnection
-  getAuthedModelForOwner(id: ID!): AuthedModelForOwner
-  listAuthedModelForOwners(filter: ModelAuthedModelForOwnerFilterInput, limit: Int, nextToken: String): ModelAuthedModelForOwnerConnection
 }
 
 input CreateRoomInput {
@@ -243,9 +235,6 @@ type Mutation {
   createQuestion(input: CreateQuestionInput!): Question
   updateQuestion(input: UpdateQuestionInput!): Question
   deleteQuestion(input: DeleteQuestionInput!): Question
-  createAuthedModelForOwner(input: CreateAuthedModelForOwnerInput!): AuthedModelForOwner
-  updateAuthedModelForOwner(input: UpdateAuthedModelForOwnerInput!): AuthedModelForOwner
-  deleteAuthedModelForOwner(input: DeleteAuthedModelForOwnerInput!): AuthedModelForOwner
 }
 
 type Subscription {
@@ -276,9 +265,6 @@ type Subscription {
   onCreateQuestion: Question @aws_subscribe(mutations: ["createQuestion"])
   onUpdateQuestion: Question @aws_subscribe(mutations: ["updateQuestion"])
   onDeleteQuestion: Question @aws_subscribe(mutations: ["deleteQuestion"])
-  onCreateAuthedModelForOwner: AuthedModelForOwner @aws_subscribe(mutations: ["createAuthedModelForOwner"])
-  onUpdateAuthedModelForOwner: AuthedModelForOwner @aws_subscribe(mutations: ["updateAuthedModelForOwner"])
-  onDeleteAuthedModelForOwner: AuthedModelForOwner @aws_subscribe(mutations: ["deleteAuthedModelForOwner"])
 }
 
 type ModelJEUserConnection {
@@ -397,6 +383,7 @@ input ModelRecordFilterInput {
   timeBegin: ModelIntFilterInput
   timeEnd: ModelIntFilterInput
   history: ModelStringFilterInput
+  syncCode: ModelStringFilterInput
   and: [ModelRecordFilterInput]
   or: [ModelRecordFilterInput]
   not: ModelRecordFilterInput
@@ -408,6 +395,7 @@ input CreateRecordInput {
   timeBegin: Int
   timeEnd: Int
   history: [String]
+  syncCode: String
   recordTestId: ID
 }
 
@@ -417,6 +405,7 @@ input UpdateRecordInput {
   timeBegin: Int
   timeEnd: Int
   history: [String]
+  syncCode: String
   recordTestId: ID
 }
 
@@ -565,32 +554,5 @@ input UpdateQuestionInput {
 }
 
 input DeleteQuestionInput {
-  id: ID
-}
-
-type ModelAuthedModelForOwnerConnection {
-  items: [AuthedModelForOwner]
-  nextToken: String
-}
-
-input ModelAuthedModelForOwnerFilterInput {
-  id: ModelIDFilterInput
-  content: ModelStringFilterInput
-  and: [ModelAuthedModelForOwnerFilterInput]
-  or: [ModelAuthedModelForOwnerFilterInput]
-  not: ModelAuthedModelForOwnerFilterInput
-}
-
-input CreateAuthedModelForOwnerInput {
-  id: ID
-  content: String
-}
-
-input UpdateAuthedModelForOwnerInput {
-  id: ID!
-  content: String
-}
-
-input DeleteAuthedModelForOwnerInput {
   id: ID
 }

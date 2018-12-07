@@ -12,6 +12,8 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import UserModal from 'app/components/Modal';
 
+import { message } from 'antd';
+
 const getPageComponent = args => {
   switch (args.index) {
     case 1: {
@@ -57,9 +59,10 @@ class Page extends Component {
       } else {
         await dispatchQuestion(data);
         this.createRecord(interviewerName);
+        message.success(`Dispatching the question "${interviewerName}" successfully!`);
       }
     } catch (e) {
-      alert(e.message);
+      message.error(e.message, 2);
     }
   };
 
@@ -67,21 +70,16 @@ class Page extends Component {
     try {
       const result = await createRecord(interviewerName);
       this.setState({ recordId: result.id });
-      console.log(result)
     } catch (e) {
       alert(e.message);
     }
   };
 
   subscribeOnCreateRecord = async () => {
-    try {
-      subscribeOnCreateRecord(data => {
-        const { id } = data;
-        this.setState({ recordId: id });
-      });
-    } catch (e) {
-      alert(e.message);
-    }
+    subscribeOnCreateRecord(data => {
+      const { id } = data;
+      this.setState({ recordId: id });
+    });
   };
 
   render() {

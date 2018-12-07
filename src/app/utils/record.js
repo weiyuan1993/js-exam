@@ -33,7 +33,7 @@ const updateRecord = async (id, newHistory) => {
   return result;
 };
 
-const subscribeOnCreateRecord = async (callback) => {
+const subscribeOnCreateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onCreateRecord);
@@ -41,7 +41,7 @@ const subscribeOnCreateRecord = async (callback) => {
   });
 };
 
-const subscribeOnUpdateRecord = async (callback) => {
+const subscribeOnUpdateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onUpdateRecord);

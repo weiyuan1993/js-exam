@@ -12,6 +12,4 @@ const initErrorLogging = () => {
   }
 };
 
-export {
-  initErrorLogging
-};
+export { initErrorLogging };
