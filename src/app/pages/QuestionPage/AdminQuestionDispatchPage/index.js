@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { transform } from '@babel/standalone';
+import { message } from 'antd';
 
 import { listQuestions, getQuestion, dispatchQuestion } from 'app/utils/question';
 import debouncedRunCode from 'app/utils/runCode';
@@ -12,8 +13,7 @@ import {
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
-
-import { message } from 'antd';
+import UserModal from 'app/components/Modal';
 
 const getPageComponent = args => {
   switch (args.index) {
@@ -30,6 +30,7 @@ class Page extends Component {
   state = {
     category: 0,
     recordId: '',
+    questionName: '',
     code: '',
     compiledCode: '',
     test: '',
@@ -39,6 +40,8 @@ class Page extends Component {
     questionList: [],
     questionIndex: 0,
     isLoading: false,
+    interviewerName: ''
+
   };
 
   async componentDidMount() {
@@ -46,10 +49,11 @@ class Page extends Component {
     const result = await listQuestions('javascript');
     this.setState({ questionList: result.items, isLoading: false });
     this.onChangeQuestion(0);
+
     this.subscribeOnCreateRecord();
     this.subscribeOnUpdateRecord();
     debouncedRunCode({ code: this.state.compiledCode, onTapeUpdate: this.addTape });
-  }
+  };
 
   shouldComponentUpdate(nextProps, nextState) {
     const { compiledCode: previousCompiledCode } = this.state;
@@ -60,6 +64,12 @@ class Page extends Component {
     }
     return true;
   }
+
+  setInterviewerName = name => {
+    this.setState({ interviewerName: name });
+    message.success(name);
+  }
+
 
   onChangeCategory = index => {
     this.setState({ category: index });
@@ -73,7 +83,7 @@ class Page extends Component {
     const result = await getQuestion({ id });
     const { tags, content: code, test } = result.data.getQuestion;
     this.setState({
-      name,
+      questionName: name,
       type,
       tags,
       code,
@@ -102,13 +112,17 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const { name, type, code, test } = this.state;
+    const { questionName, type, code, test, interviewerName } = this.state;
     this.setState({ isLoading: true });
     try {
-      const result = await dispatchQuestion({ name, type, content: code, test });
-      this.createRecord();
-      message.success(`Dispatching the question "${result.name}" successfully!`);
-      this.setState({ isLoading: false });
+      if (interviewerName === '') {
+        message.warning('Please Enter Interviewer First.');
+      } else {
+        await dispatchQuestion({ name: questionName, type, code, test });
+        this.createRecord(interviewerName);
+        message.success(`Dispatching the question "${questionName}" to "${interviewerName}" successfully!`);
+        this.setState({ isLoading: false });
+      }
     } catch (e) {
       message.error(e.message, 2);
       this.setState({ isLoading: false });
@@ -144,9 +158,9 @@ class Page extends Component {
 
   subscribeOnUpdateRecord = () => {
     subscribeOnUpdateRecord(data => {
-      const { id, history } = data;
-      const { recordId } = this.state;
-      if (id === recordId) {
+      const { id, history, subjectId } = data;
+      const { recordId, interviewerName } = this.props;
+      if (id === recordId && interviewerName === subjectId) {
         console.log(data);
         this.setState({ code: history[0] });
       }
@@ -155,7 +169,7 @@ class Page extends Component {
 
 
   render() {
-    const { category, recordId } = this.state;
+    const { category, recordId, interviewerName } = this.state;
     const {
       onChangeQuestion,
       handleCodeChange,
@@ -168,6 +182,7 @@ class Page extends Component {
         {getPageComponent({
           categoryIndex: category,
           recordId,
+          interviewerName,
           onDispatchQuestion: this.onDispatchQuestion,
           onChangeCategory: this.onChangeCategory,
           onChangeQuestion,
@@ -177,6 +192,12 @@ class Page extends Component {
           onTagUpdate,
           ...this.state
         })}
+        <UserModal
+          mustEnterName={false}
+          closable
+          setInterviewerName={this.setInterviewerName}
+          visible
+        />
       </React.Fragment>
     );
   }

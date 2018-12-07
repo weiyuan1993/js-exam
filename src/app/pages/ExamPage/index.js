@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
+import { message } from 'antd';
 
 // import { resetConsole } from 'app/actions/console';
 
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
 import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
+import UserModal from 'app/components/Modal';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
@@ -33,14 +35,16 @@ class Page extends Component {
       test: '',
       tape: [],
       recordId: '',
-      console: []
+      console: [],
+      interviewerName: '',
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
 
   componentDidMount() {
-    this.subscribeOnDispatchQuestion();
     this.subscribeOnCreateRecord();
+    console.log('123456879werwerwer', this.subscribeOnCreateRecord())
+     this.subscribeOnDispatchQuestion();
   }
 
   componentWillUnmount() {
@@ -101,12 +105,21 @@ class Page extends Component {
     this.setState({ console: [] });
   };
 
+  setInterviewerName = name => {
+    this.setState({ interviewerName: name });
+    message.success(name)
+  }
+
+
   subscribeOnCreateRecord = () => {
+    const { interviewerName } = this.state;
     subscribeOnCreateRecord(data => {
-      const { id } = data;
-      this.setState({
-        recordId: id
-      });
+      const { id, subjectId } = data;
+      if (interviewerName === subjectId) {
+        this.setState({
+          recordId: id
+        });
+      }
     });
   };
 
@@ -145,6 +158,11 @@ class Page extends Component {
           ...this.state,
           ...this.props
         })}
+        <UserModal
+          mustEnterName={true}
+          closable={false}
+          setInterviewerName={this.setInterviewerName}
+          visible={true}/>
       </>
     );
   }
