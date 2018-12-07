@@ -10,7 +10,6 @@ import Grid from 'app/components/Grid';
 import GridItem from 'app/components/Grid/GridItem';
 import ConsoleWidget from 'app/components/Widgets/ConsoleWidget';
 import CodeWidget from 'app/components/Widgets/CodeWidget';
-import ControlWidget from '../ControlWidget';
 import ResultWidget from 'app/components/Widgets/ResultWidget';
 import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 
@@ -56,14 +55,14 @@ class ReactPage extends Component {
       {
         key: 'answer', x: 0, y: 1, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, maxWidth: 700
       },
+      // {
+      //   key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
+      // },
       {
-        key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
+        key: 'result', x: 1, y: 0, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
       },
       {
-        key: 'result', x: 1, y: 1, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
-      },
-      {
-        key: 'console', x: 1, y: 2, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'console', x: 1, y: 1, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
       },
     ];
     return (
@@ -79,12 +78,6 @@ class ReactPage extends Component {
           </GridItem>
           <GridItem key="answer">
             <AnswerWidget />
-          </GridItem>
-          <GridItem key="control">
-            <ControlWidget
-              type="react"
-              onReset={() => onReset('react')}
-            />
           </GridItem>
           <GridItem key="result">
             <ResultWidget />

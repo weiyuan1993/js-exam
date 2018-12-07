@@ -12,7 +12,6 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import UserModal from 'app/components/Modal';
 
-import { message } from 'antd';
 
 const getPageComponent = args => {
   switch (args.index) {

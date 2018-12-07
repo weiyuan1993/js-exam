@@ -4,19 +4,12 @@ import styles from './Modal.scss';
 
 export default class UserModal extends React.Component {
   state = {
-    visible: this.props.visible,
     userName: '',
   }
   constructor(props) {
     super(props);
   }
 
-  handleCancel = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  }
 
   submitName = () => {
     const { userName } = this.state;
@@ -24,19 +17,19 @@ export default class UserModal extends React.Component {
       message.error(`Please Enter Interviewer's Name`);
     } else {
       this.props.setInterviewerName(userName);
-      this.setState({visible: false});
+      this.props.setInterviewerModal();
     }
   }
 
   render() {
-    const { closable } = this.props;
+    const { closable, setInterviewerModal, visible } = this.props;
     return (
       <Modal
         title="Enter Interviewer's Name"
         maskClosable={false}
-        visible={this.state.visible}
+        visible={visible}
         closable={closable}
-        onCancel={this.handleCancel}
+        onCancel={setInterviewerModal}
         footer={null}>
 
         <Input
