@@ -26,7 +26,7 @@ const listQuestions = async type => {
       }
     }`;
   const result = await API.graphql(graphqlOperation(query));
-  return result;
+  return result.data.listQuestions;
 };
 
 const createQuestion = async data => {

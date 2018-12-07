@@ -6,7 +6,6 @@ import 'brace/theme/monokai';
 
 import { Spin } from 'antd';
 
-import { transform } from '@babel/standalone';
 import Grid from 'app/components/Grid';
 import GridItem from 'app/components/Grid/GridItem';
 import CodeWidget from 'app/components/Widgets/CodeWidget';
@@ -15,136 +14,35 @@ import TapeWidget from 'app/components/Widgets/TapeWidget';
 
 import debouncedRunCode from 'app/utils/runCode';
 
-import { listQuestions, getQuestion } from 'app/utils/question';
-import { subscribeOnUpdateRecord } from 'app/utils/record';
 import ControlWidget from '../ControlWidget';
 import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
 
 class JavaScriptPage extends Component {
-  constructor(props) {
-    super(props);
-    this.controlHeight = 70;
-    this.state = {
-      code: '',
-      compiledCode: '',
-      test: '',
-      tape: [],
-      tags: [],
-      id: null,
-      questionList: [],
-      isLoading: false,
-      index: 0
-    };
+
+  controlHeight = 70;
+
+  componentDidMount() {
+    const { compiledCode, addTape } = this.props;
+    debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
   }
-
-  async componentDidMount() {
-    const { compiledCode } = this.state;
-    this.setState({ isLoading: true });
-    const result = await listQuestions('javascript');
-    this.setState({
-      questionList: result.data.listQuestions.items,
-      isLoading: false
-    });
-    this.onChangeQuestion(0);
-    this.subscribeOnUpdateRecord();
-
-    debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { compiledCode: previousCompiledCode } = this.state;
-    const { compiledCode } = nextState;
-    if (previousCompiledCode !== compiledCode) {
-      this.setState({ tape: [] }, () => {
-        debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
-      });
-    }
-    return true;
-  }
-
-  addTape = data => {
-    const { tape } = this.state;
-    this.setState({
-      tape: [...tape, data]
-    });
-  };
-
-  onTagUpdate = tags => {
-    this.setState({ tags });
-  };
-
-  onCodeChange = () => {
-    const { code, test } = this.state;
-    const fullCode = `${code} ${test}`;
-    try {
-      const { code: compiledCode } = transform(fullCode, {
-        presets: [
-          'es2015',
-          ['stage-2', { decoratorsBeforeExport: true }],
-          'react'
-        ],
-        plugins: ['proposal-object-rest-spread']
-      });
-      this.setState({ compiledCode });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  onDispatchQuestion = async () => {
-    const { name, type, tags, code, test, id } = this.state;
-    const { onDispatchQuestion } = this.props;
-    console.log('onDispatchQuestion!', this.state);
-    this.setState({ isLoading: true });
-    await onDispatchQuestion({
-      name,
-      type,
-      content: code,
-      test
-    });
-    this.setState({ isLoading: false });
-  };
-
-  onChangeQuestion = async index => {
-    const { questionList } = this.state;
-    const { id, name, type } = questionList[index];
-    this.setState({ isLoading: true, index });
-    const result = await getQuestion({ id });
-    const { tags, content: code, test } = result.data.getQuestion;
-    this.setState({
-      name,
-      type,
-      tags,
-      code,
-      test,
-      isLoading: false,
-      id
-    });
-  };
-
-  subscribeOnUpdateRecord = () => {
-    subscribeOnUpdateRecord(data => {
-      const { id, history } = data;
-      const { recordId } = this.props;
-      if (id === recordId) {
-        console.log(data);
-        this.setState({ code: history[0] });
-      }
-    });
-  };
 
   render() {
     const {
-      test,
+      onChangeCategory,
+      onDispatchQuestion,
+      onChangeQuestion,
+      onTagUpdate,
+      categoryIndex,
+      questionIndex,
+      handleCodeChange,
       code,
+      test,
       tape,
       tags,
       questionList,
-      isLoading,
-      index
-    } = this.state;
-    const { onChangeCategory, categoryIndex } = this.props;
+      isLoading
+    } = this.props;
     const layout = [
       {
         key: 'code',
@@ -203,9 +101,7 @@ class JavaScriptPage extends Component {
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
             <GridItem key="code">
               <CodeWidget
-                handleCodeChange={newCode => {
-                  this.setState({ code: newCode }, this.onCodeChange);
-                }}
+                handleCodeChange={handleCodeChange}
                 data={code}
                 mode="javascript"
                 theme="monokai"
@@ -213,9 +109,6 @@ class JavaScriptPage extends Component {
             </GridItem>
             <GridItem key="test">
               <TestWidget
-                handleCodeChange={newTest => {
-                  this.setState({ test: newTest }, this.onCodeChange);
-                }}
                 data={test}
                 readOnly={false}
               />
@@ -223,20 +116,19 @@ class JavaScriptPage extends Component {
             <GridItem key="control">
               <ControlWidget
                 type="javascript"
-                onChangeName={name => this.setState({ name })}
-                onDispatchQuestion={this.onDispatchQuestion}
+                onDispatchQuestion={onDispatchQuestion}
                 onChangeCategory={onChangeCategory}
+                onChangeQuestion={onChangeQuestion}
                 categoryIndex={categoryIndex}
-                questionIndex={index}
+                questionIndex={questionIndex}
                 questionList={questionList}
-                onChangeQuestion={this.onChangeQuestion}
               />
             </GridItem>
             <GridItem key="tape">
               <TapeWidget data={tape} />
             </GridItem>
             <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={this.onTagUpdate} />
+              <TagWidget data={tags} onTagUpdate={onTagUpdate} />
             </GridItem>
           </Grid>
         </Spin>
