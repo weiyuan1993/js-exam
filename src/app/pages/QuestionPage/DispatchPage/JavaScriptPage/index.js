@@ -19,8 +19,6 @@ import styles from './JavaScriptPage.module.scss';
 
 class JavaScriptPage extends Component {
 
-  controlHeight = 70;
-
   componentDidMount() {
     const { compiledCode, addTape } = this.props;
     debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
@@ -72,7 +70,7 @@ class JavaScriptPage extends Component {
         x: 1,
         y: 0,
         width: window.innerWidth / 2,
-        height: (window.innerHeight - this.controlHeight) / 2,
+        height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
@@ -83,7 +81,7 @@ class JavaScriptPage extends Component {
         x: 1,
         y: 1,
         width: window.innerWidth / 2,
-        height: (window.innerHeight - this.controlHeight) / 2,
+        height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,

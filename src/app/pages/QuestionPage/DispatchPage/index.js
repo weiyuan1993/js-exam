@@ -69,7 +69,7 @@ class Page extends Component {
 
   setIntervieweeName = name => {
     this.setState({ intervieweeName: name });
-    message.success(name)
+    message.success(name);
   }
 
   onChangeCategory = async index => {

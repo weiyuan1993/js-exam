@@ -1,29 +1,28 @@
-import React, { Component } from 'react';
-import { login } from 'app/utils/auth';
+import React from 'react';
 
-class AdminPage extends Component {
-  state = {
-    username: '',
-    password: ''
-  }
+import { Tabs, Icon } from 'antd';
 
-  render() {
-    return (
-      <div>
-        <input placeholder="username" onChange={(e) => this.setState({ username: e.target.value })} />
-        <input placeholder="password" onChange={(e) => this.setState({ password: e.target.value })} />
-        <button 
-          onClick={() => 
-            login({
-              username: this.state.username,
-              password: this.state.password
-            })
-        }>
-          Login
-        </button>
-      </div>
-    );
-  }
-}
+import DispatchPage from 'app/pages/QuestionPage/DispatchPage';
+import QuestionAddPage from 'app/pages/QuestionPage/AddPage';
+import QuestionEditPage from 'app/pages/QuestionPage/EditPage';
 
+import './AdminPage.scss';
+
+const TabPane = Tabs.TabPane;
+
+const AdminPage = () => (
+  <div>
+    <Tabs defaultActiveKey="1">
+      <TabPane tab={<span><Icon type="eye" />Dispatch</span>} key="1">
+        <DispatchPage />
+      </TabPane>
+      <TabPane tab={<span><Icon type="plus-circle" />Add</span>} key="2">
+        <QuestionAddPage />
+      </TabPane>
+      <TabPane tab={<span><Icon type="edit" />Edit</span>} key="3">
+        <QuestionEditPage />
+      </TabPane>
+    </Tabs>
+  </div>
+);
 export default AdminPage;
