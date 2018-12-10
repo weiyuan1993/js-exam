@@ -11,32 +11,32 @@ export default class UserModal extends React.Component {
   submitName = () => {
     const { userName } = this.state;
     if (this.props.mustEnterName && userName === '') {
-      message.error('Please Enter Interviewer\'s Name');
+      message.error('Please Enter Interviewee\'s Name');
     } else {
-      this.props.setInterviewerName(userName);
-      this.props.setInterviewerModal();
+      this.props.setIntervieweeName(userName);
+      this.props.setIntervieweeModal();
     }
   }
 
   render() {
-    const { closable, setInterviewerModal, visible } = this.props;
+    const { closable, setIntervieweeModal, visible } = this.props;
     const { userName } = this.state;
     return (
       <Modal
-        title="Enter Interviewer's Name"
+        title="Enter Interviewee's Name"
         maskClosable={false}
         visible={visible}
         closable={closable}
-        onCancel={setInterviewerModal}
+        onCancel={setIntervieweeModal}
         footer={null}
       >
         <Input
-          id="interviewerNameInput"
+          id="intervieweeNameInput"
           placeholder="Enter Name"
           onChange={e => this.setState({ userName: e.target.value.trim() })}
         />
         <Button
-          id="interviewerNameSubmitBtn"
+          id="intervieweeNameSubmitBtn"
           onClick={this.submitName}
         >
           {`Submit${userName}`}

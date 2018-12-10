@@ -36,8 +36,8 @@ class Page extends Component {
       tape: [],
       recordId: '',
       console: [],
-      interviewerName: '',
-      visibleInterviewerModal: true,
+      intervieweeName: '',
+      visibleIntervieweeModal: true,
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
@@ -97,9 +97,9 @@ class Page extends Component {
     this.setState({ tape: [] });
   };
 
-  setInterviewerModal = () => {
-    const { visibleInterviewerModal } = this.state;
-    this.setState({ visibleInterviewerModal: !visibleInterviewerModal });
+  setIntervieweeModal = () => {
+    const { visibleIntervieweeModal } = this.state;
+    this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
   }
 
   addConsole = (...args) => {
@@ -111,17 +111,17 @@ class Page extends Component {
     this.setState({ console: [] });
   };
 
-  setInterviewerName = name => {
-    this.setState({ interviewerName: name });
+  setIntervieweeName = name => {
+    this.setState({ intervieweeName: name });
     message.success(name);
   }
 
 
   subscribeOnCreateRecord = () => {
-    const { interviewerName } = this.state;
+    const { intervieweeName } = this.state;
     subscribeOnCreateRecord(data => {
       const { id, subjectId } = data;
-      if (interviewerName === subjectId) {
+      if (intervieweeName === subjectId) {
         this.setState({
           recordId: id
         });
@@ -151,15 +151,15 @@ class Page extends Component {
       addTape,
       resetTape,
       resetConsole,
-      setInterviewerModal,
-      setInterviewerName,
+      setIntervieweeModal,
+      setIntervieweeName,
     } = this;
-    const { visibleInterviewerModal } = this.state;
+    const { visibleIntervieweeModal } = this.state;
     return (
       <>
         <ControlWidget
           onReset={() => onReset('javascript')}
-          setInterviewerModal={setInterviewerModal}
+          setIntervieweeModal={setIntervieweeModal}
         />
         {getPageComponent({
           handleCodeChange,
@@ -168,16 +168,16 @@ class Page extends Component {
           addTape,
           resetTape,
           resetConsole,
-          setInterviewerModal,
+          setIntervieweeModal,
           ...this.state,
           ...this.props
         })}
         <UserModal
-          setInterviewerModal={setInterviewerModal}
+          setIntervieweeModal={setIntervieweeModal}
           mustEnterName
           closable
-          setInterviewerName={setInterviewerName}
-          visible={visibleInterviewerModal}
+          setIntervieweeName={setIntervieweeName}
+          visible={visibleIntervieweeModal}
         />
       </>
     );

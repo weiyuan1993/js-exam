@@ -45,9 +45,14 @@ class Page extends Component {
     questionList: [],
     questionIndex: 0,
     isLoading: false,
-    interviewerName: '',
-    visibleInterviewerModal: true,
+    intervieweeName: '',
+    visibleIntervieweeModal: true,
   };
+
+  constructor(props) {
+    super(props);
+    this.setIntervieweeName = this.setIntervieweeName.bind(this);
+  }
 
   async componentDidMount() {
     this.setState({ isLoading: true });
@@ -62,10 +67,10 @@ class Page extends Component {
     });
   }
 
-  setInterviewerName = name => {
-    this.setState({ interviewerName: name });
-    message.success(name);
-  };
+  setIntervieweeName = name => {
+    this.setState({ intervieweeName: name });
+    message.success(name)
+  }
 
   onChangeCategory = async index => {
     this.setState({ categoryIndex: index, isLoading: true });
@@ -110,17 +115,17 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const { questionName, type, code, test, interviewerName } = this.state;
+    const { questionName, type, code, test, intervieweeName } = this.state;
     this.setState({ isLoading: true });
     try {
-      if (interviewerName === '') {
-        message.warning('Please Enter Interviewer First.');
+      if (intervieweeName === '') {
+        message.warning('Please Enter Interviewee First.');
         this.setState({ isLoading: false });
       } else {
         await dispatchQuestion({ name: questionName, type, code, test });
-        this.createRecord(interviewerName);
+        this.createRecord(intervieweeName);
         message.success(
-          `Dispatching the question "${questionName}" to "${interviewerName}" successfully!`
+          `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
         );
         this.setState({ isLoading: false });
       }
@@ -143,13 +148,13 @@ class Page extends Component {
     this.setState({ tags });
   };
 
-  setInterviewerModal = () => {
-    const { visibleInterviewerModal } = this.state;
-    this.setState({ visibleInterviewerModal: !visibleInterviewerModal });
+  setIntervieweeModal = () => {
+    const { visibleIntervieweeModal } = this.state;
+    this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
   }
 
-  createRecord = async interviewerName => {
-    const result = await createRecord(interviewerName);
+  createRecord = async intervieweeName => {
+    const result = await createRecord(intervieweeName);
     this.setState({ recordId: result.id });
   };
 
@@ -163,8 +168,8 @@ class Page extends Component {
   subscribeOnUpdateRecord = () => {
     subscribeOnUpdateRecord(data => {
       const { id, history, subjectId } = data;
-      const { recordId, interviewerName } = this.props;
-      if (id === recordId && interviewerName === subjectId) {
+      const { recordId, intervieweeName } = this.props;
+      if (id === recordId && intervieweeName === subjectId) {
         console.log(data);
         this.setState({ code: history[0] });
       }
@@ -177,8 +182,8 @@ class Page extends Component {
       questionIndex,
       questionList,
       recordId,
-      interviewerName,
-      visibleInterviewerModal
+      intervieweeName,
+      visibleIntervieweeModal,
     } = this.state;
     const {
       onChangeCategory,
@@ -188,8 +193,8 @@ class Page extends Component {
       addTape,
       resetTape,
       onTagUpdate,
-      setInterviewerName,
-      setInterviewerModal
+      setIntervieweeName,
+      setIntervieweeModal
     } = this;
     return (
       <React.Fragment>
@@ -204,7 +209,7 @@ class Page extends Component {
         {getPageComponent({
           categoryIndex,
           recordId,
-          interviewerName,
+          intervieweeName,
           onDispatchQuestion,
           onChangeCategory,
           onChangeQuestion,
@@ -215,11 +220,11 @@ class Page extends Component {
           ...this.state
         })}
         <UserModal
-          setInterviewerModal={setInterviewerModal}
+          setIntervieweeModal={setIntervieweeModal}
           mustEnterName={false}
           closable
-          setInterviewerName={setInterviewerName}
-          visible={visibleInterviewerModal}
+          setIntervieweeName={setIntervieweeName}
+          visible={visibleIntervieweeModal}
         />
       </React.Fragment>
     );
