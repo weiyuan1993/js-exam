@@ -287,6 +287,7 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -329,6 +330,7 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -371,6 +373,7 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -386,6 +389,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
   createRecord(input: $input) {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -394,6 +398,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -421,6 +426,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
   updateRecord(input: $input) {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -429,6 +435,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -456,6 +463,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
   deleteRecord(input: $input) {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -464,6 +472,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -489,25 +498,52 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
 `;
 export const createResult = `mutation CreateResult($input: CreateResultInput!) {
   createResult(input: $input) {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
 export const updateResult = `mutation UpdateResult($input: UpdateResultInput!) {
   updateResult(input: $input) {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
 export const deleteResult = `mutation DeleteResult($input: DeleteResultInput!) {
   deleteResult(input: $input) {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -518,6 +554,14 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -536,6 +580,14 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -554,6 +606,14 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -688,27 +748,6 @@ export const deleteQuestion = `mutation DeleteQuestion($input: DeleteQuestionInp
     content
     test
     tags
-  }
-}
-`;
-export const createAuthedModelForOwner = `mutation CreateAuthedModelForOwner($input: CreateAuthedModelForOwnerInput!) {
-  createAuthedModelForOwner(input: $input) {
-    id
-    content
-  }
-}
-`;
-export const updateAuthedModelForOwner = `mutation UpdateAuthedModelForOwner($input: UpdateAuthedModelForOwnerInput!) {
-  updateAuthedModelForOwner(input: $input) {
-    id
-    content
-  }
-}
-`;
-export const deleteAuthedModelForOwner = `mutation DeleteAuthedModelForOwner($input: DeleteAuthedModelForOwnerInput!) {
-  deleteAuthedModelForOwner(input: $input) {
-    id
-    content
   }
 }
 `;
