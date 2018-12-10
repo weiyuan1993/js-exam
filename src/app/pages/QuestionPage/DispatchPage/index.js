@@ -36,6 +36,7 @@ class Page extends Component {
     categoryIndex: 0,
     recordId: '',
     questionName: '',
+    questionContent: '',
     code: '',
     compiledCode: '',
     test: '',
@@ -56,11 +57,14 @@ class Page extends Component {
 
   async componentDidMount() {
     this.setState({ isLoading: true });
-    const result = await listQuestions('javascript');
-    this.setState({ questionList: result.items, isLoading: false });
-    this.onChangeQuestion(0);
     this.subscribeOnCreateRecord();
     this.subscribeOnUpdateRecord();
+    const result = await listQuestions('javascript');
+    if (result) {
+      this.setState({ questionList: result.items, isLoading: false });
+      this.onChangeQuestion(0);
+    }
+
     debouncedRunCode({
       code: this.state.compiledCode,
       onTapeUpdate: this.addTape
@@ -69,7 +73,7 @@ class Page extends Component {
 
   setIntervieweeName = name => {
     this.setState({ intervieweeName: name });
-    message.success(name)
+    message.success(name);
   }
 
   onChangeCategory = async index => {
@@ -87,6 +91,7 @@ class Page extends Component {
     const { tags, content: code, test } = result;
     this.setState({
       questionName: name,
+      questionContent: code,
       type,
       tags,
       code,
@@ -115,14 +120,14 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const { questionName, type, code, test, intervieweeName } = this.state;
+    const { questionName, type, questionContent, test, intervieweeName } = this.state;
     this.setState({ isLoading: true });
     try {
       if (intervieweeName === '') {
         message.warning('Please Enter Interviewee First.');
         this.setState({ isLoading: false });
       } else {
-        await dispatchQuestion({ name: questionName, type, code, test });
+        await dispatchQuestion({ name: questionName, type, content: questionContent, test });
         this.createRecord(intervieweeName);
         message.success(
           `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
@@ -170,7 +175,6 @@ class Page extends Component {
       const { id, history, subjectId } = data;
       const { recordId, intervieweeName } = this.props;
       if (id === recordId && intervieweeName === subjectId) {
-        console.log(data);
         this.setState({ code: history[0] });
       }
     });

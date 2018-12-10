@@ -46,7 +46,7 @@ class JavaScriptPage extends Component {
     const { compiledCode } = this.state;
     this.setState({ isLoading: true });
     const result = await listQuestions('javascript');
-    this.setState({ questionList: result.data.listQuestions.items, isLoading: false });
+    this.setState({ questionList: result.items, isLoading: false });
     debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
   }
 
