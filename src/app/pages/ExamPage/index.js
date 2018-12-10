@@ -44,7 +44,6 @@ class Page extends Component {
 
   componentDidMount() {
     this.subscribeOnCreateRecord();
-    console.log('123456879werwerwer', this.subscribeOnCreateRecord());
     this.subscribeOnDispatchQuestion();
   }
 
