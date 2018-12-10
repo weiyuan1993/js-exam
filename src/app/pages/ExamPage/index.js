@@ -153,7 +153,7 @@ class Page extends Component {
       resetConsole,
       setInterviewerModal,
     } = this;
-    const { visibleInterviewerModal, } = this.state;
+    const { visibleInterviewerModal } = this.state;
     return (
       <>
         <ControlWidget
@@ -173,10 +173,11 @@ class Page extends Component {
         })}
         <UserModal
           setInterviewerModal={setInterviewerModal}
-          mustEnterName={true}
-          closable={true}
+          mustEnterName
+          closable
           setInterviewerName={this.setInterviewerName}
-          visible={visibleInterviewerModal}/>
+          visible={visibleInterviewerModal}
+        />
       </>
     );
   }

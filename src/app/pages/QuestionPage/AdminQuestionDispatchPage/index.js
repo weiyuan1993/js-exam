@@ -28,7 +28,8 @@ class Page extends Component {
   state = {
     category: 0,
     recordId: '',
-    interviewerName: ''
+    interviewerName: '',
+    visibleInterviewerModal: true,
   };
 
   constructor(props) {
@@ -51,7 +52,7 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async data => {
-    const {interviewerName} = this.state;
+    const { interviewerName } = this.state;
     try {
       if (interviewerName === '') {
         message.warning('Please Enter Interviewer First.')
@@ -64,6 +65,11 @@ class Page extends Component {
       message.error(e.message, 2);
     }
   };
+
+  setInterviewerModal = () => {
+    const { visibleInterviewerModal } = this.state;
+    this.setState({ visibleInterviewerModal: !visibleInterviewerModal });
+  }
 
   createRecord = async interviewerName => {
     try {
@@ -82,7 +88,12 @@ class Page extends Component {
   };
 
   render() {
-    const { category, recordId, interviewerName } = this.state;
+    const {
+      category,
+      recordId,
+      interviewerName,
+      visibleInterviewerModal,
+    } = this.state;
     return (
       <React.Fragment>
         {getPageComponent({
@@ -95,10 +106,12 @@ class Page extends Component {
           categoryIndex: category,
         })}
         <UserModal
+          setInterviewerModal={this.setInterviewerModal}
           mustEnterName={false}
-          closable={true}
+          closable
           setInterviewerName={this.setInterviewerName}
-          visible={true}/>
+          visible={visibleInterviewerModal}
+        />
       </React.Fragment>
     );
   }
