@@ -223,6 +223,7 @@ export const getTest = `query GetTest($id: ID!) {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -270,6 +271,7 @@ export const listTests = `query ListTests(
         items {
           id
           subjectId
+          syncCode
           timeBegin
           timeEnd
           history
@@ -287,6 +289,7 @@ export const getRecord = `query GetRecord($id: ID!) {
   getRecord(id: $id) {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -295,6 +298,7 @@ export const getRecord = `query GetRecord($id: ID!) {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -327,6 +331,7 @@ export const listRecords = `query ListRecords(
     items {
       id
       subjectId
+      syncCode
       interviewer {
         id
         name
@@ -335,6 +340,7 @@ export const listRecords = `query ListRecords(
       timeEnd
       history
       result {
+        id
         input
         output
         testCaseResults
@@ -362,9 +368,18 @@ export const listRecords = `query ListRecords(
 `;
 export const getResult = `query GetResult($id: ID!) {
   getResult(id: $id) {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -375,9 +390,18 @@ export const listResults = `query ListResults(
 ) {
   listResults(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
+      id
       input
       output
       testCaseResults
+      record {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+      }
     }
     nextToken
   }
@@ -390,6 +414,14 @@ export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -413,6 +445,14 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
       name
       content
       test
+      record {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+      }
       room {
         id
         subjectId
@@ -519,31 +559,6 @@ export const listQuestions = `query ListQuestions(
       content
       test
       tags
-    }
-    nextToken
-  }
-}
-`;
-export const getAuthedModelForOwner = `query GetAuthedModelForOwner($id: ID!) {
-  getAuthedModelForOwner(id: $id) {
-    id
-    content
-  }
-}
-`;
-export const listAuthedModelForOwners = `query ListAuthedModelForOwners(
-  $filter: ModelAuthedModelForOwnerFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listAuthedModelForOwners(
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
-    items {
-      id
-      content
     }
     nextToken
   }
