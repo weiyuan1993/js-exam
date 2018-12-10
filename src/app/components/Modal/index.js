@@ -1,12 +1,19 @@
 import React from 'react';
 import { Modal, Button, Input, message } from 'antd';
-import styles from './Modal.scss';
+import './Modal.scss';
 
 export default class UserModal extends React.Component {
-  state = {
-    userName: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      userName: '',
+    };
   }
 
+  handleCancel = () => {
+    this.props.setIntervieweeModal();
+    this.setState({ userName: '' });
+  }
 
   submitName = () => {
     const { userName } = this.state;
@@ -15,11 +22,12 @@ export default class UserModal extends React.Component {
     } else {
       this.props.setIntervieweeName(userName);
       this.props.setIntervieweeModal();
+      this.setState({ userName: '' });
     }
   }
 
   render() {
-    const { closable, setIntervieweeModal, visible } = this.props;
+    const { closable, visible } = this.props;
     const { userName } = this.state;
     return (
       <Modal
@@ -27,12 +35,13 @@ export default class UserModal extends React.Component {
         maskClosable={false}
         visible={visible}
         closable={closable}
-        onCancel={setIntervieweeModal}
+        onCancel={this.handleCancel}
         footer={null}
       >
         <Input
           id="intervieweeNameInput"
           placeholder="Enter Name"
+          value={userName}
           onChange={e => this.setState({ userName: e.target.value.trim() })}
         />
         <Button
