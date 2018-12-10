@@ -1,0 +1,41 @@
+.ant-modal-content {
+  background-color: #1D4F91;
+  padding: 1.5vw;
+
+  .ant-modal-close {
+    color: #FFFFFF;
+  }
+
+  .ant-modal-header {
+    background-color: transparent;
+    border: unset;
+    display: flex;
+    justify-content: center;
+
+    .ant-modal-title {
+      color: #FFFFFF;
+      font-size: 1.5vw;
+    }
+  }
+
+  .ant-modal-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+#intervieweeNameInput {
+  height: 45px;
+  margin-bottom: 25px;
+  font-size: 18px;
+}
+
+#intervieweeNameSubmitBtn {
+  border: unset;
+  font-size: 18px;
+  background-color: #7EAED0;
+  color: #FFFFFF;
+  height: 40px;
+}

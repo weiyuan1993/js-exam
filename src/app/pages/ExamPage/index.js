@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
+import { message } from 'antd';
 
 // import { resetConsole } from 'app/actions/console';
-
+import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
 import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
+import UserModal from 'app/components/Modal';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
@@ -33,14 +35,16 @@ class Page extends Component {
       test: '',
       tape: [],
       recordId: '',
-      console: []
+      console: [],
+      intervieweeName: '',
+      visibleIntervieweeModal: true,
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
 
   componentDidMount() {
-    this.subscribeOnDispatchQuestion();
     this.subscribeOnCreateRecord();
+    this.subscribeOnDispatchQuestion();
   }
 
   componentWillUnmount() {
@@ -77,7 +81,7 @@ class Page extends Component {
     }
   };
 
-  onReset = type => {
+  onReset = () => {
     const { questionContent } = this.state;
     this.setState({ code: questionContent });
     this.handleCodeChange(questionContent);
@@ -92,6 +96,11 @@ class Page extends Component {
     this.setState({ tape: [] });
   };
 
+  setIntervieweeModal = () => {
+    const { visibleIntervieweeModal } = this.state;
+    this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
+  }
+
   addConsole = (...args) => {
     const { console: _console } = this.state;
     this.setState({ console: [..._console, ...args] });
@@ -101,18 +110,27 @@ class Page extends Component {
     this.setState({ console: [] });
   };
 
+  setIntervieweeName = name => {
+    this.setState({ intervieweeName: name });
+    message.success(name);
+  }
+
+
   subscribeOnCreateRecord = () => {
+    const { intervieweeName } = this.state;
     subscribeOnCreateRecord(data => {
-      const { id } = data;
-      this.setState({
-        recordId: id
-      });
+      const { id, subjectId } = data;
+      if (intervieweeName === subjectId) {
+        this.setState({
+          recordId: id
+        });
+      }
     });
   };
 
   subscribeOnDispatchQuestion = () => {
-    subscribeOnCreateQuestionSnapshot(({ data }) => {
-      const { type, content: code, test } = data.onCreateQuestionSnapshot;
+    subscribeOnCreateQuestionSnapshot(data => {
+      const { type, content: code, test } = data;
       this.setState({
         categoryIndex: type === 'javascript' ? 0 : 1,
         code,
@@ -131,10 +149,17 @@ class Page extends Component {
       onReset,
       addTape,
       resetTape,
-      resetConsole
+      resetConsole,
+      setIntervieweeModal,
+      setIntervieweeName,
     } = this;
+    const { visibleIntervieweeModal } = this.state;
     return (
       <>
+        <ControlWidget
+          onReset={() => onReset('javascript')}
+          setIntervieweeModal={setIntervieweeModal}
+        />
         {getPageComponent({
           handleCodeChange,
           wrappedConsole,
@@ -142,9 +167,17 @@ class Page extends Component {
           addTape,
           resetTape,
           resetConsole,
+          setIntervieweeModal,
           ...this.state,
           ...this.props
         })}
+        <UserModal
+          setIntervieweeModal={setIntervieweeModal}
+          mustEnterName
+          closable
+          setIntervieweeName={setIntervieweeName}
+          visible={visibleIntervieweeModal}
+        />
       </>
     );
   }

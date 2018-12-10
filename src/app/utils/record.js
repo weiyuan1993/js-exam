@@ -5,10 +5,10 @@ import * as subscriptions from '../../graphql/subscriptions.js';
 
 Amplify.configure(awsExportConfig);
 
-const createRecord = async () => {
+const createRecord = async (subjectId) => {
   const params = {
     input: {
-      subjectId: 'interviewee01',
+      subjectId,
       history: [],
       timeBegin: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
@@ -32,18 +32,24 @@ const updateRecord = async (id, newHistory) => {
   return result;
 };
 
-const subscribeOnCreateRecord = async (callback) => {
+const subscribeOnCreateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onCreateRecord);
+    },
+    error: error => {
+      console.error(error);
     }
   });
 };
 
-const subscribeOnUpdateRecord = async (callback) => {
+const subscribeOnUpdateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onUpdateRecord);
+    },
+    error: error => {
+      console.error(error);
     }
   });
 };

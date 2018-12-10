@@ -15,9 +15,13 @@ import styles from './ControlWidget.module.scss';
 
 const ControlWidget = ({
   onReset,
+  setIntervieweeModal,
 }) => (
   <div className={styles.control}>
     <Button type="danger" onClick={onReset}>Reset</Button>
+    <div>
+      <Button type="primary" onClick={setIntervieweeModal}>Change Interviewee</Button>
+    </div>
   </div>
 );
 
