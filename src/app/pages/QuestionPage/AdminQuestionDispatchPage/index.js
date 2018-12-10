@@ -45,7 +45,8 @@ class Page extends Component {
     questionList: [],
     questionIndex: 0,
     isLoading: false,
-    interviewerName: ''
+    interviewerName: '',
+    visibleInterviewerModal: true,
   };
 
   async componentDidMount() {
@@ -142,6 +143,11 @@ class Page extends Component {
     this.setState({ tags });
   };
 
+  setInterviewerModal = () => {
+    const { visibleInterviewerModal } = this.state;
+    this.setState({ visibleInterviewerModal: !visibleInterviewerModal });
+  }
+
   createRecord = async interviewerName => {
     const result = await createRecord(interviewerName);
     this.setState({ recordId: result.id });
@@ -171,7 +177,8 @@ class Page extends Component {
       questionIndex,
       questionList,
       recordId,
-      interviewerName
+      interviewerName,
+      visibleInterviewerModal
     } = this.state;
     const {
       onChangeCategory,
@@ -181,7 +188,8 @@ class Page extends Component {
       addTape,
       resetTape,
       onTagUpdate,
-      setInterviewerName
+      setInterviewerName,
+      setInterviewerModal
     } = this;
     return (
       <React.Fragment>
@@ -207,10 +215,11 @@ class Page extends Component {
           ...this.state
         })}
         <UserModal
+          setInterviewerModal={setInterviewerModal}
           mustEnterName={false}
           closable
           setInterviewerName={setInterviewerName}
-          visible
+          visible={visibleInterviewerModal}
         />
       </React.Fragment>
     );

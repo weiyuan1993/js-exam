@@ -44,8 +44,8 @@ class Page extends Component {
 
   componentDidMount() {
     this.subscribeOnCreateRecord();
-    console.log('123456879werwerwer', this.subscribeOnCreateRecord())
-     this.subscribeOnDispatchQuestion();
+    console.log('123456879werwerwer', this.subscribeOnCreateRecord());
+    this.subscribeOnDispatchQuestion();
   }
 
   componentWillUnmount() {
@@ -113,7 +113,7 @@ class Page extends Component {
 
   setInterviewerName = name => {
     this.setState({ interviewerName: name });
-    message.success(name)
+    message.success(name);
   }
 
 
@@ -152,8 +152,9 @@ class Page extends Component {
       resetTape,
       resetConsole,
       setInterviewerModal,
+      setInterviewerName,
     } = this;
-    const { visibleInterviewerModal, } = this.state;
+    const { visibleInterviewerModal } = this.state;
     return (
       <>
         <ControlWidget
@@ -173,10 +174,11 @@ class Page extends Component {
         })}
         <UserModal
           setInterviewerModal={setInterviewerModal}
-          mustEnterName={true}
-          closable={true}
-          setInterviewerName={this.setInterviewerName}
-          visible={visibleInterviewerModal}/>
+          mustEnterName
+          closable
+          setInterviewerName={setInterviewerName}
+          visible={visibleInterviewerModal}
+        />
       </>
     );
   }
