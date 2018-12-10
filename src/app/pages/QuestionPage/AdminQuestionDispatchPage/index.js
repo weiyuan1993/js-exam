@@ -71,6 +71,7 @@ class Page extends Component {
     this.setState({ categoryIndex: index, isLoading: true });
     const result = await listQuestions(index === 0 ? 'javascript' : 'react');
     this.setState({ questionList: result.items, isLoading: false });
+    this.onChangeQuestion(0);
   };
 
   onChangeQuestion = async index => {
@@ -91,6 +92,7 @@ class Page extends Component {
   };
 
   handleCodeChange = (newCode) => {
+    this.setState({ code: newCode });
     const { code, test } = this.state;
     const fullCode = `${code} ${test}`;
     try {
@@ -102,10 +104,9 @@ class Page extends Component {
         ],
         plugins: ['proposal-object-rest-spread']
       });
-      this.setState({ code: newCode, compiledCode });
+      this.setState({ compiledCode });
     } catch (e) {
-      console.log(e);
-      this.setState({ code: newCode });
+      console.log('Editor code complie error.');
     }
   };
 

@@ -7,18 +7,14 @@ import 'brace/theme/monokai';
 
 import { Spin } from 'antd';
 
-import { transform } from '@babel/standalone';
 import Grid from 'app/components/Grid';
 import GridItem from 'app/components/Grid/GridItem';
 import CodeWidget from 'app/components/Widgets/CodeWidget';
 import ResultWidget from 'app/components/Widgets/ResultWidget';
 import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 
-import { listQuestions, getQuestion } from 'app/utils/question';
 import debouncedRunCode from 'app/utils/runCode';
-import { subscribeOnUpdateRecord } from 'app/utils/record';
 
-import ControlWidget from '../ControlWidget';
 import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
 
@@ -31,10 +27,10 @@ class ReactPage extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const { compiledCode: previousCompiledCode, addTape } = this.props;
+    const { compiledCode: previousCompiledCode } = this.props;
     const { compiledCode } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
+      debouncedRunCode({ code: compiledCode });
     }
     return true;
   }

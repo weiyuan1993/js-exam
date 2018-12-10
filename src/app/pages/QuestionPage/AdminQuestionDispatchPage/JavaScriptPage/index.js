@@ -14,7 +14,6 @@ import TapeWidget from 'app/components/Widgets/TapeWidget';
 
 import debouncedRunCode from 'app/utils/runCode';
 
-import ControlWidget from '../ControlWidget';
 import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
 
@@ -27,11 +26,10 @@ class JavaScriptPage extends Component {
     debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const { compiledCode: previousCompiledCode, addTape, resetTape } = this.props;
     const { compiledCode } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      console.log("code change")
       resetTape();
       debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
     }
