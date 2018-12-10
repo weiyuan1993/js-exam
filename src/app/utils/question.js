@@ -54,8 +54,7 @@ const createQuestion = async data => {
   return result;
 };
 
-const getQuestion = async data => {
-  const { id } = data;
+const getQuestion = async id => {
   const query = `query {
     getQuestion(id: "${id}") {
       content,
@@ -63,8 +62,8 @@ const getQuestion = async data => {
       tags
     }
   }`;
-  const result = await API.graphql(graphqlOperation(query));
-  return result;
+  const { data } = await API.graphql(graphqlOperation(query));
+  return data.getQuestion;
 };
 
 const updateQuestion = async data => {

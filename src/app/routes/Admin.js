@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Amplify from 'aws-amplify';
+import Amplify,{Auth} from 'aws-amplify';
 import { withAuthenticator } from 'aws-amplify-react';
 import AwsConfig from 'aws-exports';
 
@@ -10,7 +10,14 @@ import AdminQuestionDispatchPage from 'app/pages/QuestionPage/AdminQuestionDispa
 import NotFoundPage from 'app/pages/NotFoundPage';
 
 Amplify.configure(AwsConfig);
-
+Auth.signIn("Admin", "Admin@123456")
+ .then(user => {
+     const session = Amplify.Auth.currentSession()
+ .then(s => {
+   console.log(s.getAccessToken().getJwtToken());
+ }).catch(e=>console.log(e));
+   })
+ .catch(err => console.log(err));
 const Question = ({ match }) => {
   return (
     <Switch>

@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { transform } from '@babel/standalone';
 import { message } from 'antd';
 
-import { listQuestions, getQuestion, dispatchQuestion } from 'app/utils/question';
+import {
+  listQuestions,
+  getQuestion,
+  dispatchQuestion
+} from 'app/utils/question';
 import debouncedRunCode from 'app/utils/runCode';
 
 import {
@@ -13,10 +17,11 @@ import {
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
+import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
 
 const getPageComponent = args => {
-  switch (args.index) {
+  switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
     }
@@ -28,7 +33,7 @@ const getPageComponent = args => {
 
 class Page extends Component {
   state = {
-    category: 0,
+    categoryIndex: 0,
     recordId: '',
     questionName: '',
     code: '',
@@ -41,7 +46,6 @@ class Page extends Component {
     questionIndex: 0,
     isLoading: false,
     interviewerName: ''
-
   };
 
   async componentDidMount() {
@@ -49,39 +53,31 @@ class Page extends Component {
     const result = await listQuestions('javascript');
     this.setState({ questionList: result.items, isLoading: false });
     this.onChangeQuestion(0);
-
     this.subscribeOnCreateRecord();
     this.subscribeOnUpdateRecord();
-    debouncedRunCode({ code: this.state.compiledCode, onTapeUpdate: this.addTape });
-  };
-
-  shouldComponentUpdate(nextProps, nextState) {
-    const { compiledCode: previousCompiledCode } = this.state;
-    const { compiledCode } = nextState;
-    if (previousCompiledCode !== compiledCode) {
-      this.resetTape();
-      debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
-    }
-    return true;
+    debouncedRunCode({
+      code: this.state.compiledCode,
+      onTapeUpdate: this.addTape
+    });
   }
 
   setInterviewerName = name => {
     this.setState({ interviewerName: name });
     message.success(name);
-  }
+  };
 
-
-  onChangeCategory = index => {
-    this.setState({ category: index });
+  onChangeCategory = async index => {
+    this.setState({ categoryIndex: index, isLoading: true });
+    const result = await listQuestions(index === 0 ? 'javascript' : 'react');
+    this.setState({ questionList: result.items, isLoading: false });
   };
 
   onChangeQuestion = async index => {
-    console.log(index)
     const { questionList } = this.state;
     const { id, name, type } = questionList[index];
     this.setState({ isLoading: true, index });
-    const result = await getQuestion({ id });
-    const { tags, content: code, test } = result.data.getQuestion;
+    const result = await getQuestion(id);
+    const { tags, content: code, test } = result;
     this.setState({
       questionName: name,
       type,
@@ -93,7 +89,7 @@ class Page extends Component {
     });
   };
 
-  onCodeChange = () => {
+  handleCodeChange = (newCode) => {
     const { code, test } = this.state;
     const fullCode = `${code} ${test}`;
     try {
@@ -105,9 +101,10 @@ class Page extends Component {
         ],
         plugins: ['proposal-object-rest-spread']
       });
-      this.setState({ compiledCode });
+      this.setState({ code: newCode, compiledCode });
     } catch (e) {
       console.log(e);
+      this.setState({ code: newCode });
     }
   };
 
@@ -117,10 +114,13 @@ class Page extends Component {
     try {
       if (interviewerName === '') {
         message.warning('Please Enter Interviewer First.');
+        this.setState({ isLoading: false });
       } else {
         await dispatchQuestion({ name: questionName, type, code, test });
         this.createRecord(interviewerName);
-        message.success(`Dispatching the question "${questionName}" to "${interviewerName}" successfully!`);
+        message.success(
+          `Dispatching the question "${questionName}" to "${interviewerName}" successfully!`
+        );
         this.setState({ isLoading: false });
       }
     } catch (e) {
@@ -129,11 +129,9 @@ class Page extends Component {
     }
   };
 
-  addTape = data => {
+  addTape = newTape => {
     const { tape } = this.state;
-    this.setState({
-      tape: [...tape, data]
-    });
+    this.setState({ tape: [...tape, newTape] });
   };
 
   resetTape = () => {
@@ -144,8 +142,8 @@ class Page extends Component {
     this.setState({ tags });
   };
 
-  createRecord = async () => {
-    const result = await createRecord();
+  createRecord = async interviewerName => {
+    const result = await createRecord(interviewerName);
     this.setState({ recordId: result.id });
   };
 
@@ -167,24 +165,40 @@ class Page extends Component {
     });
   };
 
-
   render() {
-    const { category, recordId, interviewerName } = this.state;
     const {
+      categoryIndex,
+      questionIndex,
+      questionList,
+      recordId,
+      interviewerName
+    } = this.state;
+    const {
+      onChangeCategory,
       onChangeQuestion,
+      onDispatchQuestion,
       handleCodeChange,
       addTape,
       resetTape,
-      onTagUpdate
+      onTagUpdate,
+      setInterviewerName
     } = this;
     return (
       <React.Fragment>
+        <ControlWidget
+          onDispatchQuestion={onDispatchQuestion}
+          onChangeCategory={onChangeCategory}
+          categoryIndex={categoryIndex}
+          questionIndex={questionIndex}
+          questionList={questionList}
+          onChangeQuestion={onChangeQuestion}
+        />
         {getPageComponent({
-          categoryIndex: category,
+          categoryIndex,
           recordId,
           interviewerName,
-          onDispatchQuestion: this.onDispatchQuestion,
-          onChangeCategory: this.onChangeCategory,
+          onDispatchQuestion,
+          onChangeCategory,
           onChangeQuestion,
           handleCodeChange,
           addTape,
@@ -195,7 +209,7 @@ class Page extends Component {
         <UserModal
           mustEnterName={false}
           closable
-          setInterviewerName={this.setInterviewerName}
+          setInterviewerName={setInterviewerName}
           visible
         />
       </React.Fragment>

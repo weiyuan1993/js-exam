@@ -23,109 +23,31 @@ import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
-  constructor(props) {
-    super(props);
-    this.controlHeight = 70;
-    this.state = {
-      code: '',
-      compiledCode: '',
-      test: '',
-      name: '',
-      tags: [],
-      index: 0,
-      questionList: [],
-      isLoading: false
-    };
-  }
+  controlHeight = 70;
 
   async componentDidMount() {
-    const { compiledCode } = this.state;
-    this.setState({ isLoading: true });
-    const result = await listQuestions('react');
-    this.setState({
-      questionList: result.data.listQuestions.items,
-      isLoading: false
-    });
-    this.subscribeOnUpdateRecord();
-    debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
+    const { compiledCode, addTape } = this.props;
+    debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { compiledCode: previousCompiledCode } = this.state;
-    const { compiledCode } = nextState;
+  shouldComponentUpdate(nextProps) {
+    const { compiledCode: previousCompiledCode, addTape } = this.props;
+    const { compiledCode } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
+      debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
     }
     return true;
   }
 
-  onCodeChange = () => {
-    const { code, test } = this.state;
-    const fullCode = `${code} ${test}`;
-    try {
-      const { code: compiledCode } = transform(fullCode, {
-        presets: [
-          'es2015',
-          ['stage-2', { decoratorsBeforeExport: true }],
-          'react'
-        ],
-        plugins: ['proposal-object-rest-spread']
-      });
-      this.setState({ compiledCode });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  onTagUpdate = tags => {
-    this.setState({ tags });
-  };
-
-  onDispatchQuestion = async () => {
-    const { name, type, tags, code, test, id } = this.state;
-    const { onDispatchQuestion } = this.props;
-    console.log('onDispatchQuestion!', this.state);
-    this.setState({ isLoading: true });
-    await onDispatchQuestion({
-      name,
-      type,
-      content: code,
-      test
-    });
-    this.setState({ isLoading: false });
-  };
-
-  onChangeQuestion = async index => {
-    const { questionList } = this.state;
-    const { id, name, type } = questionList[index];
-    this.setState({ isLoading: true, index });
-    const result = await getQuestion({ id });
-    const { tags, content: code, test } = result.data.getQuestion;
-    this.setState({
-      name,
-      type,
-      tags,
-      code,
-      test,
-      isLoading: false,
-      id
-    });
-  };
-
-  subscribeOnUpdateRecord = () => {
-    subscribeOnUpdateRecord(data => {
-      const { id, history, subjectId } = data;
-      const { recordId, interviewerName } = this.props;
-      if (id === recordId, subjectId === interviewerName) {
-        console.log(data);
-        this.setState({ code: history[0] });
-      }
-    });
-  };
-
   render() {
-    const { test, code, tags, isLoading, questionList, index } = this.state;
-    const { onChangeCategory, categoryIndex } = this.props;
+    const {
+      onTagUpdate,
+      handleCodeChange,
+      test,
+      code,
+      tags,
+      isLoading,
+    } = this.props;
     const layout = [
       {
         key: 'code',
@@ -148,17 +70,9 @@ class ReactPage extends Component {
         maxWidth: 700
       },
       {
-        key: 'control',
-        x: 1,
-        y: 0,
-        width: window.innerWidth / 2,
-        height: this.controlHeight,
-        static: true
-      },
-      {
         key: 'result',
         x: 1,
-        y: 1,
+        y: 0,
         width: window.innerWidth / 2,
         height: (window.innerHeight - this.controlHeight) / 2 - 100,
         minWidth: 100,
@@ -169,7 +83,7 @@ class ReactPage extends Component {
       {
         key: 'answer',
         x: 1,
-        y: 2,
+        y: 1,
         width: window.innerWidth / 2,
         height: (window.innerHeight - this.controlHeight) / 2 - 100,
         minWidth: 100,
@@ -195,9 +109,7 @@ class ReactPage extends Component {
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
             <GridItem key="code">
               <CodeWidget
-                handleCodeChange={newCode => {
-                  this.setState({ code: newCode }, this.onCodeChange);
-                }}
+                handleCodeChange={handleCodeChange}
                 data={code}
                 mode="jsx"
                 theme="monokai"
@@ -205,9 +117,6 @@ class ReactPage extends Component {
             </GridItem>
             <GridItem key="test">
               <CodeWidget
-                handleCodeChange={newCode => {
-                  this.setState({ test: newCode }, this.onCodeChange);
-                }}
                 data={test}
                 mode="jsx"
                 theme="textmate"
@@ -216,23 +125,11 @@ class ReactPage extends Component {
             <GridItem key="answer">
               <AnswerWidget />
             </GridItem>
-            <GridItem key="control">
-              <ControlWidget
-                type="react"
-                onChangeName={name => this.setState({ name })}
-                onDispatchQuestion={this.onDispatchQuestion}
-                onChangeCategory={onChangeCategory}
-                categoryIndex={categoryIndex}
-                questionIndex={index}
-                questionList={questionList}
-                onChangeQuestion={this.onChangeQuestion}
-              />
-            </GridItem>
             <GridItem key="result">
               <ResultWidget />
             </GridItem>
             <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={this.onTagUpdate} />
+              <TagWidget data={tags} onTagUpdate={onTagUpdate} />
             </GridItem>
           </Grid>
         </Spin>

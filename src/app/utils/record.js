@@ -16,7 +16,6 @@ const createRecord = async (subjectId) => {
   const { data } = await API.graphql(
     graphqlOperation(mutations.createRecord, params)
   );
-  console.log(data)
   return data.createRecord;
 };
 const updateRecord = async (id, newHistory) => {
@@ -37,6 +36,9 @@ const subscribeOnCreateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onCreateRecord);
+    },
+    error: error => {
+      console.error(error);
     }
   });
 };
@@ -45,6 +47,9 @@ const subscribeOnUpdateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onUpdateRecord);
+    },
+    error: error => {
+      console.error(error);
     }
   });
 };

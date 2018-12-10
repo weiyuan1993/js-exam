@@ -27,20 +27,25 @@ class JavaScriptPage extends Component {
     debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { compiledCode: previousCompiledCode, addTape, resetTape } = this.props;
+    const { compiledCode } = nextProps;
+    if (previousCompiledCode !== compiledCode) {
+      console.log("code change")
+      resetTape();
+      debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
+    }
+    return true;
+  }
+
   render() {
     const {
-      onChangeCategory,
-      onDispatchQuestion,
-      onChangeQuestion,
       onTagUpdate,
-      categoryIndex,
-      questionIndex,
       handleCodeChange,
       code,
       test,
       tape,
       tags,
-      questionList,
       isLoading
     } = this.props;
     const layout = [
@@ -65,17 +70,9 @@ class JavaScriptPage extends Component {
         maxWidth: 700
       },
       {
-        key: 'control',
-        x: 1,
-        y: 0,
-        width: window.innerWidth / 2,
-        height: this.controlHeight,
-        static: true
-      },
-      {
         key: 'tape',
         x: 1,
-        y: 1,
+        y: 0,
         width: window.innerWidth / 2,
         height: (window.innerHeight - this.controlHeight) / 2,
         minWidth: 100,
@@ -86,7 +83,7 @@ class JavaScriptPage extends Component {
       {
         key: 'tag',
         x: 1,
-        y: 2,
+        y: 1,
         width: window.innerWidth / 2,
         height: (window.innerHeight - this.controlHeight) / 2,
         minWidth: 100,
@@ -111,17 +108,6 @@ class JavaScriptPage extends Component {
               <TestWidget
                 data={test}
                 readOnly={false}
-              />
-            </GridItem>
-            <GridItem key="control">
-              <ControlWidget
-                type="javascript"
-                onDispatchQuestion={onDispatchQuestion}
-                onChangeCategory={onChangeCategory}
-                onChangeQuestion={onChangeQuestion}
-                categoryIndex={categoryIndex}
-                questionIndex={questionIndex}
-                questionList={questionList}
               />
             </GridItem>
             <GridItem key="tape">

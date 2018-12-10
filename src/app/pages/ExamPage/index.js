@@ -5,7 +5,7 @@ import { transform } from '@babel/standalone';
 import { message } from 'antd';
 
 // import { resetConsole } from 'app/actions/console';
-
+import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
 import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
@@ -37,6 +37,7 @@ class Page extends Component {
       recordId: '',
       console: [],
       interviewerName: '',
+      visibleInterviewerModal: true,
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
@@ -81,7 +82,7 @@ class Page extends Component {
     }
   };
 
-  onReset = type => {
+  onReset = () => {
     const { questionContent } = this.state;
     this.setState({ code: questionContent });
     this.handleCodeChange(questionContent);
@@ -95,6 +96,11 @@ class Page extends Component {
   resetTape = () => {
     this.setState({ tape: [] });
   };
+
+  setInterviewerModal = () => {
+    const { visibleInterviewerModal } = this.state;
+    this.setState({ visibleInterviewerModal: !visibleInterviewerModal });
+  }
 
   addConsole = (...args) => {
     const { console: _console } = this.state;
@@ -144,10 +150,16 @@ class Page extends Component {
       onReset,
       addTape,
       resetTape,
-      resetConsole
+      resetConsole,
+      setInterviewerModal,
     } = this;
+    const { visibleInterviewerModal, } = this.state;
     return (
       <>
+        <ControlWidget
+          onReset={() => onReset('javascript')}
+          setInterviewerModal={setInterviewerModal}
+        />
         {getPageComponent({
           handleCodeChange,
           wrappedConsole,
@@ -155,14 +167,16 @@ class Page extends Component {
           addTape,
           resetTape,
           resetConsole,
+          setInterviewerModal,
           ...this.state,
           ...this.props
         })}
         <UserModal
+          setInterviewerModal={setInterviewerModal}
           mustEnterName={true}
-          closable={false}
+          closable={true}
           setInterviewerName={this.setInterviewerName}
-          visible={true}/>
+          visible={visibleInterviewerModal}/>
       </>
     );
   }
