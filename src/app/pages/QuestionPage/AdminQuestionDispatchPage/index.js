@@ -92,9 +92,8 @@ class Page extends Component {
   };
 
   handleCodeChange = (newCode) => {
-    this.setState({ code: newCode });
-    const { code, test } = this.state;
-    const fullCode = `${code} ${test}`;
+    const { test } = this.state;
+    const fullCode = `${newCode} ${test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -104,7 +103,7 @@ class Page extends Component {
         ],
         plugins: ['proposal-object-rest-spread']
       });
-      this.setState({ compiledCode });
+      this.setState({ code: newCode, compiledCode });
     } catch (e) {
       console.log('Editor code complie error.');
     }
