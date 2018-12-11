@@ -109,7 +109,6 @@ const subscribeOnCreateQuestionSnapshot = callback => {
     graphqlOperation(subscriptions.onCreateQuestionSnapshot)
   ).subscribe({
     next: ({ value }) => {
-      console.log(value)
       callback(value.data.onCreateQuestionSnapshot);
     }
   });

@@ -117,8 +117,8 @@ class Page extends Component {
 
 
   subscribeOnCreateRecord = () => {
-    const { intervieweeName } = this.state;
     subscribeOnCreateRecord(data => {
+      const { intervieweeName } = this.state;
       const { id, subjectId } = data;
       if (intervieweeName === subjectId) {
         this.setState({
