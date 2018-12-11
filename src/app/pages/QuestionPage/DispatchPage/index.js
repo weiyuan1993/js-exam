@@ -172,10 +172,10 @@ class Page extends Component {
 
   subscribeOnUpdateRecord = () => {
     subscribeOnUpdateRecord(data => {
-      const { id, history, subjectId } = data;
+      const { id, syncCode, subjectId } = data;
       const { recordId, intervieweeName } = this.state;
       if (id === recordId && intervieweeName === subjectId) {
-        this.setState({ code: history[0] });
+        this.setState({ code: syncCode });
       }
     });
   };
