@@ -9,7 +9,6 @@ const createRecord = async (subjectId) => {
   const params = {
     input: {
       subjectId,
-      history: [],
       timeBegin: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
   };
@@ -18,12 +17,12 @@ const createRecord = async (subjectId) => {
   );
   return data.createRecord;
 };
-const updateRecord = async (id, newHistory, subjectId) => {
+const updateRecord = async (id, newCode, subjectId) => {
   const params = {
     input: {
       id,
       subjectId,
-      history: [newHistory],
+      syncCode: newCode,
       timeEnd: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
   };
