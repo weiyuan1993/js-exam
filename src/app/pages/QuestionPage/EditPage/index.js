@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
-import { updateQuestion } from 'app/utils/question';
+import { message } from 'antd';
+
+import { updateQuestion, deleteQuestion } from 'app/utils/question';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
+
 
 
 const getPageComponent = (args) => {
@@ -23,14 +26,6 @@ class Page extends Component {
     this.state = { category: 0 };
   }
 
-  componentDidMount() {
-    const { state, history } = this.props;
-    // if (!state.login.isLogin) {
-    //   history.push('/login');
-    //   return;
-    // }
-  }
-
   onChangeCategory = (index) => {
     this.setState({ category: index });
   }
@@ -38,8 +33,18 @@ class Page extends Component {
   onSubmit = async (data) => {
     try {
       await updateQuestion(data);
+      message.success('Successfully edited!');
     } catch (e) {
-      alert(e.message);
+      message.error(e);
+    }
+  }
+
+  onDelete = async data => {
+    try {
+      await deleteQuestion(data);
+      message.success('Successfully deleted!');
+    } catch (e) {
+      message.error(e);
     }
   }
 
@@ -51,6 +56,7 @@ class Page extends Component {
           getPageComponent({
             index: category,
             onSubmit: this.onSubmit,
+            onDelete: this.onDelete,
             onChangeCategory: this.onChangeCategory,
             categoryIndex: category
           })

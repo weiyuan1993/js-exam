@@ -24,6 +24,7 @@ const QuestionSelector = ({ index, onChange, list }) => (
   <Select
     onChange={onChange}
     defaultValue={index}
+    value={index}
     style={{ minWidth: 200 }}
   >
     { list.map((q, i) => <Option key={q.id} value={i}>{q.name}</Option>)}

@@ -30,7 +30,6 @@ class ReactPage extends Component {
       code: '',
       compiledCode: '',
       test: '',
-      name: '',
       tags: [],
       index: 0,
       questionList: [],
@@ -41,8 +40,8 @@ class ReactPage extends Component {
   async componentDidMount() {
     const { compiledCode } = this.state;
     this.setState({ isLoading: true });
-    const result = await listQuestions('react');
-    this.setState({ questionList: result.items, isLoading: false });
+    await this.getQuestionList();
+    this.onChangeQuestion(0);
     debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
   }
 
@@ -55,6 +54,11 @@ class ReactPage extends Component {
       // });
     }
     return true;
+  }
+
+  getQuestionList = async () => {
+    const result = await listQuestions('react');
+    this.setState({ questionList: result.items, isLoading: false });
   }
 
   onCodeChange = () => {
@@ -93,12 +97,25 @@ class ReactPage extends Component {
     this.setState({ isLoading: false });
   }
 
+  onDelete = async () => {
+    const { id } = this.state;
+    this.setState({ isLoading: true });
+    await this.props.onDelete({
+      input: {
+        id
+      }
+    });
+    await this.getQuestionList();
+    await this.onChangeQuestion(0);
+    this.setState({ isLoading: false });
+  }
+
   onChangeQuestion = async (index) => {
     const { questionList } = this.state;
     const { id } = questionList[index];
     this.setState({ isLoading: true, index });
-    const result = await getQuestion({ id });
-    const { tags, content: code, test } = result.data.getQuestion;
+    const result = await getQuestion(id);
+    const { tags, content: code, test } = result;
     this.setState({
       tags,
       code,
@@ -139,7 +156,7 @@ class ReactPage extends Component {
       },
     ];
     return (
-      <div className={styles.app}>    
+      <div className={styles.app}>   
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
             <GridItem key="code">
@@ -170,6 +187,7 @@ class ReactPage extends Component {
                 type="react"
                 onChangeName={name => this.setState({ name })}
                 onSubmit={this.onSubmit}
+                onDelete={this.onDelete}
                 onChangeCategory={onChangeCategory}
                 categoryIndex={categoryIndex}
                 questionIndex={index}

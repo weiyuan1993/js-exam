@@ -13,9 +13,6 @@ import CodeWidget from 'app/components/Widgets/CodeWidget';
 import TestWidget from 'app/components/Widgets/TestWidget';
 import TapeWidget from 'app/components/Widgets/TapeWidget';
 
-import { changeCategory } from 'app/actions/category';
-
-import { getCategories } from 'app/questions/index';
 import debouncedRunCode from 'app/utils/runCode';
 
 import { listQuestions, getQuestion } from 'app/utils/question';
@@ -45,8 +42,8 @@ class JavaScriptPage extends Component {
   async componentDidMount() {
     const { compiledCode } = this.state;
     this.setState({ isLoading: true });
-    const result = await listQuestions('javascript');
-    this.setState({ questionList: result.items, isLoading: false });
+    await this.getQuestionList();
+    this.onChangeQuestion(0);
     debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
   }
 
@@ -59,6 +56,11 @@ class JavaScriptPage extends Component {
       });
     }
     return true;
+  }
+
+  getQuestionList = async () => {
+    const result = await listQuestions('javascript');
+    this.setState({ questionList: result.items, isLoading: false });
   }
 
   addTape = (data) => {
@@ -104,12 +106,25 @@ class JavaScriptPage extends Component {
     this.setState({ isLoading: false });
   }
 
+  onDelete = async () => {
+    const { id } = this.state;
+    this.setState({ isLoading: true });
+    await this.props.onDelete({
+      input: {
+        id
+      }
+    });
+    await this.getQuestionList();
+    await this.onChangeQuestion(0);
+    this.setState({ isLoading: false });
+  }
+
   onChangeQuestion = async (index) => {
     const { questionList } = this.state;
     const { id } = questionList[index];
     this.setState({ isLoading: true, index });
-    const result = await getQuestion({ id });
-    const { tags, content: code, test } = result.data.getQuestion;
+    const result = await getQuestion(id);
+    const { tags, content: code, test } = result;
     this.setState({
       tags,
       code,
@@ -173,8 +188,8 @@ class JavaScriptPage extends Component {
             <GridItem key="control">
               <ControlWidget
                 type="javascript"
-                onChangeName={name => this.setState({ name })}
                 onSubmit={this.onSubmit}
+                onDelete={this.onDelete}
                 onChangeCategory={onChangeCategory}
                 categoryIndex={categoryIndex}
                 questionIndex={index}

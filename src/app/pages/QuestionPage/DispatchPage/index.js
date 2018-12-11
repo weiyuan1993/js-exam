@@ -86,7 +86,7 @@ class Page extends Component {
   onChangeQuestion = async index => {
     const { questionList } = this.state;
     const { id, name, type } = questionList[index];
-    this.setState({ isLoading: true, index });
+    this.setState({ isLoading: true, questionIndex: index });
     const result = await getQuestion(id);
     const { tags, content: code, test } = result;
     this.setState({

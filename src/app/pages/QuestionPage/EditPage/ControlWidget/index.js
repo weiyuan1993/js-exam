@@ -10,6 +10,7 @@ const ControlWidget = ({
   categoryIndex,
   questionIndex,
   onSubmit,
+  onDelete,
   onChangeCategory,
   onChangeQuestion,
   questionList
@@ -18,10 +19,16 @@ const ControlWidget = ({
     <CategorySelector onChange={onChangeCategory} index={categoryIndex} />
     <QuestionSelector onChange={onChangeQuestion} index={questionIndex} list={questionList} />
     <Button
-      type="danger"
+      type="primary"
       onClick={onSubmit}
     >
       Submit
+    </Button>
+    <Button
+      type="danger"
+      onClick={onDelete}
+    >
+      Delete
     </Button>
   </div>
 );
