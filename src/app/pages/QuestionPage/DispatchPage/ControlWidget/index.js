@@ -2,7 +2,7 @@ import React from 'react';
 import CategorySelector from 'app/components/Selectors/CategorySelector';
 import QuestionSelector from 'app/components/Selectors/QuestionSelector';
 
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
 
 
@@ -12,16 +12,33 @@ const ControlWidget = ({
   onDispatchQuestion,
   onChangeCategory,
   onChangeQuestion,
-  questionList
+  questionList,
+  setIntervieweeModal,
+  intervieweeName
 }) => (
   <div className={styles.control}>
-    <CategorySelector onChange={onChangeCategory} index={categoryIndex} />
-    <QuestionSelector onChange={onChangeQuestion} index={questionIndex} list={questionList} />
+    <div className={styles.interviewee}>
+      <Icon type="user" />
+      <p>
+        Interviewee:
+        <span>{ intervieweeName || 'UNSET' }</span>
+      </p>
+    </div>
+    <div>
+      <CategorySelector onChange={onChangeCategory} index={categoryIndex} />
+      <QuestionSelector onChange={onChangeQuestion} index={questionIndex} list={questionList} />
+      <Button
+        type="danger"
+        onClick={onDispatchQuestion}
+      >
+      Dispatch Question
+      </Button>
+    </div>
     <Button
-      type="danger"
-      onClick={onDispatchQuestion}
+      type="primary"
+      onClick={setIntervieweeModal}
     >
-    Dispatch Question
+    Change Interviewee
     </Button>
   </div>
 );

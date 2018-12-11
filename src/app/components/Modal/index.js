@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Input, message } from 'antd';
+import { Modal, Button, Input, message, Select } from 'antd';
 import './Modal.scss';
 
 export default class UserModal extends React.Component {
@@ -26,8 +26,19 @@ export default class UserModal extends React.Component {
     }
   }
 
+  searchName = () => {
+    const { userName } = this.state;
+    if (userName === '') {
+      message.error('Please Enter Interviewee\'s Name');
+    } else {
+      this.props.setIntervieweeName(userName);
+      this.props.getRecordListBySubjectId(userName);
+      this.setState({ userName: '' });
+    }
+  }
+
   render() {
-    const { closable, visible } = this.props;
+    const { closable, visible, searchable } = this.props;
     const { userName } = this.state;
     return (
       <Modal
@@ -44,12 +55,29 @@ export default class UserModal extends React.Component {
           value={userName}
           onChange={e => this.setState({ userName: e.target.value.trim() })}
         />
-        <Button
-          id="intervieweeNameSubmitBtn"
-          onClick={this.submitName}
-        >
-          {`Submit${userName}`}
-        </Button>
+        <div>
+          {
+            searchable ? (
+              <Button
+                id="getRecordListBtn"
+                onClick={this.searchName}
+              >
+                {`Search${userName}`}
+              </Button>
+            ) : ''
+          }
+          <Button
+            id="intervieweeNameSubmitBtn"
+            onClick={this.submitName}
+          >
+            Submit
+          </Button>
+        </div>
+        <div>
+          <Select>
+
+          </Select>
+        </div>
       </Modal>
     );
   }

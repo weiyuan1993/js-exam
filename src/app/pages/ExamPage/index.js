@@ -52,9 +52,11 @@ class Page extends Component {
   }
 
   updateRecordAction = async newCode => {
-    const { recordId } = this.state;
+    const { recordId, intervieweeName } = this.state;
     if (recordId !== '') {
-      await updateRecord(recordId, newCode);
+      console.log('weoruwoierj20394rjei')
+      const result = await updateRecord(recordId, newCode, intervieweeName);
+      console.log(result);
     }
   };
 
@@ -71,6 +73,7 @@ class Page extends Component {
         ],
         plugins: ['proposal-object-rest-spread']
       });
+      console.log('weoruwoierj20394rjei')
       this.setState({ compiledCode, code: newCode });
       this.updateRecordAction(newCode);
     } catch (e) {
@@ -112,6 +115,7 @@ class Page extends Component {
 
   setIntervieweeName = name => {
     this.setState({ intervieweeName: name });
+    console.log(this.state.intervieweeName, '####################');
     message.success(name);
   }
 
