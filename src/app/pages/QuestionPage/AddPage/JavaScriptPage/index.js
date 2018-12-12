@@ -51,6 +51,7 @@ class JavaScriptPage extends Component {
   render() {
     const { tape } = this.state;
     const {
+      isLoading,
       test,
       code,
       tags,
@@ -103,7 +104,7 @@ class JavaScriptPage extends Component {
     ];
     return (
       <div className={styles.app}>
-        <Spin spinning={this.props.isLoading} size="large">
+        <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
             <GridItem key="code">
               <CodeWidget

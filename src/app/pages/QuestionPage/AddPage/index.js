@@ -40,6 +40,7 @@ class Page extends Component {
 
   onSubmit = async () => {
     const {
+      category,
       tags,
       name,
       code,
@@ -52,7 +53,7 @@ class Page extends Component {
         name,
         code,
         test,
-        type: 'javascript'
+        type: category === 0 ? 'javascript' : 'react'
       });
       message.success(`Successfully add the question "${name}"!`);
     } catch (e) {
