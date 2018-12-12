@@ -15,8 +15,8 @@ const ControlWidget = ({
   questionList
 }) => (
   <div className={styles.control}>
-    <CategorySelector onChange={onChangeCategory} index={categoryIndex} />
-    <QuestionSelector onChange={onChangeQuestion} index={questionIndex} list={questionList} />
+    <CategorySelector onChange={onChangeCategory} categoryIndex={categoryIndex} />
+    <QuestionSelector onChange={onChangeQuestion} questionIndex={questionIndex} list={questionList} />
     <Button
       type="danger"
       onClick={onDispatchQuestion}

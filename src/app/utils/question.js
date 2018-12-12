@@ -30,7 +30,7 @@ const listQuestions = async type => {
 };
 
 const createQuestion = async data => {
-  const { tags, name, code: content, test, type } = data;
+  const { tags, name, content, test, type } = data;
   const params = {
     input: {
       name,
