@@ -21,7 +21,8 @@ import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
 
 
-class ReactPage extends Component {
+class 
+ReactPage extends Component {
   constructor(props) {
     super(props);
     this.controlHeight = 70;

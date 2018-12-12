@@ -40,7 +40,7 @@ class TagWidget extends Component {
     const { data: tags } = this.props;
     return (
       <div className={styles['tag-widget']}>
-        {tags.map((tag, index) => {
+        {tags ? tags.map((tag, index) => {
           const isLongTag = tag.length > 20;
           const tagElem = (
             <Tag key={tag} closable afterClose={() => this.handleClose(tag)}>
@@ -48,7 +48,7 @@ class TagWidget extends Component {
             </Tag>
           );
           return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
-        })}
+        }) : null}
         {inputVisible && (
           <Input
             ref={this.saveInputRef}
