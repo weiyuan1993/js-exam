@@ -50,6 +50,7 @@ class Page extends Component {
     isLoading: false,
     intervieweeName: '',
     visibleIntervieweeModal: true,
+    recordList: [],
   };
 
   constructor(props) {
@@ -193,10 +194,17 @@ class Page extends Component {
   getRecordListBySubjectId = async intervieweeName => {
     const result = await listRecords(intervieweeName);
     console.log(result, '@@@@@@@@@@@@@@@@@@@@');
-    result.forEach(item => {
-      const { timeBegin } = item;
-      // item.timeBegin = (timeBegin * 1000)
+    this.setState({ recordList: result });
+  }
+
+  joinExam = record => {
+    const { id, syncCode } = record;
+    this.setState({
+      recordId: id
     });
+    this.handleCodeChange(syncCode);
+    this.setState({ recordList: [] });
+    this.setIntervieweeModal();
   }
 
   render() {
@@ -207,6 +215,7 @@ class Page extends Component {
       recordId,
       intervieweeName,
       visibleIntervieweeModal,
+      recordList,
     } = this.state;
     const {
       onChangeCategory,
@@ -219,6 +228,7 @@ class Page extends Component {
       setIntervieweeName,
       setIntervieweeModal,
       getRecordListBySubjectId,
+      joinExam
     } = this;
     return (
       <React.Fragment>
@@ -253,6 +263,8 @@ class Page extends Component {
           getRecordListBySubjectId={getRecordListBySubjectId}
           visible={visibleIntervieweeModal}
           searchable
+          recordList={recordList}
+          joinExam={joinExam}
         />
       </React.Fragment>
     );

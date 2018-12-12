@@ -22,20 +22,45 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    align-items: flex-end;
+    align-items:  center;
   }
+}
+
+#modalSubmitBtn {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 15px 0;
 }
 
 #intervieweeNameInput {
   height: 45px;
-  margin-bottom: 25px;
   font-size: 18px;
 }
 
-#intervieweeNameSubmitBtn {
+#intervieweeNameSubmitBtn, #getRecordListBtn {
+  margin: 0 5px;
   border: unset;
   font-size: 18px;
-  background-color: #7EAED0;
-  color: #FFFFFF;
   height: 40px;
+  color: #FFFFFF;
+}
+
+#intervieweeNameSubmitBtn {
+  background-color: #7EAED0;
+}
+
+#intervieweeNameSubmitBtn:hover {
+  background-color: #FFFFFF;
+  color: #7EAED0;
+}
+
+#getRecordListBtn {
+  background-color: #E65E1E;
+}
+
+#getRecordListBtn:hover {
+  background-color: #FFFFFF;
+  color: #E65E1E;
 }
