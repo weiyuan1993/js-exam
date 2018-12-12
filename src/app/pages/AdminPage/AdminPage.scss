@@ -1,3 +1,32 @@
-.ant-tabs-bar {
-  margin:0;
+#AdminPage {
+
+  .ant-tabs-bar {
+    margin: 0;
+    padding-top: 5px;
+    background-color: #1D4F91;
+
+    .ant-tabs-nav {
+      width: 100%;
+      padding-left: 2%;
+
+      .ant-tabs-tab {
+        width: 15%;
+        text-align: center;
+        color: #FFF;
+        border: solid #FFF;
+        border-width: 1px 1px 0;
+        border-radius: 4px 4px 0 0;
+        margin: 1px;
+      }
+
+      .ant-tabs-tab-active {
+        background-color: #FFF;
+        color: #1D4F91;
+      }
+
+      .ant-tabs-ink-bar-animated {
+        background-color: #1D4F91;
+      }
+    }
+  }
 }

@@ -1,12 +1,15 @@
 import React from 'react';
-import { Modal, Button, Input, message } from 'antd';
+import { Modal, Button, Input, message, Select } from 'antd';
 import './Modal.scss';
 
+const { Option } = Select;
 export default class UserModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       userName: '',
+      recodId: '',
+      recordSyncCode: '',
     };
   }
 
@@ -26,8 +29,41 @@ export default class UserModal extends React.Component {
     }
   }
 
+  onChangeSelect = (e) => {
+    const record = this.props.recordList.find(item => {
+      return item.id === e;
+    });
+    this.setState({
+      recodId: record.id,
+      recordSyncCode: record.syncCode
+    });
+  }
+
+  changeTime = time => {
+    const date = new Date(time * 1000);
+    return date.toDateString();
+  }
+
+  searchName = () => {
+    const { userName } = this.state;
+    if (userName === '') {
+      message.error('Please Enter Interviewee\'s Name');
+    } else {
+      this.props.setIntervieweeName(userName);
+      this.props.getRecordListBySubjectId(userName);
+      this.setState({ userName: '' });
+    }
+  }
+
+  joinAction = () => {
+    const { recodId, recordSyncCode } = this.state;
+    const data = { recodId, recordSyncCode };
+    this.props.joinExam(data);
+    this.setState({ recodId: '', recordSyncCode: '' });
+  }
+
   render() {
-    const { closable, visible } = this.props;
+    const { closable, visible, searchable, recordList } = this.props;
     const { userName } = this.state;
     return (
       <Modal
@@ -44,12 +80,62 @@ export default class UserModal extends React.Component {
           value={userName}
           onChange={e => this.setState({ userName: e.target.value.trim() })}
         />
-        <Button
-          id="intervieweeNameSubmitBtn"
-          onClick={this.submitName}
-        >
-          {`Submit${userName}`}
-        </Button>
+        <div id="modalSubmitBtn">
+          {
+            searchable ? (
+              <Button
+                id="getRecordListBtn"
+                onClick={this.searchName}
+              >
+                {`Search${userName}`}
+              </Button>
+            ) : ''
+          }
+          <Button
+            id="intervieweeNameSubmitBtn"
+            onClick={this.submitName}
+          >
+            Submit
+          </Button>
+        </div>
+        {
+          recordList ? (
+            <div
+              style={
+                recordList.length > 0 ? { opacity: '1' }
+                  : { opacity: '0.5' }
+              }
+            >
+              <Select
+                onChange={this.onChangeSelect}
+                style={{ width: '400px' }}
+                disabled={recordList.length <= 0}
+                placeholder={recordList.length > 0 ? 'Place Select to Join' : ''}
+                size="large"
+              >
+                {
+                  Object.values(recordList).map(
+                    item => (
+                      <Option
+                        key={item.id}
+                        onChange={this.onChange}
+                      >
+                        {
+                          this.changeTime(item.timeBegin)
+                        }
+                      </Option>
+                    )
+                  )
+                }
+              </Select>
+              <Button
+                onClick={this.joinAction}
+              >
+                Join
+              </Button>
+            </div>
+          ) : ''
+        }
       </Modal>
     );
   }

@@ -28,7 +28,7 @@ export class AdminPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id="AdminPage">
         <Tabs activeKey={this.state.activeKey} onTabClick={this.onTabClick}>
           <TabPane tab={<span><Icon type="eye" />Dispatch</span>} key="#dispatch">
             <DispatchPage />

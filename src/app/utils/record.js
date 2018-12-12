@@ -17,10 +17,11 @@ const createRecord = async (subjectId) => {
   );
   return data.createRecord;
 };
-const updateRecord = async (id, newCode) => {
+const updateRecord = async (id, newCode, subjectId) => {
   const params = {
     input: {
       id,
+      subjectId,
       syncCode: newCode,
       timeEnd: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
@@ -52,7 +53,26 @@ const subscribeOnUpdateRecord = callback => {
     }
   });
 };
+
+const listRecords = async subjectId => {
+  const query = `query {listRecords(filter:{subjectId:{eq:"${subjectId}"}}limit: 1000){
+    items {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+    }
+    nextToken
+  }
+  }
+ `;
+  const { data } = await API.graphql(graphqlOperation(query));
+  return data.listRecords.items;
+};
+
 export {
+  listRecords,
   createRecord,
   updateRecord,
   subscribeOnCreateRecord,

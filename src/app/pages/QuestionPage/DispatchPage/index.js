@@ -12,13 +12,15 @@ import debouncedRunCode from 'app/utils/runCode';
 import {
   createRecord,
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord
+  subscribeOnUpdateRecord,
+  listRecords
 } from 'app/utils/record';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
+import { callbackify } from 'util';
 
 const getPageComponent = args => {
   switch (args.categoryIndex) {
@@ -48,11 +50,13 @@ class Page extends Component {
     isLoading: false,
     intervieweeName: '',
     visibleIntervieweeModal: true,
+    recordList: [],
   };
 
   constructor(props) {
     super(props);
     this.setIntervieweeName = this.setIntervieweeName.bind(this);
+    this.getRecordListBySubjectId = this.getRecordListBySubjectId.bind(this);
   }
 
   async componentDidMount() {
@@ -127,8 +131,13 @@ class Page extends Component {
         message.warning('Please Enter Interviewee First.');
         this.setState({ isLoading: false });
       } else {
-        await dispatchQuestion({ name: questionName, type, content: questionContent, test });
         this.createRecord(intervieweeName);
+        await dispatchQuestion({
+          name: questionName,
+          type,
+          content: questionContent,
+          test,
+        });
         message.success(
           `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
         );
@@ -160,7 +169,10 @@ class Page extends Component {
 
   createRecord = async intervieweeName => {
     const result = await createRecord(intervieweeName);
-    this.setState({ recordId: result.id });
+    console.log(result)
+    this.setState({
+      recordId: result.id,
+    });
   };
 
   subscribeOnCreateRecord = () => {
@@ -180,6 +192,22 @@ class Page extends Component {
     });
   };
 
+  getRecordListBySubjectId = async intervieweeName => {
+    const result = await listRecords(intervieweeName);
+    console.log(result, '@@@@@@@@@@@@@@@@@@@@');
+    this.setState({ recordList: result });
+  }
+
+  joinExam = record => {
+    const { id, syncCode } = record;
+    this.setState({
+      recordId: id
+    });
+    this.handleCodeChange(syncCode);
+    this.setState({ recordList: [] });
+    this.setIntervieweeModal();
+  }
+
   render() {
     const {
       categoryIndex,
@@ -188,6 +216,7 @@ class Page extends Component {
       recordId,
       intervieweeName,
       visibleIntervieweeModal,
+      recordList,
     } = this.state;
     const {
       onChangeCategory,
@@ -198,7 +227,9 @@ class Page extends Component {
       resetTape,
       onTagUpdate,
       setIntervieweeName,
-      setIntervieweeModal
+      setIntervieweeModal,
+      getRecordListBySubjectId,
+      joinExam
     } = this;
     return (
       <React.Fragment>
@@ -209,6 +240,8 @@ class Page extends Component {
           questionIndex={questionIndex}
           questionList={questionList}
           onChangeQuestion={onChangeQuestion}
+          setIntervieweeModal={setIntervieweeModal}
+          intervieweeName={intervieweeName}
         />
         {getPageComponent({
           categoryIndex,
@@ -228,7 +261,11 @@ class Page extends Component {
           mustEnterName={false}
           closable
           setIntervieweeName={setIntervieweeName}
+          getRecordListBySubjectId={getRecordListBySubjectId}
           visible={visibleIntervieweeModal}
+          searchable
+          recordList={recordList}
+          joinExam={joinExam}
         />
       </React.Fragment>
     );
