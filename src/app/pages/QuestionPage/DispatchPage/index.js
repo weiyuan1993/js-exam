@@ -20,7 +20,6 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
-import { callbackify } from 'util';
 
 const getPageComponent = args => {
   switch (args.categoryIndex) {
@@ -169,7 +168,6 @@ class Page extends Component {
 
   createRecord = async intervieweeName => {
     const result = await createRecord(intervieweeName);
-    console.log(result)
     this.setState({
       recordId: result.id,
     });
@@ -194,7 +192,6 @@ class Page extends Component {
 
   getRecordListBySubjectId = async intervieweeName => {
     const result = await listRecords(intervieweeName);
-    console.log(result, '@@@@@@@@@@@@@@@@@@@@');
     this.setState({ recordList: result });
   }
 
