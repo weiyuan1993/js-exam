@@ -131,13 +131,13 @@ class Page extends Component {
         message.warning('Please Enter Interviewee First.');
         this.setState({ isLoading: false });
       } else {
-        this.createRecord(intervieweeName);
         await dispatchQuestion({
           name: questionName,
           type,
           content: questionContent,
           test,
         });
+        this.createRecord(intervieweeName);
         message.success(
           `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
         );
@@ -172,6 +172,7 @@ class Page extends Component {
     this.setState({
       recordId: result.id,
     });
+    console.log(result, 'werwer');
   };
 
   subscribeOnCreateRecord = () => {
@@ -193,7 +194,6 @@ class Page extends Component {
 
   getRecordListBySubjectId = async intervieweeName => {
     const result = await listRecords(intervieweeName);
-    console.log(result, '@@@@@@@@@@@@@@@@@@@@');
     this.setState({ recordList: result });
   }
 

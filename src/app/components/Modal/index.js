@@ -41,7 +41,7 @@ export default class UserModal extends React.Component {
 
   changeTime = time => {
     const date = new Date(time * 1000);
-    return date.toDateString();
+    return date.toDateString() + date.toTimeString()};
   }
 
   searchName = () => {
@@ -51,7 +51,6 @@ export default class UserModal extends React.Component {
     } else {
       this.props.setIntervieweeName(userName);
       this.props.getRecordListBySubjectId(userName);
-      this.setState({ userName: '' });
     }
   }
 
