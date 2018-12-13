@@ -118,7 +118,7 @@ class Page extends Component {
       });
       this.setState({ code: newCode, compiledCode });
     } catch (e) {
-      console.log('Editor code complie error.');
+      this.setState({ code: newCode });
     }
   };
 
@@ -130,13 +130,14 @@ class Page extends Component {
         message.warning('Please Enter Interviewee First.');
         this.setState({ isLoading: false });
       } else {
-        await dispatchQuestion({
+        const question = {
           name: questionName,
           type,
           content: questionContent,
           test,
-        });
-        this.createRecord(intervieweeName);
+        };
+        await dispatchQuestion(question);
+        this.createRecord(intervieweeName, question.content);
         message.success(
           `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
         );
@@ -166,12 +167,11 @@ class Page extends Component {
     this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
   }
 
-  createRecord = async intervieweeName => {
-    const result = await createRecord(intervieweeName);
+  createRecord = async (intervieweeName, questionContent) => {
+    const result = await createRecord(intervieweeName, questionContent);
     this.setState({
       recordId: result.id,
     });
-    console.log(result, 'werwer');
   };
 
   subscribeOnCreateRecord = () => {
@@ -193,16 +193,18 @@ class Page extends Component {
 
   getRecordListBySubjectId = async intervieweeName => {
     const result = await listRecords(intervieweeName);
+    console.log(result)
     this.setState({ recordList: result });
   }
 
   joinExam = record => {
-    const { id, syncCode } = record;
+    const { recordId, recordSyncCode } = record;
+    console.log(record)
     this.setState({
-      recordId: id
+      recordId,
+      recordList: []
     });
-    this.handleCodeChange(syncCode);
-    this.setState({ recordList: [] });
+    this.handleCodeChange(recordSyncCode);
     this.setIntervieweeModal();
   }
 

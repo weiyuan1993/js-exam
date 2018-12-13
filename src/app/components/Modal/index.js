@@ -8,7 +8,7 @@ export default class UserModal extends React.Component {
     super(props);
     this.state = {
       userName: '',
-      recodId: '',
+      recordId: '',
       recordSyncCode: '',
     };
   }
@@ -34,14 +34,14 @@ export default class UserModal extends React.Component {
       return item.id === e;
     });
     this.setState({
-      recodId: record.id,
+      recordId: record.id,
       recordSyncCode: record.syncCode
     });
   }
 
   changeTime = time => {
     const date = new Date(time * 1000);
-    return date.toDateString() + date.toTimeString()};
+    return date.toDateString() + date.toTimeString();
   }
 
   searchName = () => {
@@ -55,10 +55,8 @@ export default class UserModal extends React.Component {
   }
 
   joinAction = () => {
-    const { recodId, recordSyncCode } = this.state;
-    const data = { recodId, recordSyncCode };
-    this.props.joinExam(data);
-    this.setState({ recodId: '', recordSyncCode: '' });
+    const { recordId, recordSyncCode } = this.state;
+    this.props.joinExam({ recordId, recordSyncCode });
   }
 
   render() {

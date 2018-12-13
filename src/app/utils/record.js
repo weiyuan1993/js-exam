@@ -5,10 +5,11 @@ import * as subscriptions from '../../graphql/subscriptions.js';
 
 Amplify.configure(awsExportConfig);
 
-const createRecord = async (subjectId) => {
+const createRecord = async (subjectId, questionContent) => {
   const params = {
     input: {
       subjectId,
+      syncCode: questionContent,
       timeBegin: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
   };
