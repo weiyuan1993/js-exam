@@ -41,13 +41,14 @@ export default class UserModal extends React.Component {
     return date.toDateString() + date.toTimeString();
   }
 
-  searchName = () => {
+  searchName = async () => {
     const { userName } = this.state;
     if (userName === '') {
       message.error('Please Enter Interviewee\'s Name');
     } else {
       this.props.setIntervieweeName(userName);
-      this.props.getRecordListBySubjectId(userName);
+      await this.props.getRecordListBySubjectId(userName);
+      this.onChangeSelect(0);
     }
   }
 
@@ -58,7 +59,7 @@ export default class UserModal extends React.Component {
 
   render() {
     const { closable, visible, searchable, recordList } = this.props;
-    const { userName, recordId } = this.state;
+    const { userName } = this.state;
     return (
       <Modal
         title="Enter Interviewee's Name"
@@ -111,7 +112,6 @@ export default class UserModal extends React.Component {
               >
                 {
                   recordList
-                    .sort((a, b) => b.timeBegin - a.timeBegin)
                     .map((item, index) => (
                       <Option
                         key={item.id}
@@ -127,7 +127,6 @@ export default class UserModal extends React.Component {
               <Button
                 id="joinExamBtn"
                 onClick={this.joinAction}
-                disabled={recordId === ''}
               >
                 Join
               </Button>

@@ -193,13 +193,11 @@ class Page extends Component {
 
   getRecordListBySubjectId = async intervieweeName => {
     const result = await listRecords(intervieweeName);
-    console.log(result)
-    this.setState({ recordList: result });
+    this.setState({ recordList: result.sort((a, b) => b.timeBegin - a.timeBegin) });
   }
 
   joinExam = record => {
     const { recordId, recordSyncCode } = record;
-    console.log(record)
     this.setState({
       recordId,
       recordList: []
