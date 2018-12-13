@@ -9,7 +9,7 @@ export default class UserModal extends React.Component {
     this.state = {
       userName: '',
       recordId: '',
-      recordSyncCode: '',
+      recordSyncCode: ''
     };
   }
 
@@ -29,13 +29,10 @@ export default class UserModal extends React.Component {
     }
   }
 
-  onChangeSelect = (e) => {
-    const record = this.props.recordList.find(item => {
-      return item.id === e;
-    });
+  onChangeSelect = index => {
     this.setState({
-      recordId: record.id,
-      recordSyncCode: record.syncCode
+      recordId: this.props.recordList[index].id,
+      recordSyncCode: this.props.recordList[index].syncCode,
     });
   }
 
@@ -104,25 +101,26 @@ export default class UserModal extends React.Component {
               }
             >
               <Select
+                defaultValue={0}
                 onChange={this.onChangeSelect}
                 style={{ width: '400px' }}
                 disabled={recordList.length <= 0}
-                placeholder={recordList.length > 0 ? 'Place Select to Join' : ''}
+                placeholder={recordList.length > 0 ? 'Please select to join' : ''}
                 size="large"
               >
                 {
-                  Object.values(recordList).map(
-                    item => (
+                  recordList
+                    .sort((a, b) => b.timeBegin - a.timeBegin)
+                    .map((item, index) => (
                       <Option
                         key={item.id}
-                        onChange={this.onChange}
+                        value={index}
                       >
                         {
                           this.changeTime(item.timeBegin)
                         }
                       </Option>
-                    )
-                  )
+                    ))
                 }
               </Select>
               <Button
