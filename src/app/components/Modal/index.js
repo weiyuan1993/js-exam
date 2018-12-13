@@ -84,7 +84,7 @@ export default class UserModal extends React.Component {
                 id="getRecordListBtn"
                 onClick={this.searchName}
               >
-                {`Search${userName}`}
+                Search
               </Button>
             ) : ''
           }
