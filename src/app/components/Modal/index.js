@@ -41,7 +41,7 @@ export default class UserModal extends React.Component {
 
   changeTime = time => {
     const date = new Date(time * 1000);
-    return date.toDateString() + date.toTimeString()};
+    return date.toDateString() + date.toTimeString();
   }
 
   searchName = () => {
