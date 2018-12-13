@@ -39,7 +39,7 @@
   font-size: 18px;
 }
 
-#intervieweeNameSubmitBtn, #getRecordListBtn {
+#intervieweeNameSubmitBtn, #getRecordListBtn, #joinExamBtn {
   margin: 0 5px;
   border: unset;
   font-size: 18px;
@@ -56,11 +56,22 @@
   color: #7EAED0;
 }
 
-#getRecordListBtn {
+#getRecordListBtn, #joinExamBtn {
   background-color: #E65E1E;
 }
 
-#getRecordListBtn:hover {
+#getRecordListBtn:hover, #joinExamBtn:hover {
   background-color: #FFFFFF;
   color: #E65E1E;
+}
+
+#searchRecordListStyle {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  #joinExamBtn {
+    margin: 15px 0;
+  }
 }

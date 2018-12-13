@@ -54,9 +54,7 @@ class Page extends Component {
   updateRecordAction = async newCode => {
     const { recordId, intervieweeName } = this.state;
     if (recordId !== '') {
-      console.log('weoruwoierj20394rjei')
-      const result = await updateRecord(recordId, newCode, intervieweeName);
-      console.log(result);
+      await updateRecord(recordId, newCode, intervieweeName);
     }
   };
 
@@ -73,7 +71,6 @@ class Page extends Component {
         ],
         plugins: ['proposal-object-rest-spread']
       });
-      console.log('weoruwoierj20394rjei')
       this.setState({ compiledCode, code: newCode });
       this.updateRecordAction(newCode);
     } catch (e) {
@@ -115,7 +112,6 @@ class Page extends Component {
 
   setIntervieweeName = name => {
     this.setState({ intervieweeName: name });
-    console.log(this.state.intervieweeName, '####################');
     message.success(name);
   }
 
@@ -157,10 +153,11 @@ class Page extends Component {
       setIntervieweeModal,
       setIntervieweeName,
     } = this;
-    const { visibleIntervieweeModal } = this.state;
+    const { visibleIntervieweeModal, intervieweeName } = this.state;
     return (
       <>
         <ControlWidget
+          intervieweeName={intervieweeName}
           onReset={() => onReset('javascript')}
           setIntervieweeModal={setIntervieweeModal}
         />
@@ -178,7 +175,7 @@ class Page extends Component {
         <UserModal
           setIntervieweeModal={setIntervieweeModal}
           mustEnterName
-          closable
+          closable={false}
           setIntervieweeName={setIntervieweeName}
           visible={visibleIntervieweeModal}
         />

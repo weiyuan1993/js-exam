@@ -61,7 +61,7 @@ export default class UserModal extends React.Component {
 
   render() {
     const { closable, visible, searchable, recordList } = this.props;
-    const { userName } = this.state;
+    const { userName, recordId } = this.state;
     return (
       <Modal
         title="Enter Interviewee's Name"
@@ -98,6 +98,7 @@ export default class UserModal extends React.Component {
         {
           recordList ? (
             <div
+              id="searchRecordListStyle"
               style={
                 recordList.length > 0 ? { opacity: '1' }
                   : { opacity: '0.5' }
@@ -105,7 +106,7 @@ export default class UserModal extends React.Component {
             >
               <Select
                 onChange={this.onChangeSelect}
-                style={{ width: '400px' }}
+                style={{ width: '100%' }}
                 disabled={recordList.length <= 0}
                 placeholder={recordList.length > 0 ? 'Place Select to Join' : ''}
                 size="large"
@@ -126,7 +127,9 @@ export default class UserModal extends React.Component {
                 }
               </Select>
               <Button
+                id="joinExamBtn"
                 onClick={this.joinAction}
+                disabled={recordId === ''}
               >
                 Join
               </Button>

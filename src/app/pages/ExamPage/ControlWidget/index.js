@@ -10,18 +10,26 @@ import CategorySelector from 'app/components/Selectors/CategorySelector';
 
 import { getStateInformation } from 'app/utils/stateHelper';
 
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
 
 const ControlWidget = ({
   onReset,
-  setIntervieweeModal,
+  // setIntervieweeModal,
+  intervieweeName
 }) => (
   <div className={styles.control}>
-    <Button type="danger" onClick={onReset}>Reset</Button>
-    <div>
-      <Button type="primary" onClick={setIntervieweeModal}>Change Interviewee</Button>
+    <div className={styles.interviewee}>
+      <Icon type="user" />
+      <p>
+        Interviewee:
+        <span>{ intervieweeName || 'UNSET' }</span>
+      </p>
     </div>
+    <Button type="danger" onClick={onReset}>Reset</Button>
+    {/* <div>
+      <Button type="primary" onClick={setIntervieweeModal}>Change Interviewee</Button>
+    </div> */}
   </div>
 );
 
