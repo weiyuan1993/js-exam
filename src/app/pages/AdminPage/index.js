@@ -3,8 +3,7 @@ import React from 'react';
 import { Tabs, Icon } from 'antd';
 
 import DispatchPage from 'app/pages/QuestionPage/DispatchPage';
-import QuestionAddPage from 'app/pages/QuestionPage/AddPage';
-import QuestionEditPage from 'app/pages/QuestionPage/EditPage';
+import AddAndEditPage from 'app/pages/QuestionPage/AddAndEditPage';
 
 import './AdminPage.scss';
 
@@ -35,10 +34,10 @@ export class AdminPage extends React.Component {
             <DispatchPage />
           </TabPane>
           <TabPane tab={<span><Icon type="plus-circle" />Add</span>} key="#add">
-            <QuestionAddPage />
+            <AddAndEditPage type="add" />
           </TabPane>
           <TabPane tab={<span><Icon type="edit" />Edit</span>} key="#edit">
-            <QuestionEditPage />
+            <AddAndEditPage type="edit" />
           </TabPane>
         </Tabs>
       </div>

@@ -20,7 +20,6 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
-import { callbackify } from 'util';
 
 const getPageComponent = args => {
   switch (args.categoryIndex) {
@@ -90,7 +89,7 @@ class Page extends Component {
   onChangeQuestion = async index => {
     const { questionList } = this.state;
     const { id, name, type } = questionList[index];
-    this.setState({ isLoading: true, index });
+    this.setState({ isLoading: true, questionIndex: index });
     const result = await getQuestion(id);
     const { tags, content: code, test } = result;
     this.setState({

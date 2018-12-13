@@ -55,7 +55,7 @@ const subscribeOnUpdateRecord = callback => {
 };
 
 const listRecords = async subjectId => {
-  const query = `query {listRecords(filter:{subjectId:{eq:"${subjectId}"}}){
+  const query = `query {listRecords(filter:{subjectId:{eq:"${subjectId}"}}limit: 1000){
     items {
       id
       subjectId

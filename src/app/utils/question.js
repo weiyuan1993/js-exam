@@ -30,7 +30,7 @@ const listQuestions = async type => {
 };
 
 const createQuestion = async data => {
-  const { tags, name, code: content, test, type } = data;
+  const { tags, name, content, test, type } = data;
   const params = {
     input: {
       name,
@@ -88,6 +88,11 @@ const updateQuestion = async data => {
   return result;
 };
 
+const deleteQuestion = async params => {
+  const result = await API.graphql(graphqlOperation(mutations.deleteQuestion, params));
+  return result;
+};
+
 const dispatchQuestion = async question => {
   const params = {
     input: {
@@ -119,6 +124,7 @@ export {
   createQuestion,
   getQuestion,
   updateQuestion,
+  deleteQuestion,
   dispatchQuestion,
   subscribeOnCreateQuestionSnapshot
 };
