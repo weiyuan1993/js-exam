@@ -1,6 +1,6 @@
 projects:
   innovap3jsexam:
-    schemaPath: src\graphql\schema.json
+    schemaPath: ..\develop\src\graphql\schema.json
     includes:
       - src\graphql\**\*.js
     excludes:
@@ -10,7 +10,9 @@ projects:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src\graphql
-        graphQLApiId: 54dfdtawendfreypwvh2sfpxt4
+        # graphQLApiId: 54dfdtawendfreypwvh2sfpxt4
+        graphQLApiId: ccjdcq6kbrbevoex4fc5gqymgu
       endpoints:
         prod: >-
-          https://7hiay4be35bi5b2jujxw4lkfmu.appsync-api.us-east-1.amazonaws.com/graphql
+          https://l2ef6zhywnel3att32o53ns2ve.appsync-api.us-east-1.amazonaws.com/graphql
+          # https://7hiay4be35bi5b2jujxw4lkfmu.appsync-api.us-east-1.amazonaws.com/graphql

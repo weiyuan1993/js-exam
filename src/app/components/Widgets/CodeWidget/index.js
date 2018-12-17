@@ -17,7 +17,7 @@ const CodeWidget = ({
     onChange={handleCodeChange}
     value={data}
     tabSize={2}
-    debounceChangePeriod={800}
+    debounceChangePeriod={500}
   />
 );
 

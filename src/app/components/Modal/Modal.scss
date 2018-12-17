@@ -1,0 +1,77 @@
+.ant-modal-content {
+  background-color: #1D4F91;
+  padding: 1.5vw;
+
+  .ant-modal-close {
+    color: #FFFFFF;
+  }
+
+  .ant-modal-header {
+    background-color: transparent;
+    border: unset;
+    display: flex;
+    justify-content: center;
+
+    .ant-modal-title {
+      color: #FFFFFF;
+      font-size: 1.5vw;
+    }
+  }
+
+  .ant-modal-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items:  center;
+  }
+}
+
+#modalSubmitBtn {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 15px 0;
+}
+
+#intervieweeNameInput {
+  height: 45px;
+  font-size: 18px;
+}
+
+#intervieweeNameSubmitBtn, #getRecordListBtn, #joinExamBtn {
+  margin: 0 5px;
+  border: unset;
+  font-size: 18px;
+  height: 40px;
+  color: #FFFFFF;
+}
+
+#intervieweeNameSubmitBtn {
+  background-color: #7EAED0;
+}
+
+#intervieweeNameSubmitBtn:hover {
+  background-color: #FFFFFF;
+  color: #7EAED0;
+}
+
+#getRecordListBtn, #joinExamBtn {
+  background-color: #E65E1E;
+}
+
+#getRecordListBtn:hover, #joinExamBtn:hover {
+  background-color: #FFFFFF;
+  color: #E65E1E;
+}
+
+#searchRecordListStyle {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  #joinExamBtn {
+    margin: 15px 0;
+  }
+}

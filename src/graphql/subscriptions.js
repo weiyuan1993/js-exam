@@ -287,6 +287,7 @@ export const onCreateTest = `subscription OnCreateTest {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -329,6 +330,7 @@ export const onUpdateTest = `subscription OnUpdateTest {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -371,6 +373,7 @@ export const onDeleteTest = `subscription OnDeleteTest {
       items {
         id
         subjectId
+        syncCode
         timeBegin
         timeEnd
         history
@@ -386,6 +389,7 @@ export const onCreateRecord = `subscription OnCreateRecord {
   onCreateRecord {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -394,6 +398,7 @@ export const onCreateRecord = `subscription OnCreateRecord {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -421,6 +426,7 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
   onUpdateRecord {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -429,6 +435,7 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -456,6 +463,7 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
   onDeleteRecord {
     id
     subjectId
+    syncCode
     interviewer {
       id
       name
@@ -464,6 +472,7 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
     timeEnd
     history
     result {
+      id
       input
       output
       testCaseResults
@@ -489,25 +498,52 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
 `;
 export const onCreateResult = `subscription OnCreateResult {
   onCreateResult {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
 export const onUpdateResult = `subscription OnUpdateResult {
   onUpdateResult {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
 export const onDeleteResult = `subscription OnDeleteResult {
   onDeleteResult {
+    id
     input
     output
     testCaseResults
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -518,6 +554,14 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -536,6 +580,14 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -554,6 +606,14 @@ export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
     name
     content
     test
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
     room {
       id
       subjectId
@@ -688,27 +748,6 @@ export const onDeleteQuestion = `subscription OnDeleteQuestion {
     content
     test
     tags
-  }
-}
-`;
-export const onCreateAuthedModelForOwner = `subscription OnCreateAuthedModelForOwner {
-  onCreateAuthedModelForOwner {
-    id
-    content
-  }
-}
-`;
-export const onUpdateAuthedModelForOwner = `subscription OnUpdateAuthedModelForOwner {
-  onUpdateAuthedModelForOwner {
-    id
-    content
-  }
-}
-`;
-export const onDeleteAuthedModelForOwner = `subscription OnDeleteAuthedModelForOwner {
-  onDeleteAuthedModelForOwner {
-    id
-    content
   }
 }
 `;

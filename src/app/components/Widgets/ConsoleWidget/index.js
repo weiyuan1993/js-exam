@@ -9,19 +9,15 @@ const ConsoleWidget = ({ data, className }) => (
   <div className={`${styles['console-widget']} ${className || ''}`}>
     Console:
     {
-      data.map(({ args }) => (
-        <div className={styles.console} key={args}>
-          {
-            args.map((text, index) => (
-              <div className={styles.text} key={index}>
-                {
-                  typeof text === 'object' && !isError(text)
-                    ? JSON.stringify(text, null, 2)
-                    : <Text text={text} />
-                }
-              </div>
-            ))
-          }
+      data.map((text, index) => (
+        <div className={styles.console} key={index}>
+          <div className={styles.text}>
+            {
+              typeof text === 'object' && !isError(text)
+                ? JSON.stringify(text, null, 2)
+                : <Text text={text} />
+            }
+          </div>
         </div>
       ))
     }

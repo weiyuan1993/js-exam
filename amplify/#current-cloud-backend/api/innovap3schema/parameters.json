@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "innovap3schema",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcognitob94b116c",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "schemaGraphql": "s3://innovap3schema-20181210133041-deployment/amplify-appsync-files/schema.graphql.1544423322112",
+    "ResolverBucket": "innovap3schema-20181210133041-deployment",
+    "ResolverRootKey": "amplify-appsync-files",
+    "DeploymentTimestamp": "1544423322112"
+}

@@ -1,31 +1,20 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
+import { message } from 'antd';
 
-import { resetQuestion, changeQuestion, changeCode, remoteChangeQuestion } from 'app/actions/code';
-import { changeCategory } from 'app/actions/category';
-import { resetConsole } from 'app/actions/console';
-
+// import { resetConsole } from 'app/actions/console';
+import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
-import { getStateInformation } from 'app/utils/stateHelper';
-
+import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
+import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
+import UserModal from 'app/components/Modal';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
-import Amplify, {
-  API,
-  graphqlOperation
-} from 'aws-amplify';
-
-import awsExportConfig from '../../../aws-exports.js';
-
-import * as subscriptions from '../../../graphql/subscriptions.js';
-
-Amplify.configure(awsExportConfig);
-
-const getPageComponent = (args) => {
-  switch (args.index) {
+const getPageComponent = args => {
+  switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
     }
@@ -38,148 +27,161 @@ const getPageComponent = (args) => {
 class Page extends Component {
   constructor(props) {
     super(props);
-    const { actions } = this.props;
-    const { _dispatch: dispatch } = actions;
-    this.wrappedConsole = createWrappedConsole(console, dispatch);
+    this.state = {
+      categoryIndex: 0,
+      code: '',
+      compiledCode: '',
+      questionContent: '',
+      test: '',
+      tape: [],
+      recordId: '',
+      console: [],
+      intervieweeName: '',
+      visibleIntervieweeModal: true,
+    };
+    this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
 
   componentDidMount() {
-    const { isLogin, history, code } = this.props;
-    // if (!isLogin) {
-    //   history.push('/login');
-    //   return;
-    // }
-    this.handleCodeChange(code);
-    this.subscribeOnCreateQuestionSnapshot();
+    this.subscribeOnCreateRecord();
+    this.subscribeOnDispatchQuestion();
   }
 
   componentWillUnmount() {
-    this.subscriptionDispatchQuestion.unsubscribe();
+    // this.subscriptionDispatchQuestion.unsubscribe();
   }
 
-  componentDidUpdate(prevProps) {
-    const { categoryIndex: previousCategoryIndex } = prevProps;
-    const { categoryIndex, code } = this.props;
-    if (previousCategoryIndex !== categoryIndex) {
-      this.handleCodeChange(code);
+  updateRecordAction = async newCode => {
+    const { recordId, intervieweeName } = this.state;
+    if (recordId !== '') {
+      await updateRecord(recordId, newCode, intervieweeName);
     }
-  }
+  };
 
-  handleCodeChange = (newCode) => {
-    const { actions, type, question } = this.props;
-    const fullCode = `${newCode} ${question.test}`;
+  handleCodeChange = newCode => {
+    const { test } = this.state;
+    const fullCode = `${newCode} ${test}`;
+
     try {
-      const { code } = transform(fullCode, {
-        presets: ['es2015', ['stage-2', { decoratorsBeforeExport: true }], 'react'],
+      const { code: compiledCode } = transform(fullCode, {
+        presets: [
+          'es2015',
+          ['stage-2', { decoratorsBeforeExport: true }],
+          'react'
+        ],
         plugins: ['proposal-object-rest-spread']
       });
-      actions.changeCode({ compiledCode: code, rawCode: newCode, type });
+      this.setState({ compiledCode, code: newCode });
+      this.updateRecordAction(newCode);
     } catch (e) {
-      actions.changeCode({ rawCode: newCode, type });
-      actions.resetConsole();
+      this.setState({ code: newCode });
+      this.resetConsole();
       this.wrappedConsole.log(e);
+      this.updateRecordAction(newCode);
     }
+  };
+
+  onReset = () => {
+    const { questionContent } = this.state;
+    this.setState({ code: questionContent });
+    this.handleCodeChange(questionContent);
+  };
+
+  addTape = newTape => {
+    const { tape } = this.state;
+    this.setState({ tape: [...tape, newTape] });
+  };
+
+  resetTape = () => {
+    this.setState({ tape: [] });
+  };
+
+  setIntervieweeModal = () => {
+    const { visibleIntervieweeModal } = this.state;
+    this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
   }
 
-  onReset = (type) => {
-    const { actions } = this.props;
-    actions.resetQuestion(type);
+  addConsole = (...args) => {
+    const { console: _console } = this.state;
+    this.setState({ console: [..._console, ...args] });
+  };
+
+  resetConsole = () => {
+    this.setState({ console: [] });
+  };
+
+  setIntervieweeName = name => {
+    this.setState({ intervieweeName: name });
+    message.success(name);
   }
 
-  onChangeCategory = (index) => {
-    const { actions } = this.props;
-    actions.changeCategory(index);
-  }
-  
-  onChangeQuestion = ({ index, type }) => {
-    const { actions } = this.props;
-    actions.changeQuestion({ index, type });
-  }
-  
-  remoteChangeQuestion({ type, name, code, test }) {
-    const { actions } = this.props;
-    actions.changeCategory(type == 'javascript' ? 0 : 1);
-    actions.remoteChangeQuestion({ type, name, code, test });
-  }
 
-  subscribeOnCreateQuestionSnapshot() {
-    this.subscriptionDispatchQuestion = API.graphql(
-      graphqlOperation(subscriptions.onCreateQuestionSnapshot)
-    ).subscribe({
-      next: (result) => {
-        if (result) {
-          console.log("#subscribeOnCreateQuestionSnapshot", result);
-          const { type, name, content: code, test } = result.value.data.onCreateQuestionSnapshot
-          this.remoteChangeQuestion({ type, name, code, test })
-        }
+  subscribeOnCreateRecord = () => {
+    subscribeOnCreateRecord(data => {
+      const { intervieweeName } = this.state;
+      const { id, subjectId } = data;
+      if (intervieweeName === subjectId) {
+        this.setState({
+          recordId: id
+        });
       }
+    });
+  };
+
+  subscribeOnDispatchQuestion = () => {
+    subscribeOnCreateQuestionSnapshot(data => {
+      const { type, content: code, test } = data;
+      this.setState({
+        categoryIndex: type === 'javascript' ? 0 : 1,
+        code,
+        test,
+        questionContent: code
+      });
+      const { questionContent } = this.state;
+      this.handleCodeChange(questionContent);
     });
   };
 
   render() {
     const {
-      categoryIndex
-    } = this.props;
-    const {
       handleCodeChange,
       wrappedConsole,
       onReset,
-      onChangeCategory,
-      onChangeQuestion,
-      onDispatchQuestion
+      addTape,
+      resetTape,
+      resetConsole,
+      setIntervieweeModal,
+      setIntervieweeName,
     } = this;
+    const { visibleIntervieweeModal, intervieweeName } = this.state;
     return (
       <>
-        {
-          getPageComponent({
-            index: categoryIndex,
-            handleCodeChange,
-            wrappedConsole,
-            onReset,
-            onChangeCategory,
-            onChangeQuestion,
-            ...this.props
-          })
-        }
+        <ControlWidget
+          intervieweeName={intervieweeName}
+          onReset={() => onReset('javascript')}
+          setIntervieweeModal={setIntervieweeModal}
+        />
+        {getPageComponent({
+          handleCodeChange,
+          wrappedConsole,
+          onReset,
+          addTape,
+          resetTape,
+          resetConsole,
+          setIntervieweeModal,
+          ...this.state,
+          ...this.props
+        })}
+        <UserModal
+          setIntervieweeModal={setIntervieweeModal}
+          mustEnterName
+          closable={false}
+          setIntervieweeName={setIntervieweeName}
+          visible={visibleIntervieweeModal}
+        />
       </>
     );
   }
 }
 
-export default withRouter(connect(
-  (state) => {
-    const {
-      code,
-      questionIndex,
-      compiledCode,
-      categoryIndex,
-      type,
-      question,
-      remoteQuestion
-    } = getStateInformation(state);
-    return {
-      compiledCode,
-      questionIndex,
-      code,
-      console: state.console,
-      categoryIndex,
-      type,
-      question: remoteQuestion || question,
-      isLogin: state.login.isLogin,
-      remoteQuestion
-    };
-  },
-  (dispatch) => {
-    return {
-      actions: {
-        resetConsole: () => dispatch(resetConsole()),
-        changeCode: args => dispatch(changeCode({ ...args, type: (args.type || 'javascript').toUpperCase() })),
-        _dispatch: dispatch,
-        resetQuestion: type => dispatch(resetQuestion({ type: type.toUpperCase() })),
-        changeCategory: index => dispatch(changeCategory(index)),
-        changeQuestion: ({ index, type }) => dispatch(changeQuestion({ index, type })),
-        remoteChangeQuestion: ({ type, name, code, test }) => dispatch(remoteChangeQuestion({ type, name, code, test }))
-      }
-    };
-  }
-)(Page));
+export default withRouter(Page);

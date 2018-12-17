@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import 'brace';
 import 'brace/mode/jsx';
@@ -11,19 +10,14 @@ import Grid from 'app/components/Grid';
 import GridItem from 'app/components/Grid/GridItem';
 import ConsoleWidget from 'app/components/Widgets/ConsoleWidget';
 import CodeWidget from 'app/components/Widgets/CodeWidget';
-import ControlWidget from '../ControlWidget';
 import ResultWidget from 'app/components/Widgets/ResultWidget';
 import AnswerWidget from 'app/components/Widgets/AnswerWidget';
 
-import { resetConsole } from 'app/actions/console';
 
 import debouncedRunCode from 'app/utils/runCode';
 
-import { getQuestions } from 'app/questions/index';
-
 import styles from './ReactPage.module.scss';
 
-const questions = getQuestions('react');
 
 class ReactPage extends Component {
   constructor(props) {
@@ -32,16 +26,16 @@ class ReactPage extends Component {
   }
 
   componentDidMount() {
-    const { compiledCode, wrappedConsole, actions } = this.props;
-    actions.resetConsole();
+    const { compiledCode, wrappedConsole, resetConsole } = this.props;
+    resetConsole();
     debouncedRunCode({ code: compiledCode, wrappedConsole });
   }
 
   shouldComponentUpdate(nextProps) {
     const { compiledCode: previousCompiledCode } = this.props;
-    const { compiledCode, wrappedConsole, actions } = nextProps;
+    const { compiledCode, wrappedConsole, resetConsole } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      actions.resetConsole();
+      resetConsole();
       debouncedRunCode({ code: compiledCode, wrappedConsole });
     }
     return true;
@@ -50,16 +44,10 @@ class ReactPage extends Component {
   render() {
     const {
       code,
-      questionIndex,
-      categoryIndex,
       handleCodeChange,
       console: _console,
       onReset,
-      onChangeCategory,
-      onChangeQuestion,
-      remoteQuestion
     } = this.props;
-    const { test } = remoteQuestion || questions[questionIndex];
     const layout = [
       {
         key: 'code', x: 0, y: 0, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
@@ -67,14 +55,14 @@ class ReactPage extends Component {
       {
         key: 'answer', x: 0, y: 1, width: window.innerWidth / 2, height: window.innerHeight / 2, minWidth: 100, maxWidth: 700
       },
+      // {
+      //   key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
+      // },
       {
-        key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
+        key: 'result', x: 1, y: 0, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
       },
       {
-        key: 'result', x: 1, y: 1, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
-      },
-      {
-        key: 'console', x: 1, y: 2, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
+        key: 'console', x: 1, y: 1, width: window.innerWidth / 2, height: (window.innerHeight - this.controlHeight) / 2, minWidth: 100, minHeight: 100, maxWidth: 700, maxHeight: 500
       },
     ];
     return (
@@ -91,17 +79,6 @@ class ReactPage extends Component {
           <GridItem key="answer">
             <AnswerWidget />
           </GridItem>
-          <GridItem key="control">
-            <ControlWidget
-              type="react"
-              onReset={() => onReset('react')}
-              onChangeCategory={onChangeCategory}
-              onChangeQuestion={index => onChangeQuestion({ type: 'react', index })}
-              questionList={questions}
-              categoryIndex={categoryIndex}
-              questionIndex={questionIndex}
-            />
-          </GridItem>
           <GridItem key="result">
             <ResultWidget />
           </GridItem>
@@ -114,16 +91,4 @@ class ReactPage extends Component {
   }
 }
 
-export default withRouter(connect(
-  () => {
-    return {
-    };
-  },
-  (dispatch) => {
-    return {
-      actions: {
-        resetConsole: () => dispatch(resetConsole())
-      }
-    };
-  }
-)(ReactPage));
+export default withRouter(ReactPage);

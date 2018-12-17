@@ -1,6 +1,6 @@
 {
-    "projectName": "jsexam",
-    "projectPath": "C:\\Users\\jackie.chao\\Documents\\Innova\\projects\\devExam\\innovap3\\js-exam",
+    "projectName": "innovap3schema",
+    "projectPath": "C:\\Users\\jackie.chao\\Documents\\Innova\\projects\\devExam\\innovap3\\innovap3-schema",
     "defaultEditor": "code",
     "frontendHandler": {
         "javascript": "C:\\Users\\jackie.chao\\Documents\\Innova\\dev_bin\\node-v8.12.0\\node_modules\\@aws-amplify\\cli\\node_modules\\amplify-frontend-javascript"

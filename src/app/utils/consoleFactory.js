@@ -1,8 +1,8 @@
-const createWrappedConsole = (console, dispatch) => {
+const createWrappedConsole = (console, addConsole) => {
   return Object.keys(console).reduce((cal, key) => {
     const newCal = { ...cal };
     newCal[key] = (...args) => {
-      dispatch({ type: 'CONSOLE/ADD', key, args: [...args] });
+      addConsole(...args);
     };
     return newCal;
   }, {});

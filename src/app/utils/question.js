@@ -1,14 +1,13 @@
-import Amplify, {
-  API,
-  graphqlOperation
-} from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
 
+import * as subscriptions from '../../graphql/subscriptions';
+
 Amplify.configure(awsExportConfig);
 
-const listQuestions = async (type) => {
+const listQuestions = async type => {
   const query = `
     query {
       listQuestions (
@@ -27,17 +26,11 @@ const listQuestions = async (type) => {
       }
     }`;
   const result = await API.graphql(graphqlOperation(query));
-  return result;
+  return result.data.listQuestions;
 };
 
-const createQuestion = async (data) => {
-  const {
-    tags,
-    name,
-    code: content,
-    test,
-    type
-  } = data;
+const createQuestion = async data => {
+  const { tags, name, content, test, type } = data;
   const params = {
     input: {
       name,
@@ -58,12 +51,10 @@ const createQuestion = async (data) => {
     }
   }`;
   const result = await API.graphql(graphqlOperation(query, params));
-  console.log(result);
   return result;
 };
 
-const getQuestion = async (data) => {
-  const { id } = data;
+const getQuestion = async id => {
   const query = `query {
     getQuestion(id: "${id}") {
       content,
@@ -71,17 +62,12 @@ const getQuestion = async (data) => {
       tags
     }
   }`;
-  const result = await API.graphql(graphqlOperation(query));
-  return result;
+  const { data } = await API.graphql(graphqlOperation(query));
+  return data.getQuestion;
 };
 
-const updateQuestion = async (data) => {
-  const {
-    id,
-    content,
-    test,
-    tags
-  } = data;
+const updateQuestion = async data => {
+  const { id, content, test, tags } = data;
   const params = {
     input: {
       id,
@@ -102,19 +88,35 @@ const updateQuestion = async (data) => {
   return result;
 };
 
-const dispatchQuestion = async function(question) {
-  console.log('dispatchQuestion / updateQuestionSnapshot');
+const deleteQuestion = async params => {
+  const result = await API.graphql(graphqlOperation(mutations.deleteQuestion, params));
+  return result;
+};
+
+const dispatchQuestion = async question => {
   const params = {
     input: {
       type: question.type,
       name: question.name,
       content: question.content,
       test: question.test,
-      questionSnapshotRoomId: "demoRoom1"
+      questionSnapshotRoomId: 'demoRoom1'
     }
   };
-  const result = await API.graphql(graphqlOperation(mutations.createQuestionSnapshot, params));
-  alert(JSON.stringify(result));
+  const { data } = await API.graphql(
+    graphqlOperation(mutations.createQuestionSnapshot, params)
+  );
+  return data.createQuestionSnapshot;
+};
+
+const subscribeOnCreateQuestionSnapshot = callback => {
+  API.graphql(
+    graphqlOperation(subscriptions.onCreateQuestionSnapshot)
+  ).subscribe({
+    next: ({ value }) => {
+      callback(value.data.onCreateQuestionSnapshot);
+    }
+  });
 };
 
 export {
@@ -122,5 +124,7 @@ export {
   createQuestion,
   getQuestion,
   updateQuestion,
-  dispatchQuestion
+  deleteQuestion,
+  dispatchQuestion,
+  subscribeOnCreateQuestionSnapshot
 };
