@@ -20,6 +20,7 @@ export const onCreateRoom = `subscription OnCreateRoom {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -27,18 +28,6 @@ export const onCreateRoom = `subscription OnCreateRoom {
       }
       nextToken
     }
-    questionSource {
-      items {
-        id
-        type
-        name
-        content
-        test
-      }
-      nextToken
-    }
-    questionSourceStr
-    progress
   }
 }
 `;
@@ -61,6 +50,7 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -68,18 +58,6 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       }
       nextToken
     }
-    questionSource {
-      items {
-        id
-        type
-        name
-        content
-        test
-      }
-      nextToken
-    }
-    questionSourceStr
-    progress
   }
 }
 `;
@@ -102,6 +80,7 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
       id
       name
     }
+    password
     users {
       items {
         id
@@ -109,18 +88,6 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
       }
       nextToken
     }
-    questionSource {
-      items {
-        id
-        type
-        name
-        content
-        test
-      }
-      nextToken
-    }
-    questionSourceStr
-    progress
   }
 }
 `;
@@ -133,13 +100,30 @@ export const onCreateJeUser = `subscription OnCreateJeUser {
       subjectId
       description
       status
-      questionSourceStr
-      progress
+      password
     }
     team {
       id
       name
       description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
     }
   }
 }
@@ -153,13 +137,30 @@ export const onUpdateJeUser = `subscription OnUpdateJeUser {
       subjectId
       description
       status
-      questionSourceStr
-      progress
+      password
     }
     team {
       id
       name
       description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
     }
   }
 }
@@ -173,13 +174,30 @@ export const onDeleteJeUser = `subscription OnDeleteJeUser {
       subjectId
       description
       status
-      questionSourceStr
-      progress
+      password
     }
     team {
       id
       name
       description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
     }
   }
 }
@@ -264,8 +282,7 @@ export const onCreateTest = `subscription OnCreateTest {
       subjectId
       description
       status
-      questionSourceStr
-      progress
+      password
     }
     team {
       id
@@ -280,6 +297,10 @@ export const onCreateTest = `subscription OnCreateTest {
       }
       nextToken
     }
+    host {
+      id
+      name
+    }
     description
     timeBegin
     timeEnd
@@ -293,6 +314,14 @@ export const onCreateTest = `subscription OnCreateTest {
         history
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
     status
     tags
@@ -307,8 +336,7 @@ export const onUpdateTest = `subscription OnUpdateTest {
       subjectId
       description
       status
-      questionSourceStr
-      progress
+      password
     }
     team {
       id
@@ -323,6 +351,10 @@ export const onUpdateTest = `subscription OnUpdateTest {
       }
       nextToken
     }
+    host {
+      id
+      name
+    }
     description
     timeBegin
     timeEnd
@@ -336,6 +368,14 @@ export const onUpdateTest = `subscription OnUpdateTest {
         history
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
     status
     tags
@@ -350,8 +390,7 @@ export const onDeleteTest = `subscription OnDeleteTest {
       subjectId
       description
       status
-      questionSourceStr
-      progress
+      password
     }
     team {
       id
@@ -366,6 +405,10 @@ export const onDeleteTest = `subscription OnDeleteTest {
       }
       nextToken
     }
+    host {
+      id
+      name
+    }
     description
     timeBegin
     timeEnd
@@ -379,6 +422,14 @@ export const onDeleteTest = `subscription OnDeleteTest {
         history
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
     status
     tags
@@ -397,12 +448,6 @@ export const onCreateRecord = `subscription OnCreateRecord {
     timeBegin
     timeEnd
     history
-    result {
-      id
-      input
-      output
-      testCaseResults
-    }
     question {
       id
       type
@@ -411,6 +456,15 @@ export const onCreateRecord = `subscription OnCreateRecord {
       test
     }
     test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    currentRecordTest {
       id
       subjectId
       description
@@ -434,12 +488,6 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
     timeBegin
     timeEnd
     history
-    result {
-      id
-      input
-      output
-      testCaseResults
-    }
     question {
       id
       type
@@ -448,6 +496,15 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
       test
     }
     test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    currentRecordTest {
       id
       subjectId
       description
@@ -471,12 +528,6 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
     timeBegin
     timeEnd
     history
-    result {
-      id
-      input
-      output
-      testCaseResults
-    }
     question {
       id
       type
@@ -493,56 +544,14 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
       status
       tags
     }
-  }
-}
-`;
-export const onCreateResult = `subscription OnCreateResult {
-  onCreateResult {
-    id
-    input
-    output
-    testCaseResults
-    record {
+    currentRecordTest {
       id
       subjectId
-      syncCode
+      description
       timeBegin
       timeEnd
-      history
-    }
-  }
-}
-`;
-export const onUpdateResult = `subscription OnUpdateResult {
-  onUpdateResult {
-    id
-    input
-    output
-    testCaseResults
-    record {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
-  }
-}
-`;
-export const onDeleteResult = `subscription OnDeleteResult {
-  onDeleteResult {
-    id
-    input
-    output
-    testCaseResults
-    record {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
+      status
+      tags
     }
   }
 }
@@ -562,14 +571,6 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
       timeEnd
       history
     }
-    room {
-      id
-      subjectId
-      description
-      status
-      questionSourceStr
-      progress
-    }
   }
 }
 `;
@@ -588,14 +589,6 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
       timeEnd
       history
     }
-    room {
-      id
-      subjectId
-      description
-      status
-      questionSourceStr
-      progress
-    }
   }
 }
 `;
@@ -613,14 +606,6 @@ export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
       timeBegin
       timeEnd
       history
-    }
-    room {
-      id
-      subjectId
-      description
-      status
-      questionSourceStr
-      progress
     }
   }
 }
