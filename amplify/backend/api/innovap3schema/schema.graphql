@@ -7,9 +7,7 @@ type Room @model { #not used anymore
   host: JEUser 
   password: String
   users: [JEUser] @connection(name: "RoomJEUsers") # host & observers
-  # questionSource: [QuestionSnapshot] @connection(name: "RoomQuestionSnapshots") #questionContainer (for host to select question), after the test, remove it
-  # questionSourceStr: [String]
-  # progress: Int  
+	currentRecord: Record @connection(name: "RoomCurrentRecord") # ID for current Record
 }
 type JEUser @model {
   id: ID!
@@ -37,7 +35,6 @@ type Test @model {
   timeBegin: Int
   timeEnd: Int 
   records: [Record] @connection(name: "TestRecords")
-	# currentRecord: Record @connection(name: "TestCurrentRecord") # ID for current Record
   status: String #open/inprogress/completed/closed
   tags: [String]
 }
@@ -48,12 +45,11 @@ type Record @model {
   interviewer: JEUser
   timeBegin: Int
   timeEnd: Int
-  history: [String] # todo
-  # result: Result @connection(name: "RecordResult")
+  history: [String]
   ques: QuesSnapshot
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
-  # currentRecordTest: Test @connection(name: "TestCurrentRecord"),
+  room: Room @connection(name: "RoomCurrentRecord")
 }
 type QuesSnapshot {
   type: String # eg. javascript
@@ -61,13 +57,6 @@ type QuesSnapshot {
   content: String
   test: String
 }
-# type Result @model {
-#   id: ID!
-#   input: String #code area
-#   output: String #code output
-#   testCaseResults: String #how many passed, how many failed
-#   record: Record @connection(name: "RecordResult")
-# }
 type QuestionSnapshot @model {
   id: ID!
   type: String # eg. javascript
@@ -75,7 +64,6 @@ type QuestionSnapshot @model {
   content: String
   test: String
   record: Record @connection(name: "RecordQuestionSnapshot")
-  # room: Room @connection(name: "RoomQuestionSnapshots") #belong to a room QuestionContainer (for host to select question), after the test, remove it
 }
 type QuestionSet @model { #question set for host to pick in a test
   id: ID! 

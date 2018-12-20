@@ -28,6 +28,14 @@ export const getRoom = `query GetRoom($id: ID!) {
       }
       nextToken
     }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -62,6 +70,14 @@ export const listRooms = `query ListRooms(
           name
         }
         nextToken
+      }
+      currentRecord {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
       }
     }
     nextToken
@@ -337,6 +353,13 @@ export const getRecord = `query GetRecord($id: ID!) {
       status
       tags
     }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
   }
 }
 `;
@@ -378,6 +401,13 @@ export const listRecords = `query ListRecords(
         timeEnd
         status
         tags
+      }
+      room {
+        id
+        subjectId
+        description
+        status
+        password
       }
     }
     nextToken

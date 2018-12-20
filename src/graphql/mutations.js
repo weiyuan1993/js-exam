@@ -28,6 +28,14 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       }
       nextToken
     }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -58,6 +66,14 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       }
       nextToken
     }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -87,6 +103,14 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
         name
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
   }
 }
@@ -446,6 +470,13 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       status
       tags
     }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
   }
 }
 `;
@@ -483,6 +514,13 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       status
       tags
     }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
   }
 }
 `;
@@ -519,6 +557,13 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       timeEnd
       status
       tags
+    }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
     }
   }
 }
