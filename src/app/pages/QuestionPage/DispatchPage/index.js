@@ -16,6 +16,8 @@ import {
   listRecords
 } from 'app/utils/record';
 
+import { subscribeOnUpdateRoom } from 'app/utils/room'
+
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
@@ -62,6 +64,7 @@ class Page extends Component {
     this.setState({ isLoading: true });
     this.subscribeOnCreateRecord();
     this.subscribeOnUpdateRecord();
+    this.subscribeOnUpdateRoom();
     const result = await listQuestions('javascript');
     if (result) {
       this.setState({ questionList: result.items, isLoading: false });
@@ -144,7 +147,7 @@ class Page extends Component {
         this.setState({ isLoading: false });
       }
     } catch (e) {
-      message.error(e.message, 2);
+      message.error(e.errors[0].message, 2);
       this.setState({ isLoading: false });
     }
   };
@@ -204,6 +207,12 @@ class Page extends Component {
     });
     this.handleCodeChange(recordSyncCode);
     this.setIntervieweeModal();
+  }
+
+  subscribeOnUpdateRoom = () => {
+    subscribeOnUpdateRoom(data => {
+      console.log(data);
+    });
   }
 
   render() {

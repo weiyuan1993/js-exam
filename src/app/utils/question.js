@@ -100,7 +100,6 @@ const dispatchQuestion = async question => {
       name: question.name,
       content: question.content,
       test: question.test,
-      questionSnapshotRoomId: 'demoRoom1'
     }
   };
   const { data } = await API.graphql(

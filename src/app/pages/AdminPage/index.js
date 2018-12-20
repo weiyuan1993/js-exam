@@ -4,6 +4,7 @@ import { Tabs, Icon } from 'antd';
 
 import DispatchPage from 'app/pages/QuestionPage/DispatchPage';
 import AddAndEditPage from 'app/pages/QuestionPage/AddAndEditPage';
+import JoinRoomPage from 'app/pages/JoinRoomPage/';
 
 import './AdminPage.scss';
 
@@ -30,6 +31,9 @@ export class AdminPage extends React.Component {
     return (
       <div id="AdminPage">
         <Tabs activeKey={this.state.activeKey} onTabClick={this.onTabClick}>
+          <TabPane tab={<span><Icon type="arrow-right" />Join Room</span>} key="#Join">
+            <JoinRoomPage {...this.props} />
+          </TabPane>
           <TabPane tab={<span><Icon type="eye" />Dispatch</span>} key="#dispatch">
             <DispatchPage />
           </TabPane>
