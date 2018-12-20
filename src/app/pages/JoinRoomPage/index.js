@@ -1,8 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
+import { connect } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
 import { List, Avatar, Button, Skeleton } from 'antd';
 import { listRooms } from 'app/utils/room';
+import changeTab from 'app/actions/tab';
+import joinRoom from 'app/actions/room';
+
 
 class JoinRoomPage extends React.Component {
   state = {
@@ -20,7 +23,10 @@ class JoinRoomPage extends React.Component {
     console.log(roomList);
   };
 
-  joinRoom = roomId => {};
+  handleClickLink = roomId => {
+    this.props.actions.changeTab('dispatch');
+    this.props.actions.joinRoom(roomId);
+  }
 
   render() {
     const { roomList, isLoading } = this.state;
@@ -48,8 +54,9 @@ class JoinRoomPage extends React.Component {
                 to={{
                   pathname: `/admin/dispatch/${item.id}`
                 }}
+                onClick={() => this.handleClickLink(item.id)}
               >
-                Join
+                <Button>Join</Button>
               </Link>
             </List.Item>
           )}
@@ -59,4 +66,20 @@ class JoinRoomPage extends React.Component {
   }
 }
 
-export default JoinRoomPage;
+export default withRouter(
+  connect(
+    state => {
+      return {
+        currentKey: state.tab.key
+      };
+    },
+    dispatch => {
+      return {
+        actions: {
+          changeTab: key => dispatch(changeTab(key)),
+          joinRoom: id => dispatch(joinRoom(id))
+        }
+      };
+    }
+  )(JoinRoomPage)
+);

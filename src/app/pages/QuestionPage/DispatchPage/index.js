@@ -62,7 +62,6 @@ class Page extends Component {
   }
 
   async componentDidMount() {
-    console.log("Dispatch page",this.props)
     this.setState({ isLoading: true });
     this.subscribeOnCreateRecord();
     this.subscribeOnUpdateRecord();
