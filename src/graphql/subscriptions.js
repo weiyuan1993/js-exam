@@ -135,6 +135,14 @@ export const onUpdateRoomByRoomId = `subscription OnUpdateRoomByRoomId($id: Stri
       }
       nextToken
     }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -172,6 +180,13 @@ export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($
       status
       tags
     }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
   }
 }
 `;
@@ -201,6 +216,14 @@ export const onCreateRoom = `subscription OnCreateRoom {
         name
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
   }
 }
@@ -232,6 +255,14 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       }
       nextToken
     }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
+    }
   }
 }
 `;
@@ -261,6 +292,14 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
         name
       }
       nextToken
+    }
+    currentRecord {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      history
     }
   }
 }
@@ -620,6 +659,13 @@ export const onCreateRecord = `subscription OnCreateRecord {
       status
       tags
     }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
   }
 }
 `;
@@ -657,6 +703,13 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
       status
       tags
     }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
   }
 }
 `;
@@ -693,6 +746,13 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
       timeEnd
       status
       tags
+    }
+    room {
+      id
+      subjectId
+      description
+      status
+      password
     }
   }
 }
