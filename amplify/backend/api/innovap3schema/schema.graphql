@@ -37,7 +37,7 @@ type Test @model {
   timeBegin: Int
   timeEnd: Int 
   records: [Record] @connection(name: "TestRecords")
-	currentRecord: Record @connection(name: "TestCurrentRecord") # ID for current Record
+	# currentRecord: Record @connection(name: "TestCurrentRecord") # ID for current Record
   status: String #open/inprogress/completed/closed
   tags: [String]
 }
@@ -50,9 +50,16 @@ type Record @model {
   timeEnd: Int
   history: [String] # todo
   # result: Result @connection(name: "RecordResult")
+  ques: QuesSnapshot
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
-  currentRecordTest: Test @connection(name: "TestCurrentRecord"),
+  # currentRecordTest: Test @connection(name: "TestCurrentRecord"),
+}
+type QuesSnapshot {
+  type: String # eg. javascript
+  name: String
+  content: String
+  test: String
 }
 # type Result @model {
 #   id: ID!
@@ -86,4 +93,11 @@ type Question @model {
   content: String
   test: String
   tags: [String]
+}
+type Subscription {
+  onUpdateJEUserByJEUserId(id: String): JEUser @aws_subscribe(mutations: ["updateJEUser"])
+  onUpdateTeamByTeamId(id: String): Team @aws_subscribe(mutations: ["updateTeam"])
+  onUpdateTestByTestId(id: String): Test @aws_subscribe(mutations: ["updateTest"])
+  onUpdateRoomByRoomId(id: String): Room @aws_subscribe(mutations: ["updateRoom"])
+  onUpdateRecordByRecordId(id: String): Record @aws_subscribe(mutations: ["updateRecord"])
 }

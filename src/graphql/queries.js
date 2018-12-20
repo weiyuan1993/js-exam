@@ -245,14 +245,6 @@ export const getTest = `query GetTest($id: ID!) {
       }
       nextToken
     }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
     status
     tags
   }
@@ -304,14 +296,6 @@ export const listTests = `query ListTests(
         }
         nextToken
       }
-      currentRecord {
-        id
-        subjectId
-        syncCode
-        timeBegin
-        timeEnd
-        history
-      }
       status
       tags
     }
@@ -331,6 +315,12 @@ export const getRecord = `query GetRecord($id: ID!) {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -339,15 +329,6 @@ export const getRecord = `query GetRecord($id: ID!) {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description
@@ -376,6 +357,12 @@ export const listRecords = `query ListRecords(
       timeBegin
       timeEnd
       history
+      ques {
+        type
+        name
+        content
+        test
+      }
       question {
         id
         type
@@ -384,15 +371,6 @@ export const listRecords = `query ListRecords(
         test
       }
       test {
-        id
-        subjectId
-        description
-        timeBegin
-        timeEnd
-        status
-        tags
-      }
-      currentRecordTest {
         id
         subjectId
         description

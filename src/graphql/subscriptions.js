@@ -1,6 +1,180 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
+export const onUpdateJeUserByJeUserId = `subscription OnUpdateJeUserByJeUserId($id: String) {
+  onUpdateJEUserByJEUserId(id: $id) {
+    id
+    name
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
+    team {
+      id
+      name
+      description
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    hostTest {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+  }
+}
+`;
+export const onUpdateTeamByTeamId = `subscription OnUpdateTeamByTeamId($id: String) {
+  onUpdateTeamByTeamId(id: $id) {
+    id
+    name
+    description
+    users {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+    questionSet {
+      items {
+        id
+        name
+        description
+        tags
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onUpdateTestByTestId = `subscription OnUpdateTestByTestId($id: String) {
+  onUpdateTestByTestId(id: $id) {
+    id
+    room {
+      id
+      subjectId
+      description
+      status
+      password
+    }
+    team {
+      id
+      name
+      description
+    }
+    subjectId
+    users {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+    host {
+      id
+      name
+    }
+    description
+    timeBegin
+    timeEnd
+    records {
+      items {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+      }
+      nextToken
+    }
+    status
+    tags
+  }
+}
+`;
+export const onUpdateRoomByRoomId = `subscription OnUpdateRoomByRoomId($id: String) {
+  onUpdateRoomByRoomId(id: $id) {
+    id
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+    subjectId
+    description
+    status
+    host {
+      id
+      name
+    }
+    password
+    users {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($id: String) {
+  onUpdateRecordByRecordId(id: $id) {
+    id
+    subjectId
+    syncCode
+    interviewer {
+      id
+      name
+    }
+    timeBegin
+    timeEnd
+    history
+    ques {
+      type
+      name
+      content
+      test
+    }
+    question {
+      id
+      type
+      name
+      content
+      test
+    }
+    test {
+      id
+      subjectId
+      description
+      timeBegin
+      timeEnd
+      status
+      tags
+    }
+  }
+}
+`;
 export const onCreateRoom = `subscription OnCreateRoom {
   onCreateRoom {
     id
@@ -315,14 +489,6 @@ export const onCreateTest = `subscription OnCreateTest {
       }
       nextToken
     }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
     status
     tags
   }
@@ -368,14 +534,6 @@ export const onUpdateTest = `subscription OnUpdateTest {
         history
       }
       nextToken
-    }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
     }
     status
     tags
@@ -423,14 +581,6 @@ export const onDeleteTest = `subscription OnDeleteTest {
       }
       nextToken
     }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
     status
     tags
   }
@@ -448,6 +598,12 @@ export const onCreateRecord = `subscription OnCreateRecord {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -456,15 +612,6 @@ export const onCreateRecord = `subscription OnCreateRecord {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description
@@ -488,6 +635,12 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -496,15 +649,6 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description
@@ -528,6 +672,12 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -536,15 +686,6 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description

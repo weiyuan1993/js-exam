@@ -315,14 +315,6 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       }
       nextToken
     }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
     status
     tags
   }
@@ -368,14 +360,6 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
         history
       }
       nextToken
-    }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
     }
     status
     tags
@@ -423,14 +407,6 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       }
       nextToken
     }
-    currentRecord {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-      history
-    }
     status
     tags
   }
@@ -448,6 +424,12 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -456,15 +438,6 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description
@@ -488,6 +461,12 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -496,15 +475,6 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description
@@ -528,6 +498,12 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     timeBegin
     timeEnd
     history
+    ques {
+      type
+      name
+      content
+      test
+    }
     question {
       id
       type
@@ -536,15 +512,6 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       test
     }
     test {
-      id
-      subjectId
-      description
-      timeBegin
-      timeEnd
-      status
-      tags
-    }
-    currentRecordTest {
       id
       subjectId
       description
