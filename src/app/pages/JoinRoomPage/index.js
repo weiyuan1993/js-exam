@@ -1,21 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import { List, Avatar, Button, Skeleton } from 'antd';
 import { listRooms } from 'app/utils/room';
 
-const data = [
-  {
-    title: 'Ant Design Title 1'
-  },
-  {
-    title: 'Ant Design Title 2'
-  },
-  {
-    title: 'Ant Design Title 3'
-  },
-  {
-    title: 'Ant Design Title 4'
-  }
-];
 class JoinRoomPage extends React.Component {
   state = {
     roomList: [],
@@ -32,7 +20,7 @@ class JoinRoomPage extends React.Component {
     console.log(roomList);
   };
 
-  joinRoom = () => {};
+  joinRoom = roomId => {};
 
   render() {
     const { roomList, isLoading } = this.state;
@@ -48,12 +36,21 @@ class JoinRoomPage extends React.Component {
                 avatar={
                   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                 }
-                title={<><p>Room ID:</p><a href="https://ant.design">{item.description}</a></>}
+                title={
+                  <>
+                    <p>Room ID:</p>
+                    <a href="https://ant.design">{item.description}</a>
+                  </>
+                }
                 description={item.status}
               />
-              <Button onClick={() => this.props.history.push(`/${item.id}`)}>
+              <Link
+                to={{
+                  pathname: `/admin/dispatch/${item.id}`
+                }}
+              >
                 Join
-              </Button>
+              </Link>
             </List.Item>
           )}
         />
