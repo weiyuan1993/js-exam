@@ -1,0 +1,55 @@
+.topnav{
+  overflow: hidden;
+  background-color: rgb(54, 54, 54);
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.column {
+  float: left;
+  padding: 10px;
+}
+
+.room {
+  background-color: #7EAED0;
+  position: fixed;
+  width: 30%;
+}
+
+.column.main {
+  width: 70%;
+}
+
+.sidebar {
+  background-color: #7EAED0;
+  /*background-attachment: fixed;*/
+  height: 100%;
+  max-width: 50%;
+
+  position: fixed;
+  z-index: 0;
+}
+
+.plusCircle {
+  //background-color: white;
+  background-color: #7EAED0;
+  color: rgb(255, 80, 80);
+  font-size: 50px;
+
+  z-index: 1;
+  position: fixed;
+  bottom: 50px;
+  left: 200px;
+}
