@@ -15,7 +15,8 @@ const ControlWidget = ({
   onChangeCategory,
   onChangeQuestion,
   onSync,
-  questionList
+  questionList,
+  disableSubmit
 }) => (
   <div className={styles.control}>
     <CategorySelector
@@ -29,7 +30,7 @@ const ControlWidget = ({
           onChange={e => onChangeName(e.target.value)}
           style={{ width: 200, marginRight: 5 }}
         />
-        <Button type="primary" icon="check-circle" onClick={onSubmit}>
+        <Button type="primary" icon="check-circle" onClick={onSubmit} disabled={disableSubmit}>
           Submit
         </Button>
       </>

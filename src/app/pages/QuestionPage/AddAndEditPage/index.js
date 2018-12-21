@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { transform } from '@babel/standalone';
 
 import { message } from 'antd';
 
-import { createQuestion, updateQuestion, deleteQuestion, listQuestions, getQuestion } from 'app/utils/question';
+import {
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
+  listQuestions,
+  getQuestion
+} from 'app/utils/question';
 import debouncedRunCode from 'app/utils/runCode';
 
 import ReactPage from './ReactPage';
@@ -12,7 +19,7 @@ import JavaScriptPage from './JavaScriptPage';
 
 import ControlWidget from './ControlWidget';
 
-const getPageComponent = (args) => {
+const getPageComponent = args => {
   switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
@@ -35,29 +42,52 @@ class Page extends Component {
     questionList: [],
     questionIndex: 0,
     isLoading: false
-  }
+  };
 
   async componentDidMount() {
     if (this.props.type === 'edit') {
       const { compiledCode } = this.state;
       this.setState({ isLoading: true });
-      await this.getQuestionList();
+      this.getQuestionList();
       debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
     }
   }
 
-  onChangeCategory = async (index) => {
-    this.setState({ categoryIndex: index }, await this.getQuestionList);
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.currentTab !== this.props.currentTab) {
+      if (nextProps.currentTab === 'edit') {
+        const { compiledCode } = this.state;
+        this.setState({ isLoading: true });
+        this.getQuestionList();
+        debouncedRunCode({ code: compiledCode, onTapeUpdate: this.addTape });
+      } else {
+        this.setState({
+          name: '',
+          tags: [],
+          code: '',
+          compiledCode: '',
+          test: '',
+          id: null
+        });
+      }
+    }
+    return true;
   }
+
+  onChangeCategory = async index => {
+    this.setState({ categoryIndex: index }, await this.getQuestionList);
+  };
 
   getQuestionList = async () => {
     const { categoryIndex } = this.state;
-    const result = await listQuestions(categoryIndex === 0 ? 'javascript' : 'react');
+    const result = await listQuestions(
+      categoryIndex === 0 ? 'javascript' : 'react'
+    );
     this.setState({ questionList: result.items, isLoading: false });
     this.onChangeQuestion(0);
-  }
+  };
 
-  onChangeQuestion = async (questionIndex) => {
+  onChangeQuestion = async questionIndex => {
     const { questionList } = this.state;
     const { id } = questionList[questionIndex];
     this.setState({ isLoading: true, questionIndex });
@@ -70,17 +100,10 @@ class Page extends Component {
       isLoading: false,
       id
     });
-  }
+  };
 
   onSubmit = async () => {
-    const {
-      categoryIndex,
-      tags,
-      name,
-      code: content,
-      test,
-      id
-    } = this.state;
+    const { categoryIndex, tags, name, code: content, test, id } = this.state;
     this.setState({ isLoading: true });
     if (this.props.type === 'add') {
       await this.onCreateQuestion({
@@ -99,16 +122,16 @@ class Page extends Component {
       });
     }
     this.setState({ isLoading: false });
-  }
+  };
 
   onCreateQuestion = async data => {
     try {
       await createQuestion(data);
       message.success(`Successfully add the question "${data.name}"!`, 0.5);
     } catch (e) {
-      message.error(e);
+      message.error(e.errors[0].message);
     }
-  }
+  };
 
   onUpdateQuestion = async data => {
     try {
@@ -117,7 +140,7 @@ class Page extends Component {
     } catch (e) {
       message.error(e);
     }
-  }
+  };
 
   onDelete = async () => {
     const { id } = this.state;
@@ -134,7 +157,7 @@ class Page extends Component {
     }
     await this.getQuestionList();
     this.setState({ isLoading: false });
-  }
+  };
 
   compileCode = () => {
     const { test, code } = this.state;
@@ -154,13 +177,13 @@ class Page extends Component {
     }
   };
 
-  handleCodeChange = (newCode) => {
+  handleCodeChange = newCode => {
     this.setState({ code: newCode }, this.compileCode);
-  }
+  };
 
-  handleTestChange = (newTest) => {
+  handleTestChange = newTest => {
     this.setState({ test: newTest }, this.compileCode);
-  }
+  };
 
   onTagUpdate = tags => {
     this.setState({ tags });
@@ -169,17 +192,19 @@ class Page extends Component {
   onSync = async () => {
     const { categoryIndex } = this.state;
     this.setState({ isLoading: true });
-    const result = await listQuestions(categoryIndex === 0 ? 'javascript' : 'react');
+    const result = await listQuestions(
+      categoryIndex === 0 ? 'javascript' : 'react'
+    );
     this.setState({ questionList: result.items, isLoading: false });
-  }
+  };
 
   render() {
-    const { categoryIndex, questionIndex, questionList } = this.state;
+    const { categoryIndex, name, code, test, questionIndex, questionList } = this.state;
     return (
       <React.Fragment>
         <ControlWidget
           type={this.props.type}
-          onChangeName={(name) => this.setState({ name })}
+          onChangeName={questionName => this.setState({ name: questionName })}
           onSubmit={this.onSubmit}
           onDelete={this.onDelete}
           onChangeCategory={this.onChangeCategory}
@@ -188,8 +213,9 @@ class Page extends Component {
           categoryIndex={categoryIndex}
           questionIndex={questionIndex}
           questionList={questionList}
+          disableSubmit={!name || !code || !test}
         />
-        { getPageComponent({
+        {getPageComponent({
           categoryIndex,
           onSubmit: this.onSubmit,
           onChangeCategory: this.onChangeCategory,
@@ -197,10 +223,14 @@ class Page extends Component {
           handleTestChange: this.handleTestChange,
           onTagUpdate: this.onTagUpdate,
           ...this.state
-        }) }
+        })}
       </React.Fragment>
     );
   }
 }
 
-export default Page;
+export default connect(state => {
+  return {
+    currentTab: state.tab.key
+  };
+})(Page);
