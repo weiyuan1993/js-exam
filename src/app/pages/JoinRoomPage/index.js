@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { List, Avatar, Button, Skeleton } from 'antd';
+import { List, Avatar, Button } from 'antd';
 import { listRooms } from 'app/utils/room';
 import changeTab from 'app/actions/tab';
 import joinRoom from 'app/actions/room';
-
 
 class JoinRoomPage extends React.Component {
   state = {
@@ -26,7 +25,7 @@ class JoinRoomPage extends React.Component {
   handleClickLink = roomId => {
     this.props.actions.changeTab('dispatch');
     this.props.actions.joinRoom(roomId);
-  }
+  };
 
   render() {
     const { roomList, isLoading } = this.state;
