@@ -1,7 +1,7 @@
 const initialState = {
   loading: false,
   rooms: [],
-  roomId: '',
+  id: '',
   description: '',
   subjectId: '',
   error: null
@@ -15,12 +15,11 @@ const room = (state = initialState, action) => {
         loading: true
       };
     case 'FETCH_ROOM_SUCCESS':
-    // console.log(action.payload)
       return {
         ...state,
         loading: false,
         error: null,
-        roomId: action.payload.result.id,
+        id: action.payload.result.id,
         description: action.payload.result.description,
         subjectId: action.payload.result.subjectId
       };

@@ -16,15 +16,14 @@ const record = (state = initialState, action) => {
         loading: true
       };
     case 'CREATE_RECORD_SUCCESS':
-      console.log(action.payload);
       return {
         ...state,
         loading: false,
         error: null,
-        id: action.payload.id,
-        syncCode: action.payload.syncCode,
-        timeBegin: parseInt(new Date().getTime() / 1000, 10),
-        ques: action.payload.ques
+        id: action.payload.result.id,
+        syncCode: action.payload.result.syncCode,
+        timeBegin: action.payload.result.timeBegin,
+        ques: action.payload.result.ques
       };
     case 'CREATE_RECORD_FAILURE':
       return {

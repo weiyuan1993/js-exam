@@ -1,41 +1,39 @@
 import {
-  getRoom,
-  bindRoomCurrentRecord,
-  subscribeOnUpdateRoom
-} from 'app/utils/room';
+  createRecord,
+  updateRecord,
+  subscribeOnUpdateRecord
+} from 'app/utils/record';
 
 import graphqlActionHelper, {
   ACTION_STATE
 } from 'app/utils/graphqlActionHelper';
 
-function getRoomInfo(id) {
+function createRecordData({ subjectId, roomId, question }) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
-        method: 'FETCH',
-        dataName: 'ROOM',
+        method: 'CREATE',
+        dataName: 'RECORD',
         actionState: ACTION_STATE.STARTED
       })
     );
     try {
-      const result = await getRoom(id);
+      const result = await createRecord({ subjectId, roomId, question });
       dispatch(
         graphqlActionHelper({
-          method: 'FETCH',
-          dataName: 'ROOM',
+          method: 'CREATE',
+          dataName: 'RECORD',
           actionState: ACTION_STATE.SUCCESS,
           result
         })
       );
-      if (result.currentRecord) {
-        dispatch({ type: 'SET_CURRENT_RECORD', payload: result.currentRecord });
-      }
-      console.log('#get room', result);
+
+      console.log('#create record', result);
     } catch (error) {
       dispatch(
         graphqlActionHelper({
-          method: 'FETCH',
-          dataName: 'ROOM',
+          method: 'CREATE',
+          dataName: 'RECORD',
           actionState: ACTION_STATE.FAILURE,
           result: error
         })
@@ -44,4 +42,4 @@ function getRoomInfo(id) {
   };
 }
 
-export { getRoomInfo };
+export { createRecordData };

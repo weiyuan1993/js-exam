@@ -124,7 +124,7 @@ export {
   listRooms,
   subscribeOnUpdateRoom,
   createRoom,
-  getRoom, 
+  getRoom,
   bindRoomCurrentRecord,
   createTest
 };

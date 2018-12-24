@@ -13,7 +13,6 @@ import {
 import debouncedRunCode from 'app/utils/runCode';
 
 import {
-  createRecord,
   subscribeOnCreateRecord,
   subscribeOnUpdateRecord,
   listRecords
@@ -27,6 +26,7 @@ import UserModal from 'app/components/Modal';
 import changeTab from 'app/actions/tab';
 import { getRoomInfo } from 'app/actions/room';
 import { fetchQuestionList, fetchQuestion } from 'app/actions/question';
+import { createRecordData } from 'app/actions/record';
 
 const MainView = args => {
   switch (args.categoryIndex) {
@@ -57,13 +57,16 @@ class Page extends Component {
     isLoading: false,
     intervieweeName: 'Vic',
     visibleIntervieweeModal: true,
-    recordList: []
+    recordList: [],
+    isHost: false
   };
 
   async componentDidMount() {
-    this.getRoom(this.props.match.params.roomId);
+    await this.getRoom(this.props.match.params.roomId);
+    console.log('DidMount', this.props);
   }
 
+  // for observer
   getRoom = async id => {
     this.setState({ isLoading: true });
     await this.props.actions.getRoomInfo(id);
@@ -75,16 +78,16 @@ class Page extends Component {
     await this.props.actions.fetchQuestionList(
       this.state.categoryIndex === 0 ? 'javascript' : 'react'
     );
-
+    // when question has dispatched
     if (this.props.record) {
-      const { ques } = this.props.record;
+      const { ques, syncCode } = this.props.record;
       if (ques) {
-        const { type, name, content: code, test } = ques;
+        const { type, name, content, test } = ques;
         this.setState({
           questionName: name,
-          questionContent: code,
+          questionContent: content,
           type,
-          code,
+          code: syncCode || content,
           test
         });
       } else {
@@ -94,8 +97,8 @@ class Page extends Component {
       await this.onChangeQuestion(0);
     }
 
-    this.subscribeOnCreateRecord();
-    this.subscribeOnUpdateRecord();
+    // this.subscribeOnCreateRecord();
+    // this.subscribeOnUpdateRecord();
     // this.subscribeOnUpdateRoom();
   };
 
@@ -115,14 +118,14 @@ class Page extends Component {
     const { id, name, type } = this.props.question.list[index];
     this.setState({ isLoading: true, questionIndex: index });
     await this.props.actions.fetchQuestion(id);
-    const { tags, content: code, test } = this.props.question;
+    const { tags, content, test } = this.props.question;
 
     this.setState({
       questionName: name,
-      questionContent: code,
-      type: type,
+      questionContent: content,
+      type,
       tags,
-      code,
+      code: content,
       test,
       isLoading: false
     });
@@ -152,28 +155,23 @@ class Page extends Component {
       questionName,
       type,
       questionContent,
-      test,
-      intervieweeName
+      test
     } = this.state;
+    const { subjectId, room } = this.props;
     this.setState({ isLoading: true });
     try {
-      if (intervieweeName === '') {
-        message.warning('Please Enter Interviewee First.');
-        this.setState({ isLoading: false });
-      } else {
-        const question = {
-          name: questionName,
-          type,
-          content: questionContent,
-          test
-        };
-        // await dispatchQuestion(question);
-        this.createRecord(intervieweeName, question);
-        message.success(
-          `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
-        );
-        this.setState({ isLoading: false });
-      }
+      const question = {
+        name: questionName,
+        type,
+        content: questionContent,
+        test
+      };
+      await this.props.actions.createRecordData({
+        subjectId,
+        roomId: room.id,
+        question
+      });
+      this.setState({ isLoading: false });
     } catch (e) {
       message.error(e.errors[0].message, 2);
       this.setState({ isLoading: false });
@@ -198,18 +196,6 @@ class Page extends Component {
     this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
   };
 
-  createRecord = async (intervieweeName, question) => {
-    const result = await createRecord(
-      intervieweeName,
-      this.props.roomId,
-      question
-    );
-    this.setState({
-      recordId: result.id
-    });
-    // await bindRoomCurrentRecord(this.props.roomId, result.id);
-  };
-
   subscribeOnCreateRecord = () => {
     subscribeOnCreateRecord(data => {
       const { id } = data;
@@ -227,22 +213,22 @@ class Page extends Component {
     });
   };
 
-  getRecordListBySubjectId = async intervieweeName => {
-    const result = await listRecords(intervieweeName);
-    this.setState({
-      recordList: result.sort((a, b) => b.timeBegin - a.timeBegin)
-    });
-  };
+  // getRecordListBySubjectId = async intervieweeName => {
+  //   const result = await listRecords(intervieweeName);
+  //   this.setState({
+  //     recordList: result.sort((a, b) => b.timeBegin - a.timeBegin)
+  //   });
+  // };
 
-  joinExam = record => {
-    const { recordId, recordSyncCode } = record;
-    this.setState({
-      recordId,
-      recordList: []
-    });
-    this.handleCodeChange(recordSyncCode);
-    this.setIntervieweeModal();
-  };
+  // joinExam = record => {
+  //   const { recordId, recordSyncCode } = record;
+  //   this.setState({
+  //     recordId,
+  //     recordList: []
+  //   });
+  //   this.handleCodeChange(recordSyncCode);
+  //   this.setIntervieweeModal();
+  // };
 
   // subscribeOnUpdateRoom = () => {
   //   subscribeOnUpdateRoom(data => {
@@ -334,7 +320,8 @@ export default withRouter(
           changeTab: key => dispatch(changeTab(key)),
           getRoomInfo: id => dispatch(getRoomInfo(id)),
           fetchQuestionList: type => dispatch(fetchQuestionList(type)),
-          fetchQuestion: id => dispatch(fetchQuestion(id))
+          fetchQuestion: id => dispatch(fetchQuestion(id)),
+          createRecordData: ({ subjectId, roomId, question }) => dispatch(createRecordData({ subjectId, roomId, question }))
         }
       };
     }
