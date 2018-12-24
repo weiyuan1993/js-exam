@@ -2,6 +2,8 @@ import React from 'react';
 import { Modal, Button, Input, message, Select } from 'antd';
 import './Modal.scss';
 
+import { createRoom, createTest } from '../../utils/room';
+
 const { Option } = Select;
 export default class UserModal extends React.Component {
   constructor(props) {
@@ -13,20 +15,26 @@ export default class UserModal extends React.Component {
     };
   }
 
+
   handleCancel = () => {
     this.props.setIntervieweeModal();
     this.setState({ userName: '' });
   }
 
-  submitName = () => {
-    const { userName } = this.state;
-    if (this.props.mustEnterName && userName === '') {
-      message.error('Please Enter Interviewee\'s Name');
-    } else {
-      this.props.setIntervieweeName(userName);
-      this.props.setIntervieweeModal();
-      this.setState({ userName: '' });
-    }
+  createRoom = async () => {
+    // const { userName } = this.state;
+    // if (this.props.mustEnterName && userName === '') {
+    //   message.error('Please Enter Interviewee\'s Name');
+    // } else {
+    //   this.props.setIntervieweeName(userName);
+    //   this.props.setIntervieweeModal();
+    //   this.setState({ userName: '' });
+    // }
+    const room = await createRoom('WENDY');
+    console.log(room);
+    const test = await createTest('WENDY');
+    console.log(test);
+    message.success(`ExamPassWord: ${room.id}`);
   }
 
   onChangeSelect = index => {
@@ -88,7 +96,7 @@ export default class UserModal extends React.Component {
           }
           <Button
             id="intervieweeNameSubmitBtn"
-            onClick={this.submitName}
+            onClick={this.createRoom}
           >
             Submit
           </Button>

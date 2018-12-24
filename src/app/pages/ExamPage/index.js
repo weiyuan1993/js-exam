@@ -9,7 +9,6 @@ import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
 import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
-import UserModal from 'app/components/Modal';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
@@ -43,6 +42,7 @@ class Page extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     this.subscribeOnCreateRecord();
     this.subscribeOnDispatchQuestion();
   }
@@ -151,9 +151,8 @@ class Page extends Component {
       resetTape,
       resetConsole,
       setIntervieweeModal,
-      setIntervieweeName,
     } = this;
-    const { visibleIntervieweeModal, intervieweeName } = this.state;
+    const { intervieweeName } = this.state;
     return (
       <>
         <ControlWidget
@@ -172,13 +171,6 @@ class Page extends Component {
           ...this.state,
           ...this.props
         })}
-        <UserModal
-          setIntervieweeModal={setIntervieweeModal}
-          mustEnterName
-          closable={false}
-          setIntervieweeName={setIntervieweeName}
-          visible={visibleIntervieweeModal}
-        />
       </>
     );
   }

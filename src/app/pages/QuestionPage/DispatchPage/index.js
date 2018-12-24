@@ -23,6 +23,7 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
+import CreateRoom from 'app/pages/CreatePage';
 
 const getPageComponent = args => {
   switch (args.categoryIndex) {
@@ -241,6 +242,7 @@ class Page extends Component {
     } = this;
     return (
       <React.Fragment>
+        <CreateRoom />
         <ControlWidget
           onDispatchQuestion={onDispatchQuestion}
           onChangeCategory={onChangeCategory}
@@ -265,6 +267,7 @@ class Page extends Component {
           ...this.state
         })}
         <UserModal
+          history={this.props.history}
           setIntervieweeModal={setIntervieweeModal}
           mustEnterName={false}
           closable
