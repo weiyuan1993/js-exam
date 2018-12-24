@@ -39,6 +39,11 @@ const record = (state = initialState, action) => {
         timeBegin: action.payload.timeBegin,
         ques: action.payload.ques
       };
+    case 'RESET_CURRENT_RECORD': // set current record from room
+      return {
+        ...state,
+        ...initialState
+      };
     default:
       return state;
   }

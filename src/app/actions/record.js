@@ -42,4 +42,17 @@ function createRecordData({ subjectId, roomId, question }) {
   };
 }
 
-export { createRecordData };
+// for subscribe
+function setCurrentRecord(result) {
+  return {
+    type: 'SET_CURRENT_RECORD',
+    payload: result
+  };
+}
+function resetCurrentRecord() {
+  return {
+    type: 'RESET_CURRENT_RECORD'
+  };
+}
+
+export { createRecordData, setCurrentRecord, resetCurrentRecord };

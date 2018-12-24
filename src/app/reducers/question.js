@@ -1,6 +1,5 @@
 const initialState = {
   loading: false,
-  index: 0,
   list: [],
   type: '',
   name: '',
