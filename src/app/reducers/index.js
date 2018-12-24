@@ -7,6 +7,10 @@ import tape from './tape';
 import _console from './console';
 import tab from './tab';
 import room from './room';
+import record from './record';
+import code from './code';
+import question from './question';
+
 
 const reducer = combineReducers({
   javascript,
@@ -16,7 +20,10 @@ const reducer = combineReducers({
   tape,
   console: _console,
   tab,
-  room
+  room,
+  record,
+  code,
+  question
 });
 
 export default reducer;

@@ -19,7 +19,7 @@ class TabWidget extends React.Component {
           onClick={this.handleClick}
           mode="horizontal"
         >
-          <Menu.Item key="join">
+          <Menu.Item key="room">
             <Link to="/">
               <Icon type="home" />
               Room

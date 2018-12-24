@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import { transform } from '@babel/standalone';
-import { message } from 'antd';
+import { message, notification } from 'antd';
 
 import {
   listQuestions,
@@ -17,14 +19,16 @@ import {
   listRecords
 } from 'app/utils/record';
 
-import { subscribeOnUpdateRoom } from 'app/utils/room'
-
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
 
-const getPageComponent = args => {
+import changeTab from 'app/actions/tab';
+import { getRoomInfo } from 'app/actions/room';
+import { fetchQuestionList, fetchQuestion } from 'app/actions/question';
+
+const MainView = args => {
   switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
@@ -37,6 +41,7 @@ const getPageComponent = args => {
 
 class Page extends Component {
   state = {
+    roomDescription: '',
     categoryIndex: 0,
     recordId: '',
     questionName: '',
@@ -50,38 +55,54 @@ class Page extends Component {
     questionList: [],
     questionIndex: 0,
     isLoading: false,
-    intervieweeName: '',
+    intervieweeName: 'Vic',
     visibleIntervieweeModal: true,
-    recordList: [],
+    recordList: []
   };
 
-  constructor(props) {
-    super(props);
-    this.setIntervieweeName = this.setIntervieweeName.bind(this);
-    this.getRecordListBySubjectId = this.getRecordListBySubjectId.bind(this);
+  async componentDidMount() {
+    this.getRoom(this.props.match.params.roomId);
   }
 
-  async componentDidMount() {
+  getRoom = async id => {
     this.setState({ isLoading: true });
-    this.subscribeOnCreateRecord();
-    this.subscribeOnUpdateRecord();
-    this.subscribeOnUpdateRoom();
-    const result = await listQuestions('javascript');
-    if (result) {
-      this.setState({ questionList: result.items, isLoading: false });
-      this.onChangeQuestion(0);
+    await this.props.actions.getRoomInfo(id);
+    await this.setRoomSetting();
+    this.setState({ isLoading: false });
+  };
+
+  setRoomSetting = async () => {
+    await this.props.actions.fetchQuestionList(
+      this.state.categoryIndex === 0 ? 'javascript' : 'react'
+    );
+
+    if (this.props.record) {
+      const { ques } = this.props.record;
+      if (ques) {
+        const { type, name, content: code, test } = ques;
+        this.setState({
+          questionName: name,
+          questionContent: code,
+          type,
+          code,
+          test
+        });
+      } else {
+        await this.onChangeQuestion(0);
+      }
+    } else {
+      await this.onChangeQuestion(0);
     }
 
-    debouncedRunCode({
-      code: this.state.compiledCode,
-      onTapeUpdate: this.addTape
-    });
-  }
+    this.subscribeOnCreateRecord();
+    this.subscribeOnUpdateRecord();
+    // this.subscribeOnUpdateRoom();
+  };
 
   setIntervieweeName = name => {
     this.setState({ intervieweeName: name });
     message.success(name);
-  }
+  };
 
   onChangeCategory = async index => {
     this.setState({ categoryIndex: index, isLoading: true });
@@ -91,24 +112,24 @@ class Page extends Component {
   };
 
   onChangeQuestion = async index => {
-    const { questionList } = this.state;
-    const { id, name, type } = questionList[index];
+    const { id, name, type } = this.props.question.list[index];
     this.setState({ isLoading: true, questionIndex: index });
-    const result = await getQuestion(id);
-    const { tags, content: code, test } = result;
+    await this.props.actions.fetchQuestion(id);
+    const { tags, content: code, test } = this.props.question;
+
     this.setState({
       questionName: name,
       questionContent: code,
-      type,
+      type: type,
       tags,
       code,
       test,
-      isLoading: false,
-      id
+      isLoading: false
     });
+    this.setState({ isLoading: false });
   };
 
-  handleCodeChange = (newCode) => {
+  handleCodeChange = newCode => {
     const { test } = this.state;
     const fullCode = `${newCode} ${test}`;
     try {
@@ -127,7 +148,13 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const { questionName, type, questionContent, test, intervieweeName } = this.state;
+    const {
+      questionName,
+      type,
+      questionContent,
+      test,
+      intervieweeName
+    } = this.state;
     this.setState({ isLoading: true });
     try {
       if (intervieweeName === '') {
@@ -138,10 +165,10 @@ class Page extends Component {
           name: questionName,
           type,
           content: questionContent,
-          test,
+          test
         };
-        await dispatchQuestion(question);
-        this.createRecord(intervieweeName, question.content);
+        // await dispatchQuestion(question);
+        this.createRecord(intervieweeName, question);
         message.success(
           `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
         );
@@ -169,13 +196,18 @@ class Page extends Component {
   setIntervieweeModal = () => {
     const { visibleIntervieweeModal } = this.state;
     this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
-  }
+  };
 
-  createRecord = async (intervieweeName, questionContent) => {
-    const result = await createRecord(intervieweeName, questionContent);
+  createRecord = async (intervieweeName, question) => {
+    const result = await createRecord(
+      intervieweeName,
+      this.props.roomId,
+      question
+    );
     this.setState({
-      recordId: result.id,
+      recordId: result.id
     });
+    // await bindRoomCurrentRecord(this.props.roomId, result.id);
   };
 
   subscribeOnCreateRecord = () => {
@@ -197,8 +229,10 @@ class Page extends Component {
 
   getRecordListBySubjectId = async intervieweeName => {
     const result = await listRecords(intervieweeName);
-    this.setState({ recordList: result.sort((a, b) => b.timeBegin - a.timeBegin) });
-  }
+    this.setState({
+      recordList: result.sort((a, b) => b.timeBegin - a.timeBegin)
+    });
+  };
 
   joinExam = record => {
     const { recordId, recordSyncCode } = record;
@@ -208,23 +242,23 @@ class Page extends Component {
     });
     this.handleCodeChange(recordSyncCode);
     this.setIntervieweeModal();
-  }
+  };
 
-  subscribeOnUpdateRoom = () => {
-    subscribeOnUpdateRoom(data => {
-      console.log(data);
-    });
-  }
+  // subscribeOnUpdateRoom = () => {
+  //   subscribeOnUpdateRoom(data => {
+  //     console.log(data);
+  //   });
+  // };
 
   render() {
     const {
+      roomDescription,
       categoryIndex,
       questionIndex,
-      questionList,
       recordId,
       intervieweeName,
       visibleIntervieweeModal,
-      recordList,
+      recordList
     } = this.state;
     const {
       onChangeCategory,
@@ -239,45 +273,70 @@ class Page extends Component {
       getRecordListBySubjectId,
       joinExam
     } = this;
+    const { room, record, question } = this.props;
     return (
       <React.Fragment>
-        <ControlWidget
-          onDispatchQuestion={onDispatchQuestion}
-          onChangeCategory={onChangeCategory}
-          categoryIndex={categoryIndex}
-          questionIndex={questionIndex}
-          questionList={questionList}
-          onChangeQuestion={onChangeQuestion}
-          setIntervieweeModal={setIntervieweeModal}
-          intervieweeName={intervieweeName}
-        />
-        {getPageComponent({
-          categoryIndex,
-          recordId,
-          intervieweeName,
-          onDispatchQuestion,
-          onChangeCategory,
-          onChangeQuestion,
-          handleCodeChange,
-          addTape,
-          resetTape,
-          onTagUpdate,
-          ...this.state
-        })}
-        <UserModal
-          setIntervieweeModal={setIntervieweeModal}
-          mustEnterName={false}
-          closable
-          setIntervieweeName={setIntervieweeName}
-          getRecordListBySubjectId={getRecordListBySubjectId}
-          visible={visibleIntervieweeModal}
-          searchable
-          recordList={recordList}
-          joinExam={joinExam}
-        />
+        {!room.loading && room.description ? (
+          <>
+            <ControlWidget
+              onDispatchQuestion={onDispatchQuestion}
+              onChangeCategory={onChangeCategory}
+              categoryIndex={categoryIndex}
+              questionIndex={questionIndex}
+              questionList={question.list}
+              onChangeQuestion={onChangeQuestion}
+              setIntervieweeModal={setIntervieweeModal}
+              intervieweeName={room.subjectId}
+            />
+            <MainView
+              onDispatchQuestion={onDispatchQuestion}
+              onChangeCategory={onChangeCategory}
+              onChangeQuestion={onChangeQuestion}
+              handleCodeChange={handleCodeChange}
+              addTape={addTape}
+              resetTape={resetTape}
+              onTagUpdate={onTagUpdate}
+              {...this.state}
+            />
+            {/* <UserModal
+            setIntervieweeModal={setIntervieweeModal}
+            mustEnterName={false}
+            closable
+            setIntervieweeName={setIntervieweeName}
+            getRecordListBySubjectId={getRecordListBySubjectId}
+            visible={visibleIntervieweeModal}
+            searchable
+            recordList={recordList}
+            joinExam={joinExam}
+          /> */}
+          </>
+        ) : (
+          <span>{room.error ? <>Not Found</> : <>Loading...</>}</span>
+        )}
       </React.Fragment>
     );
   }
 }
 
-export default Page;
+export default withRouter(
+  connect(
+    state => {
+      return {
+        room: state.room,
+        record: state.record,
+        code: state.code,
+        question: state.question
+      };
+    },
+    dispatch => {
+      return {
+        actions: {
+          changeTab: key => dispatch(changeTab(key)),
+          getRoomInfo: id => dispatch(getRoomInfo(id)),
+          fetchQuestionList: type => dispatch(fetchQuestionList(type)),
+          fetchQuestion: id => dispatch(fetchQuestion(id))
+        }
+      };
+    }
+  )(Page)
+);
