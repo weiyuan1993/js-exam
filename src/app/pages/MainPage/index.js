@@ -1,30 +1,20 @@
-import React, { Component } from 'react';
-import { Icon } from 'antd';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 
-import RoomList from 'app/components/RoomList';
+import JoinRoomPage from 'app/pages/JoinRoomPage/';
 // import SearchBox from 'app/Selectors/SearchBox';
 
 import style from './MainPage.module.scss';
 
-class MainPage extends Component {
-  render () {
-    return (
-      <div>
-        <div className={style.topnav}>
+const MainPage = () => (
+  <div>
+    <div className={`${style.column} ${style.list}`}>
+      <JoinRoomPage />
+    </div>
+    <div className={`${style.column} ${style.createRoom}`}>
+      <p> put create room here</p>
+    </div>
+  </div>
+);
 
-        </div>
-        <div>
-          <div className={[style.column, style.room].join(' ')}>
-            <RoomList />
-            <Icon type="plus-circle" className={style.plusCircle} theme="filled" />
-          </div>
-          <div className={style.column}>
-
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-export default MainPage;
+export default withRouter(MainPage);

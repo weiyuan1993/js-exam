@@ -1,13 +1,7 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React from 'react';
+import { Route } from 'react-router-dom';
 import ExamPage from 'app/pages/ExamPage';
-import NotFoundPage from 'app/pages/NotFoundPage';
 
-const Guest = ({ match }) => (
-  <Switch>
-    <Route exact path="/" component={ExamPage} />
-    <Route component={NotFoundPage} />
-  </Switch>
-);
+const Guest = ({ match }) => <Route exact path="/" component={ExamPage} />;
 
 export default Guest;

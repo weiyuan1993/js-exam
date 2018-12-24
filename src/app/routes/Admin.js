@@ -1,31 +1,21 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Amplify, { Auth } from 'aws-amplify';
-import { withAuthenticator } from 'aws-amplify-react';
-import AwsConfig from 'aws-exports';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
-import AdminPage from 'app/pages/AdminPage';
-import NotFoundPage from 'app/pages/NotFoundPage';
+import MainPage from 'app/pages/MainPage';
+import DispatchPage from 'app/pages/QuestionPage/DispatchPage';
+import AddAndEditPage from 'app/pages/QuestionPage/AddAndEditPage';
+import TabWidget from 'app/components/Widgets/TabWidget';
 
-// for graphql test
-Amplify.configure(AwsConfig);
-Auth.signIn("Admin", "Admin@123456")
- .then(user => {
-     const session = Amplify.Auth.currentSession()
- .then(s => {
-   console.log(s.getAccessToken().getJwtToken());
- }).catch(e=>console.log(e));
-   })
- .catch(err => console.log(err));
-
-
-const Admin = ({ match }) => {
-  return (
+const Admin = ({ match }) => (
+  <div>
+    <TabWidget />
     <Switch>
-      <Route exact path={`${match.path}`} component={AdminPage} />
-      <Route component={NotFoundPage} />
+      <Route exact path={`${match.path}`} render={(props) => <MainPage {...props} />} />
+      <Route exact path={`${match.path}admin/dispatch/:roomId`} render={(props) => <DispatchPage {...props} />} />
+      <Route exact path={`${match.path}admin/add`} render={() => <AddAndEditPage type="add" />} />
+      <Route exact path={`${match.path}admin/edit`} render={() => <AddAndEditPage type="edit" />} />
     </Switch>
-  );
-};
+  </div>
+);
 
-export default withAuthenticator(Admin);
+export default withRouter(Admin);
