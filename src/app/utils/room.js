@@ -36,9 +36,7 @@ const createTest = async (subjectId) => {
 
 const getRoom = async (roomId) => {
   const query = ` {
-    getRoom(filter: {
-      id:{ eq: "${roomId}" }
-    } limit: 1000){
+    getRoom(id: "${roomId}") {
       id
       test {
         id
@@ -75,8 +73,7 @@ const getRoom = async (roomId) => {
     }
   } `;
   const { data } = await API.graphql(graphqlOperation(query));
-  console.log(data)
-  return data.getRoom.items;
+  return data.getRoom;
 };
 
 const listRooms = async () => {
@@ -105,44 +102,6 @@ const listRooms = async () => {
   }`;
   const result = await API.graphql(graphqlOperation(query));
   return result.data.listRooms.items;
-};
-
-const getRoom = async id => {
-  const query = `query {
-    getRoom(id: "${id}") {
-      id
-      subjectId
-      description
-      host {
-        id
-        name
-      }
-      users {
-        items {
-          id
-          name
-        }
-        nextToken
-      }
-      currentRecord {
-        id
-        subjectId
-        syncCode
-        timeBegin
-        timeEnd
-        history
-        ques {
-          type
-          name
-          content
-          test
-        }
-      }
-    }
-  }
-  `;
-  const { data } = await API.graphql(graphqlOperation(query));
-  return data.getRoom;
 };
 
 const bindRoomCurrentRecord = async (roomId, recordId) => {

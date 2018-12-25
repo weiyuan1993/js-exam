@@ -1,16 +1,26 @@
+.Mainpage {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .column {
-  float: left;
+  overflow: hidden;
   padding: 10px;
 }
 
 .column.list {
   background-color: #7EAED0;
+  width: 50%;
   height: calc(100vh - 48px);
-  width: 30%;
   overflow-y: scroll;
 }
 
 .column.createRoom {
   height: calc(100vh - 48px);
-  width: 70%;
+  width: 50%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 50px;
 }
