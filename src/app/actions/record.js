@@ -3,7 +3,7 @@ import {
   updateRecord,
   subscribeOnUpdateRecord
 } from 'app/utils/record';
-
+import { bindRoomCurrentRecord } from 'app/utils/room';
 import graphqlActionHelper, {
   ACTION_STATE
 } from 'app/utils/graphqlActionHelper';
@@ -27,8 +27,8 @@ function createRecordData({ subjectId, roomId, question }) {
           result
         })
       );
-
-      console.log('#create record', result);
+      // bind record to room
+      await bindRoomCurrentRecord(roomId, result.id);
     } catch (error) {
       dispatch(
         graphqlActionHelper({
@@ -38,6 +38,7 @@ function createRecordData({ subjectId, roomId, question }) {
           result: error
         })
       );
+      console.log(error);
     }
   };
 }

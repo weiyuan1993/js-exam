@@ -105,9 +105,9 @@ const bindRoomCurrentRecord = async (roomId, recordId) => {
       roomCurrentRecordId: recordId
     }
   };
-  const result = API.graphql(graphqlOperation(mutations.updateRoom),params);
-  console.log(result);
-}
+  const { data } = await API.graphql(graphqlOperation(mutations.updateRoom, params));
+  return data.updateRoom;
+};
 
 const subscribeOnUpdateRoom = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRoom)).subscribe({

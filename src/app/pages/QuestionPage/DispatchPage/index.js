@@ -30,7 +30,6 @@ class Page extends Component {
   state = {
     categoryIndex: 0,
     questionName: '',
-    questionContent: '',
     code: '',
     compiledCode: '',
     test: '',
@@ -58,15 +57,13 @@ class Page extends Component {
     await this.props.actions.fetchQuestionList(
       this.state.categoryIndex === 0 ? 'javascript' : 'react'
     );
-    // when question has dispatched
+    // when question has dispatched, append the record data
     if (this.props.record.id) {
-      console.log("has record",this.props)
       const { ques, syncCode } = this.props.record;
       if (ques) {
         const { type, name, content, test } = ques;
         this.setState({
           questionName: name,
-          questionContent: content,
           type,
           code: syncCode || content,
           test
@@ -78,8 +75,7 @@ class Page extends Component {
       await this.onChangeQuestion(0);
     }
 
-    this.subscribeOnCreateRecord();
-    this.subscribeOnUpdateRecord();
+    this.subscribeData();
   };
 
   onChangeCategory = async index => {
@@ -91,14 +87,12 @@ class Page extends Component {
   };
 
   onChangeQuestion = async index => {
-    const { id, name, type } = this.props.question.list[index];
+    const { id, type } = this.props.question.list[index];
     this.setState({ isLoading: true, questionIndex: index });
     await this.props.actions.fetchQuestion(id);
-    const { tags, content, test } = this.props.question;
-
+    const { name, tags, content, test } = this.props.question;
     this.setState({
       questionName: name,
-      questionContent: content,
       type,
       tags,
       code: content,
@@ -127,14 +121,14 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const { questionName, type, questionContent, test } = this.state;
+    const { questionName, type, code, test } = this.state;
     const { subjectId, room } = this.props;
     this.setState({ isLoading: true });
     try {
       const question = {
         name: questionName,
         type,
-        content: questionContent,
+        content: code,
         test
       };
       await this.props.actions.createRecordData({
@@ -162,22 +156,19 @@ class Page extends Component {
     this.setState({ tags });
   };
 
-  subscribeOnCreateRecord = () => {
+  subscribeData = () => {
     subscribeOnCreateRecord(data => {
       const { room, ques } = data;
       if (room.id === this.props.room.id) {
         this.props.actions.setCurrentRecord(data);
+        // to receive new question dispatched
         this.setState({
           questionName: ques.name,
-          questionContent: ques.content,
           code: ques.content,
           test: ques.test
         });
       }
     });
-  };
-
-  subscribeOnUpdateRecord = () => {
     subscribeOnUpdateRecord(data => {
       const { room, syncCode } = data;
       if (room.id === this.props.room.id) {
@@ -188,6 +179,7 @@ class Page extends Component {
       }
     });
   };
+
 
   render() {
     const { categoryIndex, questionIndex } = this.state;
@@ -215,6 +207,7 @@ class Page extends Component {
               onChangeQuestion={onChangeQuestion}
               setIntervieweeModal={setIntervieweeModal}
               intervieweeName={room.subjectId}
+              roomDescription={room.description}
             />
             <MainView
               onDispatchQuestion={onDispatchQuestion}
