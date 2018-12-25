@@ -32,6 +32,57 @@ const createTest = async (subjectId) => {
   return data.createTest;
 };
 
+const getRoom = async (roomId) => {
+  const query = ` {
+    getRoom(id: "${roomId}") {
+      id
+      test {
+        id
+        subjectId
+        description
+        timeBegin
+        timeEnd
+        status
+        tags
+      }
+      subjectId
+      description
+      status
+      host {
+        id
+        name
+      }
+      password
+      users {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+      currentRecord {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+      }
+    }
+  } `;
+  const { data } = await API.graphql(graphqlOperation(query));
+  return data.getRoom;
+};
+
+const deleteRoom = async id => {
+  const params = {
+    input: {
+      id
+    }
+  };
+  const { data } = await API.graphql(graphqlOperation(mutations.deleteRoom, params));
+  return data.deleteRoom;
+}
 const listRooms = async () => {
   const query = ` {
     listRooms(limit: 1000) {
@@ -58,54 +109,6 @@ const listRooms = async () => {
   }`;
   const result = await API.graphql(graphqlOperation(query));
   return result.data.listRooms.items;
-};
-
-const getRoom = async id => {
-  const query = `query {
-    getRoom(id: "${id}") {
-      id
-      subjectId
-      description
-      host {
-        id
-        name
-      }
-      users {
-        items {
-          id
-          name
-        }
-        nextToken
-      }
-      currentRecord {
-        id
-        subjectId
-        syncCode
-        timeBegin
-        timeEnd
-        history
-        ques {
-          type
-          name
-          content
-          test
-        }
-      }
-    }
-  }
-  `;
-  const { data } = await API.graphql(graphqlOperation(query));
-  return data.getRoom;
-};
-
-const deleteRoom = async id => {
-  const params = {
-    input: {
-      id
-    }
-  };
-  const { data } = await API.graphql(graphqlOperation(mutations.deleteRoom, params));
-  return data.deleteRoom;
 };
 
 const bindRoomCurrentRecord = async (roomId, recordId) => {
