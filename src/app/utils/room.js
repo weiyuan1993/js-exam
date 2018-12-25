@@ -2,6 +2,8 @@ import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
 import * as subscriptions from '../../graphql/subscriptions.js';
+import AnswerWidget from 'app/components/Widgets/AnswerWidget/index.js';
+import room from 'app/reducers/room.js';
 
 Amplify.configure(awsExportConfig);
 
@@ -32,6 +34,48 @@ const createTest = async (subjectId) => {
   return data.createTest;
 };
 
+const getRoom = async (roomId) => {
+  const query = ` {
+    getRoom(id: "${roomId}") {
+      id
+      test {
+        id
+        subjectId
+        description
+        timeBegin
+        timeEnd
+        status
+        tags
+      }
+      subjectId
+      description
+      status
+      host {
+        id
+        name
+      }
+      password
+      users {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+      currentRecord {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+      }
+    }
+  } `;
+  const { data } = await API.graphql(graphqlOperation(query));
+  return data.getRoom;
+};
+
 const listRooms = async () => {
   const query = ` {
     listRooms(limit: 1000) {
@@ -60,44 +104,6 @@ const listRooms = async () => {
   return result.data.listRooms.items;
 };
 
-const getRoom = async id => {
-  const query = `query {
-    getRoom(id: "${id}") {
-      id
-      subjectId
-      description
-      host {
-        id
-        name
-      }
-      users {
-        items {
-          id
-          name
-        }
-        nextToken
-      }
-      currentRecord {
-        id
-        subjectId
-        syncCode
-        timeBegin
-        timeEnd
-        history
-        ques {
-          type
-          name
-          content
-          test
-        }
-      }
-    }
-  }
-  `;
-  const { data } = await API.graphql(graphqlOperation(query));
-  return data.getRoom;
-};
-
 const bindRoomCurrentRecord = async (roomId, recordId) => {
   const params = {
     input: {
@@ -124,7 +130,7 @@ export {
   listRooms,
   subscribeOnUpdateRoom,
   createRoom,
-  getRoom, 
+  getRoom,
   bindRoomCurrentRecord,
   createTest
 };

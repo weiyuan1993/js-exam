@@ -23,6 +23,7 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 import UserModal from 'app/components/Modal';
+import CreateRoom from 'app/pages/CreatePage';
 
 import changeTab from 'app/actions/tab';
 import { getRoomInfo } from 'app/actions/room';
