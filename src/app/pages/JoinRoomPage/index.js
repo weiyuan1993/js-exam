@@ -4,7 +4,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { List, Avatar } from 'antd';
 import { listRooms } from 'app/utils/room';
 import changeTab from 'app/actions/tab';
-import joinRoom from 'app/actions/room';
+import { getRoomInfo } from 'app/actions/room';
 
 import style from './JoinRoomPage.module.scss';
 
@@ -26,8 +26,8 @@ class JoinRoomPage extends React.Component {
 
   handleClickLink = roomId => {
     this.props.actions.changeTab('dispatch');
-    this.props.actions.joinRoom(roomId);
-  };
+    this.props.actions.getRoomInfo(roomId);
+  }
 
   render() {
     const { roomList, isLoading } = this.state;
@@ -76,7 +76,7 @@ export default withRouter(
       return {
         actions: {
           changeTab: key => dispatch(changeTab(key)),
-          joinRoom: id => dispatch(joinRoom(id))
+          getRoomInfo: id => dispatch(getRoomInfo(id))
         }
       };
     }
