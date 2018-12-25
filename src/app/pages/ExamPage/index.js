@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 import { message } from 'antd';
@@ -9,6 +9,7 @@ import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
 import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
+import { getRoom } from 'app/utils/room';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
@@ -37,14 +38,17 @@ class Page extends Component {
       console: [],
       intervieweeName: '',
       visibleIntervieweeModal: true,
+      roomID: this.props.match.params.roomId,
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
 
   componentDidMount() {
-    console.log(this.props);
     this.subscribeOnCreateRecord();
     this.subscribeOnDispatchQuestion();
+    console.log(this.state.roomID)
+    getRoom(this.state.roomID);
+
   }
 
   componentWillUnmount() {
@@ -96,10 +100,6 @@ class Page extends Component {
     this.setState({ tape: [] });
   };
 
-  setIntervieweeModal = () => {
-    const { visibleIntervieweeModal } = this.state;
-    this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
-  }
 
   addConsole = (...args) => {
     const { console: _console } = this.state;
@@ -109,11 +109,6 @@ class Page extends Component {
   resetConsole = () => {
     this.setState({ console: [] });
   };
-
-  setIntervieweeName = name => {
-    this.setState({ intervieweeName: name });
-    message.success(name);
-  }
 
 
   subscribeOnCreateRecord = () => {
@@ -176,4 +171,20 @@ class Page extends Component {
   }
 }
 
-export default withRouter(Page);
+
+export default withRouter(
+  connect(
+    state => {
+      return {
+        currentKey: state.tab.key
+      };
+    },
+    dispatch => {
+      return {
+        actions: {
+          // joinRoom: id => dispatch(joinRoom(id))
+        }
+      };
+    }
+  )(Page)
+);

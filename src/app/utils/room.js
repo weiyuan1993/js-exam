@@ -2,6 +2,8 @@ import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
 import * as subscriptions from '../../graphql/subscriptions.js';
+import AnswerWidget from 'app/components/Widgets/AnswerWidget/index.js';
+import room from 'app/reducers/room.js';
 
 Amplify.configure(awsExportConfig);
 
@@ -30,6 +32,51 @@ const createTest = async (subjectId) => {
     graphqlOperation(mutations.createTest, params)
   );
   return data.createTest;
+};
+
+const getRoom = async (roomId) => {
+  const query = ` {
+    getRoom(filter: {
+      id:{ eq: "${roomId}" }
+    } limit: 1000){
+      id
+      test {
+        id
+        subjectId
+        description
+        timeBegin
+        timeEnd
+        status
+        tags
+      }
+      subjectId
+      description
+      status
+      host {
+        id
+        name
+      }
+      password
+      users {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+      currentRecord {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+      }
+    }
+  } `;
+  const { data } = await API.graphql(graphqlOperation(query));
+  console.log(data)
+  return data.getRoom.items;
 };
 
 const listRooms = async () => {
@@ -124,7 +171,7 @@ export {
   listRooms,
   subscribeOnUpdateRoom,
   createRoom,
-  getRoom, 
+  getRoom,
   bindRoomCurrentRecord,
   createTest
 };
