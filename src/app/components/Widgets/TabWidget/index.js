@@ -4,9 +4,10 @@ import { withRouter, Link } from 'react-router-dom';
 
 import { Menu, Icon, message } from 'antd';
 
+import { deleteRoomAction } from 'app/actions/room';
 const SubMenu = Menu.SubMenu;
 
-const TabWidget = ({ match, location: { pathname }, room }) => {
+const TabWidget = ({ match, location: { pathname }, room, history , actions }) => {
   const currentKey = pathname.split('/')[2] || 'join';
   return (
     <Menu selectedKeys={[currentKey]} mode="horizontal">
@@ -56,6 +57,15 @@ const TabWidget = ({ match, location: { pathname }, room }) => {
           >
             <Icon type="share-alt" /> Copy Exam Link
           </Menu.Item>
+          <Menu.Item
+            key="delete"
+            onClick={async () => {
+              await actions.deleteRoomAction(room.id);
+              history.push('/');
+            }}
+          >
+            <Icon type="delete" /> Delete Room
+          </Menu.Item>
         </SubMenu>
       )}
     </Menu>
@@ -63,9 +73,18 @@ const TabWidget = ({ match, location: { pathname }, room }) => {
 };
 
 export default withRouter(
-  connect(state => {
-    return {
-      room: state.room
-    };
-  })(TabWidget)
+  connect(
+    state => {
+      return {
+        room: state.room
+      };
+    },
+    dispatch => {
+      return {
+        actions: {
+          deleteRoomAction: id => dispatch(deleteRoomAction(id))
+        }
+      };
+    }
+  )(TabWidget)
 );

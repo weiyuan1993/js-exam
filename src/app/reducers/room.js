@@ -10,6 +10,7 @@ const initialState = {
 const room = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_ROOM_STARTED':
+    case 'DELETE_ROOM_STARTED':
       return {
         ...state,
         loading: true
@@ -29,6 +30,8 @@ const room = (state = initialState, action) => {
         loading: false,
         error: action.payload.error
       };
+    case 'DELETE_ROOM_SUCCESS':
+      return initialState;
     default:
       return state;
   }

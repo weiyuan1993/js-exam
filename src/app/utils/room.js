@@ -98,6 +98,16 @@ const getRoom = async id => {
   return data.getRoom;
 };
 
+const deleteRoom = async id => {
+  const params = {
+    input: {
+      id
+    }
+  };
+  const { data } = await API.graphql(graphqlOperation(mutations.deleteRoom, params));
+  return data.deleteRoom;
+};
+
 const bindRoomCurrentRecord = async (roomId, recordId) => {
   const params = {
     input: {
@@ -125,6 +135,7 @@ export {
   subscribeOnUpdateRoom,
   createRoom,
   getRoom,
+  deleteRoom,
   bindRoomCurrentRecord,
   createTest
 };
