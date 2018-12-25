@@ -5,7 +5,11 @@ import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 import { message } from 'antd';
 
-import { subscribeOnCreateRecord, subscribeOnUpdateRecord } from 'app/utils/record';
+import {
+  subscribeOnCreateRecord,
+  subscribeOnUpdateRecord,
+  subscribeOnUpdateRecordByRecordId
+} from 'app/utils/record';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
@@ -37,7 +41,7 @@ class Page extends Component {
     tags: [],
     questionList: [],
     questionIndex: 0,
-    isLoading: false,
+    isLoading: false
   };
 
   async componentDidMount() {
@@ -59,6 +63,7 @@ class Page extends Component {
     );
     // when question has dispatched, append the record data
     if (this.props.record.id) {
+      this.subscribeRecordUpdate();
       const { ques, syncCode } = this.props.record;
       if (ques) {
         const { type, name, content, test } = ques;
@@ -75,7 +80,7 @@ class Page extends Component {
       await this.onChangeQuestion(0);
     }
 
-    this.subscribeData();
+    this.subscribeCreateRecord();
   };
 
   onChangeCategory = async index => {
@@ -122,9 +127,11 @@ class Page extends Component {
 
   onDispatchQuestion = async () => {
     const { questionName, type, code, test } = this.state;
-    const { subjectId, room } = this.props;
+    const { room } = this.props;
     this.setState({ isLoading: true });
     try {
+      // unsubscribe the old record
+      this.subscriptionForUpdateRecordByRecordId.unsubscribe();
       const question = {
         name: questionName,
         type,
@@ -132,10 +139,12 @@ class Page extends Component {
         test
       };
       await this.props.actions.createRecordData({
-        subjectId,
+        subjectId: room.subjectId,
         roomId: room.id,
         question
       });
+      // re-subscribe the new record
+      this.subscribeRecordUpdate();
       this.setState({ isLoading: false });
     } catch (e) {
       message.error(e.errors[0].message, 2);
@@ -156,10 +165,14 @@ class Page extends Component {
     this.setState({ tags });
   };
 
-  subscribeData = () => {
-    subscribeOnCreateRecord(data => {
+  subscribeCreateRecord = () => {
+    this.subscriptionForCreateRecord = subscribeOnCreateRecord(data => {
       const { room, ques } = data;
       if (room.id === this.props.room.id) {
+        // unsubscribe the old record
+        if (this.subscriptionForUpdateRecordByRecordId) {
+          this.subscriptionForUpdateRecordByRecordId.unsubscribe();
+        }
         this.props.actions.setCurrentRecord(data);
         // to receive new question dispatched
         this.setState({
@@ -167,19 +180,28 @@ class Page extends Component {
           code: ques.content,
           test: ques.test
         });
-      }
-    });
-    subscribeOnUpdateRecord(data => {
-      const { room, syncCode } = data;
-      if (room.id === this.props.room.id) {
-        this.props.actions.setCurrentRecord(data);
-        this.setState({
-          code: syncCode || this.props.record.ques.content
-        });
+        console.log('##onCreateRecord', data);
+
+        this.subscribeRecordUpdate();
       }
     });
   };
 
+  subscribeRecordUpdate = () => {
+    this.subscriptionForUpdateRecordByRecordId = subscribeOnUpdateRecordByRecordId(
+      this.props.record.id,
+      data => {
+        const { room, syncCode } = data;
+        if (room.id === this.props.room.id) {
+          this.props.actions.setCurrentRecord(data);
+          this.setState({
+            code: syncCode || this.props.record.ques.content
+          });
+          console.log('#onRecordUpdate', data);
+        }
+      }
+    );
+  };
 
   render() {
     const { categoryIndex, questionIndex } = this.state;
