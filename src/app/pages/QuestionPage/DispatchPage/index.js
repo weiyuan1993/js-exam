@@ -7,7 +7,6 @@ import { message } from 'antd';
 
 import {
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord,
   subscribeOnUpdateRecordByRecordId
 } from 'app/utils/record';
 

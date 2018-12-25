@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, message } from 'antd';
 
-const TabWidget = ({ location: { pathname }, room }) => {
+const SubMenu = Menu.SubMenu;
+
+const TabWidget = ({ match, location: { pathname }, room }) => {
   const currentKey = pathname.split('/')[2] || 'join';
   return (
     <Menu selectedKeys={[currentKey]} mode="horizontal">
@@ -33,12 +35,28 @@ const TabWidget = ({ location: { pathname }, room }) => {
         </Menu.Item>
       )}
       {room.description && (
-        <Menu.Item style={{ float: 'right' }} key="dispatch">
-          <Link to={`/admin/dispatch/${room.id}`}>
-            <Icon type="home" />
-            {room.description || 'UNSET'}
-          </Link>
-        </Menu.Item>
+        <SubMenu
+          style={{ float: 'right' }}
+          key="dispatch"
+          title={(
+            <Link to={`/admin/dispatch/${room.id}`}>
+              <Icon type="home" />
+              {room.description || 'UNSET'}
+            </Link>
+          )}
+        >
+          <Menu.Item
+            key="link"
+            onClick={() => {
+              const link = `${document.location.host}/exam/${match.params.roomId}`;
+              navigator.clipboard.writeText(link).then(() => {
+                message.success(`Successfully copied the link! -> ${link}`);
+              });
+            }}
+          >
+            <Icon type="share-alt" /> Copy Exam Link
+          </Menu.Item>
+        </SubMenu>
       )}
     </Menu>
   );

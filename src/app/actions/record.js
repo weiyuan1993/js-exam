@@ -1,7 +1,5 @@
 import {
-  createRecord,
-  updateRecord,
-  subscribeOnUpdateRecord
+  createRecord
 } from 'app/utils/record';
 import { bindRoomCurrentRecord } from 'app/utils/room';
 import graphqlActionHelper, {
