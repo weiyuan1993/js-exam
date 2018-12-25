@@ -37,15 +37,6 @@ const listRooms = async () => {
     listRooms(limit: 1000) {
       items {
         id
-        test {
-          id
-          subjectId
-          description
-          timeBegin
-          timeEnd
-          status
-          tags
-        }
         subjectId
         description
         status
@@ -69,6 +60,54 @@ const listRooms = async () => {
   return result.data.listRooms.items;
 };
 
+const getRoom = async id => {
+  const query = `query {
+    getRoom(id: "${id}") {
+      id
+      subjectId
+      description
+      host {
+        id
+        name
+      }
+      users {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
+      currentRecord {
+        id
+        subjectId
+        syncCode
+        timeBegin
+        timeEnd
+        history
+        ques {
+          type
+          name
+          content
+          test
+        }
+      }
+    }
+  }
+  `;
+  const { data } = await API.graphql(graphqlOperation(query));
+  return data.getRoom;
+};
+
+const bindRoomCurrentRecord = async (roomId, recordId) => {
+  const params = {
+    input: {
+      id: roomId,
+      roomCurrentRecordId: recordId
+    }
+  };
+  const result = API.graphql(graphqlOperation(mutations.updateRoom),params);
+  console.log(result);
+}
 
 const subscribeOnUpdateRoom = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRoom)).subscribe({
@@ -85,5 +124,7 @@ export {
   listRooms,
   subscribeOnUpdateRoom,
   createRoom,
+  getRoom, 
+  bindRoomCurrentRecord,
   createTest
 };

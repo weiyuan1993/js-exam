@@ -1,0 +1,16 @@
+.column {
+  float: left;
+  padding: 10px;
+}
+
+.column.list {
+  background-color: #7EAED0;
+  height: calc(100vh - 48px);
+  width: 30%;
+  overflow-y: scroll;
+}
+
+.column.createRoom {
+  height: calc(100vh - 48px);
+  width: 70%;
+}
