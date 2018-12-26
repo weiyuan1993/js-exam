@@ -74,6 +74,17 @@ const getRoom = async roomId => {
   return data.getRoom;
 };
 
+const deleteRoom = async id => {
+  const params = {
+    input: {
+      id
+    }
+  };
+  const { data } = await API.graphql(
+    graphqlOperation(mutations.deleteRoom, params)
+  );
+  return data.deleteRoom;
+};
 const listRooms = async () => {
   const query = ` {
     listRooms(limit: 1000) {
@@ -109,8 +120,10 @@ const bindRoomCurrentRecord = async (roomId, recordId) => {
       roomCurrentRecordId: recordId
     }
   };
-  const result = API.graphql(graphqlOperation(mutations.updateRoom), params);
-  console.log(result);
+  const { data } = await API.graphql(
+    graphqlOperation(mutations.updateRoom, params)
+  );
+  return data.updateRoom;
 };
 
 const subscribeOnUpdateRoom = callback => {
@@ -129,6 +142,7 @@ export {
   subscribeOnUpdateRoom,
   createRoom,
   getRoom,
+  deleteRoom,
   bindRoomCurrentRecord,
   createTest
 };

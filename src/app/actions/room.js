@@ -1,4 +1,5 @@
-import { getRoom } from 'app/utils/room';
+import { getRoom, deleteRoom } from 'app/utils/room';
+import { setCurrentRecord, resetCurrentRecord } from 'app/actions/record';
 
 import graphqlActionHelper, {
   ACTION_STATE
@@ -23,8 +24,13 @@ function getRoomInfo(id) {
           result
         })
       );
-      console.log(result);
-      dispatch({ type: 'SET_CURRENT_RECORD', payload: result.currentRecord });
+
+      if (result.currentRecord) {
+        dispatch(setCurrentRecord(result.currentRecord));
+      } else {
+        dispatch(resetCurrentRecord());
+      }
+      console.log('#get room', result);
     } catch (error) {
       dispatch(
         graphqlActionHelper({
@@ -38,4 +44,40 @@ function getRoomInfo(id) {
   };
 }
 
-export { getRoomInfo };
+function deleteRoomAction(id) {
+  return async dispatch => {
+    dispatch(
+      graphqlActionHelper({
+        method: 'DELETE',
+        dataName: 'ROOM',
+        actionState: ACTION_STATE.STARTED
+      })
+    );
+    try {
+      const result = await deleteRoom(id);
+      dispatch(
+        graphqlActionHelper({
+          method: 'DELETE',
+          dataName: 'ROOM',
+          actionState: ACTION_STATE.SUCCESS
+        })
+      );
+
+      dispatch(resetCurrentRecord());
+
+      console.log('#delete room', result);
+    } catch (error) {
+      dispatch(
+        graphqlActionHelper({
+          method: 'DELETE',
+          dataName: 'ROOM',
+          actionState: ACTION_STATE.FAILURE,
+          result: error
+        })
+      );
+      console.log(error);
+    }
+  };
+}
+
+export { getRoomInfo, deleteRoomAction };

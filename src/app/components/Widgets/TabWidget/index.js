@@ -2,44 +2,89 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
-import { Menu, Icon } from 'antd';
+import { Menu, Icon, message } from 'antd';
 
-const TabWidget = ({ location: { pathname }, roomId }) => {
+import { deleteRoomAction } from 'app/actions/room';
+const SubMenu = Menu.SubMenu;
+
+const TabWidget = ({ match, location: { pathname }, room, history , actions }) => {
   const currentKey = pathname.split('/')[2] || 'join';
   return (
     <Menu selectedKeys={[currentKey]} mode="horizontal">
       <Menu.Item key="join">
         <Link to="/">
-          <Icon type="home" />
+          <Icon type="home" theme="filled" />
           Room
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="dispatch" disabled={!roomId}>
-        <Link to={`/admin/dispatch/${roomId}`}>
-          <Icon type="eye" />
-          Dispatch
         </Link>
       </Menu.Item>
       <Menu.Item key="add">
         <Link to="/admin/add">
-          <Icon type="file-add" />
+          <Icon type="file-add" theme="filled" />
           Add
         </Link>
       </Menu.Item>
       <Menu.Item key="edit">
         <Link to="/admin/edit">
-          <Icon type="edit" />
+          <Icon type="edit" theme="filled" />
           Edit
         </Link>
       </Menu.Item>
+      {room.subjectId && (
+        <Menu.Item style={{ float: 'right' }} key="subjectId">
+          <Icon type="user" />
+          {room.subjectId || 'UNSET'}
+        </Menu.Item>
+      )}
+      {room.description && (
+        <SubMenu
+          style={{ float: 'right' }}
+          key="dispatch"
+          title={(
+            <Link to={`/admin/dispatch/${room.id}`}>
+              <Icon type="home" />
+              {room.description || 'UNSET'}
+            </Link>
+          )}
+        >
+          <Menu.Item
+            key="link"
+            onClick={() => {
+              const link = `${document.location.host}/exam/${match.params.roomId}`;
+              navigator.clipboard.writeText(link).then(() => {
+                message.success(`Successfully copied the link! -> ${link}`);
+              });
+            }}
+          >
+            <Icon type="share-alt" /> Copy Exam Link
+          </Menu.Item>
+          <Menu.Item
+            key="delete"
+            onClick={async () => {
+              await actions.deleteRoomAction(room.id);
+              history.push('/');
+            }}
+          >
+            <Icon type="delete" /> Delete Room
+          </Menu.Item>
+        </SubMenu>
+      )}
     </Menu>
   );
 };
 
 export default withRouter(
-  connect(state => {
-    return {
-      roomId: state.room.id
-    };
-  })(TabWidget)
+  connect(
+    state => {
+      return {
+        room: state.room
+      };
+    },
+    dispatch => {
+      return {
+        actions: {
+          deleteRoomAction: id => dispatch(deleteRoomAction(id))
+        }
+      };
+    }
+  )(TabWidget)
 );

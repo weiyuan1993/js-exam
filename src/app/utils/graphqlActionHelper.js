@@ -25,4 +25,4 @@ export default function graphqlActionHelper({ method, dataName, actionState, res
         type: `${method}_${dataName}_${ACTION_STATE.STARTED}`
       };
   }
-};
+}

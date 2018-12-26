@@ -5,7 +5,7 @@ import * as subscriptions from '../../graphql/subscriptions.js';
 
 Amplify.configure(awsExportConfig);
 
-const createRecord = async (subjectId, roomId, question) => {
+const createRecord = async ({ subjectId, roomId, question }) => {
   const params = {
     input: {
       subjectId,
@@ -36,7 +36,7 @@ const updateRecord = async (id, newCode, subjectId) => {
 };
 
 const subscribeOnCreateRecord = callback => {
-  API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
+  return API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onCreateRecord);
     },
@@ -50,6 +50,17 @@ const subscribeOnUpdateRecord = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onUpdateRecord);
+    },
+    error: error => {
+      console.error(error);
+    }
+  });
+};
+
+const subscribeOnUpdateRecordByRecordId = (id, callback) => {
+  return API.graphql(graphqlOperation(subscriptions.onUpdateRecordByRecordId, { id })).subscribe({
+    next: ({ value }) => {
+      callback(value.data.onUpdateRecordByRecordId);
     },
     error: error => {
       console.error(error);
@@ -79,5 +90,6 @@ export {
   createRecord,
   updateRecord,
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord
+  subscribeOnUpdateRecord,
+  subscribeOnUpdateRecordByRecordId
 };

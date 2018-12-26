@@ -55,6 +55,7 @@ function fetchQuestion(id) {
           result
         })
       );
+      console.log("get question",result)
     } catch (error) {
       dispatch(
         graphqlActionHelper({

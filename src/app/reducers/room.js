@@ -1,7 +1,7 @@
 const initialState = {
   loading: false,
   rooms: [],
-  roomId: '',
+  id: '',
   description: '',
   subjectId: '',
   error: null
@@ -10,17 +10,17 @@ const initialState = {
 const room = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_ROOM_STARTED':
+    case 'DELETE_ROOM_STARTED':
       return {
         ...state,
         loading: true
       };
     case 'FETCH_ROOM_SUCCESS':
-    // console.log(action.payload)
       return {
         ...state,
         loading: false,
         error: null,
-        roomId: action.payload.result.id,
+        id: action.payload.result.id,
         description: action.payload.result.description,
         subjectId: action.payload.result.subjectId
       };
@@ -30,6 +30,8 @@ const room = (state = initialState, action) => {
         loading: false,
         error: action.payload.error
       };
+    case 'DELETE_ROOM_SUCCESS':
+      return initialState;
     default:
       return state;
   }

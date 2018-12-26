@@ -1,11 +1,11 @@
 const initialState = {
   loading: false,
-  index: 0,
   list: [],
   type: '',
   name: '',
   content: '',
-  test: ''
+  test: '',
+  tags: []
 };
 
 const question = (state = initialState, action) => {
@@ -28,7 +28,8 @@ const question = (state = initialState, action) => {
         type: action.payload.result.type,
         name: action.payload.result.name,
         content: action.payload.result.content,
-        test: action.payload.result.test
+        test: action.payload.result.test,
+        tags: action.payload.result.tags
       };
     case 'FETCH_QUESTION_FAILURE':
       return {
