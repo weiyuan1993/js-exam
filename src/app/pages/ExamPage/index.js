@@ -173,11 +173,7 @@ class Page extends Component {
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        currentKey: state.tab.key
-      };
-    },
+    null,
     dispatch => {
       return {
         actions: {

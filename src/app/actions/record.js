@@ -6,7 +6,7 @@ import graphqlActionHelper, {
   ACTION_STATE
 } from 'app/utils/graphqlActionHelper';
 
-function createRecordData({ subjectId, roomId, question }) {
+function createRecordData({ subjectId, roomId, ques }) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
@@ -16,7 +16,7 @@ function createRecordData({ subjectId, roomId, question }) {
       })
     );
     try {
-      const result = await createRecord({ subjectId, roomId, question });
+      const result = await createRecord({ subjectId, roomId, ques });
       dispatch(
         graphqlActionHelper({
           method: 'CREATE',

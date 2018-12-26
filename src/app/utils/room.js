@@ -36,15 +36,6 @@ const getRoom = async (roomId) => {
   const query = ` {
     getRoom(id: "${roomId}") {
       id
-      test {
-        id
-        subjectId
-        description
-        timeBegin
-        timeEnd
-        status
-        tags
-      }
       subjectId
       description
       status
@@ -53,13 +44,6 @@ const getRoom = async (roomId) => {
         name
       }
       password
-      users {
-        items {
-          id
-          name
-        }
-        nextToken
-      }
       currentRecord {
         id
         subjectId
@@ -67,6 +51,12 @@ const getRoom = async (roomId) => {
         timeBegin
         timeEnd
         history
+        ques {
+          type
+          name
+          content
+          test
+        }
       }
     }
   } `;

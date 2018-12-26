@@ -15,10 +15,15 @@ const TabWidget = ({
   history,
   actions
 }) => {
-  const currentKey = pathname.split('/')[2] || 'join';
+  const currentKey = pathname.split('/')[2] || 'room';
   return (
-    <Menu selectedKeys={[currentKey]} mode="horizontal">
-      <Menu.Item key="join">
+    <Menu selectedKeys={[currentKey]} mode="horizontal" theme="dark">
+      <Menu.Item key="title">
+        <Link to="/">
+          <h2 style={{ display: 'inline', margin: '0 13px 0 13px', color: 'white' }}>JS-EXAM</h2>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="room">
         <Link to="/">
           <Icon type="home" theme="filled" />
           Room
