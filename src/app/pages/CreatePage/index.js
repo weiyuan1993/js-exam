@@ -3,7 +3,6 @@ import { Modal, Button, Input, message, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import changeTab from 'app/actions/tab';
 import { getRoomInfo } from 'app/actions/room';
 
 import { createRoom, createTest } from '../../utils/room';
@@ -55,7 +54,6 @@ class UserModal extends React.Component {
   toRoom = () => {
     const { roomId, roomName } = this.state;
     const { actions, history } = this.props;
-    actions.changeTab('dispatch');
     actions.getRoomInfo(roomName);
     history.push(`/admin/dispatch/${roomId}`);
   }
@@ -106,15 +104,10 @@ class UserModal extends React.Component {
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        currentKey: state.tab.key
-      };
-    },
+    null,
     dispatch => {
       return {
         actions: {
-          changeTab: key => dispatch(changeTab(key)),
           getRoomInfo: id => dispatch(getRoomInfo(id))
         }
       };
