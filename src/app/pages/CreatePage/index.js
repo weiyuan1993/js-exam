@@ -1,17 +1,23 @@
 import React from 'react';
 import { Modal, Button, Input, message, Icon } from 'antd';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+
+import changeTab from 'app/actions/tab';
+import { getRoomInfo } from 'app/actions/room';
 
 import { createRoom, createTest } from '../../utils/room';
 
-export default class UserModal extends React.Component {
+class UserModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       examLink: '',
       visible: false,
-      roomId: '',
+      roomName: '',
       userName: '',
       intervieweeName: '',
+      roomId: '',
     };
   }
 
@@ -28,13 +34,12 @@ export default class UserModal extends React.Component {
     } else {
       const { userName } = this.state;
       const room = await createRoom(userName);
-      console.log(room);
-      const test = await createTest('WENDY');
-      console.log(test);
+      await createTest(userName);
       this.setState({
+        roomId: room.id,
         visible: true,
-        examLink: `${document.location.hostname}:3000/${room.id}`,
-        roomId: room.description,
+        examLink: `${document.location.hostname}:3000/exam/${room.id}`,
+        roomName: room.description,
         intervieweeName: room.subjectId
       });
     }
@@ -47,10 +52,18 @@ export default class UserModal extends React.Component {
     message.success('wer');
   }
 
+  toRoom = () => {
+    const { roomId, roomName } = this.state;
+    const { actions, history } = this.props;
+    actions.changeTab('dispatch');
+    actions.getRoomInfo(roomName);
+    history.push(`/admin/dispatch/${roomId}`);
+  }
+
 
   render() {
     // const { examLink, visible } = this.props;
-    const { visible, examLink, roomId, userName, intervieweeName } = this.state;
+    const { visible, examLink, roomName, userName, intervieweeName } = this.state;
     return (
       <div>
         <Input
@@ -67,7 +80,7 @@ export default class UserModal extends React.Component {
         <Modal
           visible={visible}
           footer={false}
-          title={`WelCome to Room - ${roomId}`}
+          title={`WelCome to Room - ${roomName}`}
           onCancel={this.handleCancel}
         >
           <div>
@@ -81,9 +94,30 @@ export default class UserModal extends React.Component {
             <Button onClick={this.copyLink}>
               <Icon type="copy" />
             </Button>
+            <Button type="primary" onClick={this.toRoom}>
+              Enter Room
+            </Button>
           </div>
         </Modal>
       </div>
     );
   }
 }
+
+export default withRouter(
+  connect(
+    state => {
+      return {
+        currentKey: state.tab.key
+      };
+    },
+    dispatch => {
+      return {
+        actions: {
+          changeTab: key => dispatch(changeTab(key)),
+          getRoomInfo: id => dispatch(getRoomInfo(id))
+        }
+      };
+    }
+  )(UserModal)
+);

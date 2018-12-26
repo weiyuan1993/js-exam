@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
+import { message, Spin } from 'antd';
 
-// import { resetConsole } from 'app/actions/console';
 import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
-import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
-import { subscribeOnCreateRecord, updateRecord } from 'app/utils/record';
-import { getRoom } from 'app/utils/room';
+import { subscribeOnCreateRecord } from 'app/utils/record';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 
-const getPageComponent = args => {
+import { getRoomInfo, updateRoomInfo } from 'app/actions/room';
+import { setCurrentRecord, updateRecordData } from 'app/actions/record';
+
+const GetPageComponent = args => {
   switch (args.categoryIndex) {
     case 1: {
       return <ReactPage {...args} />;
@@ -37,28 +38,58 @@ class Page extends Component {
       console: [],
       intervieweeName: '',
       visibleIntervieweeModal: true,
-      roomID: this.props.match.params.roomId,
+      roomId: this.props.match.params.roomId,
+      roomPassword: '',
+      isLoading: false,
+      enableEnter: true,
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
 
   componentDidMount() {
-    this.subscribeOnCreateRecord();
-    this.subscribeOnDispatchQuestion();
-    console.log(this.state.roomID)
-    getRoom(this.state.roomID);
-
+    this.getRoom(this.state.roomId);
+    this.subscribeCreateRecord();
   }
 
-  componentWillUnmount() {
-    // this.subscriptionDispatchQuestion.unsubscribe();
+
+  getRoom = async id => {
+    this.setState({
+      isLoading: true,
+    });
+    await this.props.actions.getRoomInfo(id);
+    this.passwordSetting(this.props.room.password);
+  };
+
+  passwordSetting = async (roomPassword) => {
+    const { roomId } = this.state;
+    if (!roomPassword) {
+      const password = Math.random().toString(15).substr(2);
+      this.setState({
+        roomPassword: password,
+        intervieweeName: this.props.room.subjectId,
+      });
+      localStorage.examRoomPassword = password;
+      await this.props.actions.updateRoomInfo(roomId, password);
+      this.setState({
+        isLoading: false,
+      });
+    } else if (localStorage.examRoomPassword === roomPassword) {
+      this.setState({
+        isLoading: false,
+        intervieweeName: this.props.room.subjectId,
+      });
+    } else {
+      message.error("You Can't Not Enter the Page");
+      this.setState({
+        enableEnter: false,
+        isLoading: false,
+      });
+    }
   }
 
   updateRecordAction = async newCode => {
-    const { recordId, intervieweeName } = this.state;
-    if (recordId !== '') {
-      await updateRecord(recordId, newCode, intervieweeName);
-    }
+    const { recordId } = this.state;
+    await this.props.actions.updateRecordData(recordId, newCode);
   };
 
   handleCodeChange = newCode => {
@@ -110,29 +141,20 @@ class Page extends Component {
   };
 
 
-  subscribeOnCreateRecord = () => {
+  subscribeCreateRecord = () => {
     subscribeOnCreateRecord(data => {
-      const { intervieweeName } = this.state;
-      const { id, subjectId } = data;
-      if (intervieweeName === subjectId) {
+      const { room, ques, id } = data;
+      if (room.id === this.props.room.id) {
+        this.props.actions.setCurrentRecord(data);
+        // to receive new question dispatched
         this.setState({
-          recordId: id
+          recordId: id,
+          questionName: ques.name,
+          code: ques.content,
+          questionContent: ques.content,
+          test: ques.test
         });
       }
-    });
-  };
-
-  subscribeOnDispatchQuestion = () => {
-    subscribeOnCreateQuestionSnapshot(data => {
-      const { type, content: code, test } = data;
-      this.setState({
-        categoryIndex: type === 'javascript' ? 0 : 1,
-        code,
-        test,
-        questionContent: code
-      });
-      const { questionContent } = this.state;
-      this.handleCodeChange(questionContent);
     });
   };
 
@@ -146,26 +168,40 @@ class Page extends Component {
       resetConsole,
       setIntervieweeModal,
     } = this;
-    const { intervieweeName } = this.state;
+    const { intervieweeName, isLoading, enableEnter } = this.state;
     return (
-      <>
-        <ControlWidget
-          intervieweeName={intervieweeName}
-          onReset={() => onReset('javascript')}
-          setIntervieweeModal={setIntervieweeModal}
-        />
-        {getPageComponent({
-          handleCodeChange,
-          wrappedConsole,
-          onReset,
-          addTape,
-          resetTape,
-          resetConsole,
-          setIntervieweeModal,
-          ...this.state,
-          ...this.props
-        })}
-      </>
+      <div>
+        <Spin spinning={isLoading}>
+          {
+            enableEnter ? (
+              <>
+                <ControlWidget
+                  intervieweeName={intervieweeName}
+                  onReset={() => onReset('javascript')}
+                  setIntervieweeModal={setIntervieweeModal}
+                />
+                <GetPageComponent
+                  handleCodeChange={handleCodeChange}
+                  wrappedConsole={wrappedConsole}
+                  onReset={onReset}
+                  addTape={addTape}
+                  resetTape={resetTape}
+                  resetConsole={resetConsole}
+                  setIntervieweeModal={setIntervieweeModal}
+                  {...this.state}
+                  {...this.props}
+                />
+              </>
+            ) : (
+              <div>
+                <h1>
+                  WRONG EXAM ROOM 
+                </h1>
+              </div>
+            )
+          }
+        </Spin>
+      </div>
     );
   }
 }
@@ -173,11 +209,22 @@ class Page extends Component {
 
 export default withRouter(
   connect(
+<<<<<<< Updated upstream
     null,
+=======
+    state => {
+      return {
+        room: state.room,
+      };
+    },
+>>>>>>> Stashed changes
     dispatch => {
       return {
         actions: {
-          // joinRoom: id => dispatch(joinRoom(id))
+          getRoomInfo: id => dispatch(getRoomInfo(id)),
+          updateRoomInfo: (id, password) => dispatch(updateRoomInfo(id, password)),
+          setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+          updateRecordData: (id, syncCode) => dispatch(updateRecordData(id, syncCode))
         }
       };
     }

@@ -72,7 +72,8 @@ const deleteRoom = async id => {
   };
   const { data } = await API.graphql(graphqlOperation(mutations.deleteRoom, params));
   return data.deleteRoom;
-}
+};
+
 const listRooms = async () => {
   const query = ` {
     listRooms(limit: 1000) {
@@ -112,6 +113,19 @@ const bindRoomCurrentRecord = async (roomId, recordId) => {
   return data.updateRoom;
 };
 
+const updateRoom = async (id, password) => {
+  const params = {
+    input: {
+      id,
+      password,
+    }
+  };
+  const result = await API.graphql(
+    graphqlOperation(mutations.updateRoom, params)
+  );
+  return result;
+};
+
 const subscribeOnUpdateRoom = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRoom)).subscribe({
     next: ({ value }) => {
@@ -130,5 +144,6 @@ export {
   getRoom,
   deleteRoom,
   bindRoomCurrentRecord,
-  createTest
+  createTest,
+  updateRoom
 };

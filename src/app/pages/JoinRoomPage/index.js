@@ -20,7 +20,6 @@ class JoinRoomPage extends React.Component {
   getRoomList = async () => {
     const roomList = await listRooms();
     this.setState({ roomList, isLoading: false });
-    console.log(roomList);
   };
 
   handleClickLink = roomId => {

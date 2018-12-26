@@ -1,5 +1,6 @@
 import {
-  createRecord
+  createRecord,
+  updateRecord
 } from 'app/utils/record';
 import { bindRoomCurrentRecord } from 'app/utils/room';
 import graphqlActionHelper, {
@@ -41,6 +42,39 @@ function createRecordData({ subjectId, roomId, ques }) {
   };
 }
 
+function updateRecordData(id, question) {
+  return async dispatch => {
+    dispatch(
+      graphqlActionHelper({
+        method: 'UPDATE',
+        dataName: 'RECORD',
+        actionState: ACTION_STATE.STARTED
+      })
+    );
+    try {
+      const result = await updateRecord(id, question);
+      dispatch(
+        graphqlActionHelper({
+          method: 'UPDATE',
+          dataName: 'RECORD',
+          actionState: ACTION_STATE.SUCCESS,
+          result
+        })
+      );
+    } catch (error) {
+      dispatch(
+        graphqlActionHelper({
+          method: 'UPDATE',
+          dataName: 'RECORD',
+          actionState: ACTION_STATE.FAILURE,
+          result: error
+        })
+      );
+      console.log(error);
+    }
+  };
+}
+
 // for subscribe
 function setCurrentRecord(result) {
   return {
@@ -54,4 +88,9 @@ function resetCurrentRecord() {
   };
 }
 
-export { createRecordData, setCurrentRecord, resetCurrentRecord };
+export {
+  createRecordData,
+  setCurrentRecord,
+  resetCurrentRecord,
+  updateRecordData
+};

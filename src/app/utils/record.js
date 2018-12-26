@@ -20,11 +20,12 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
   );
   return data.createRecord;
 };
-const updateRecord = async (id, newCode, subjectId) => {
+
+const updateRecord = async (id, newCode) => {
+  console.log("UTIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   const params = {
     input: {
       id,
-      subjectId,
       syncCode: newCode,
       timeEnd: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
