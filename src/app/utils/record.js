@@ -5,13 +5,13 @@ import * as subscriptions from '../../graphql/subscriptions.js';
 
 Amplify.configure(awsExportConfig);
 
-const createRecord = async (subjectId, roomId, question) => {
+const createRecord = async ({ subjectId, roomId, ques }) => {
   const params = {
     input: {
       subjectId,
-      syncCode: question.content,
+      syncCode: ques.content,
       timeBegin: parseInt(new Date().getTime() / 1000, 10), // must to be Int
-      ques: question,
+      ques,
       recordRoomId: roomId
     }
   };
@@ -20,11 +20,12 @@ const createRecord = async (subjectId, roomId, question) => {
   );
   return data.createRecord;
 };
-const updateRecord = async (id, newCode, subjectId) => {
+
+const updateRecord = async (id, newCode) => {
+  console.log("UTIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   const params = {
     input: {
       id,
-      subjectId,
       syncCode: newCode,
       timeEnd: parseInt(new Date().getTime() / 1000, 10) // must to be Int
     }
@@ -36,7 +37,7 @@ const updateRecord = async (id, newCode, subjectId) => {
 };
 
 const subscribeOnCreateRecord = callback => {
-  API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
+  return API.graphql(graphqlOperation(subscriptions.onCreateRecord)).subscribe({
     next: ({ value }) => {
       callback(value.data.onCreateRecord);
     },
@@ -46,10 +47,10 @@ const subscribeOnCreateRecord = callback => {
   });
 };
 
-const subscribeOnUpdateRecord = callback => {
-  API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
+const subscribeOnUpdateRecordByRecordId = (id, callback) => {
+  return API.graphql(graphqlOperation(subscriptions.onUpdateRecordByRecordId, { id })).subscribe({
     next: ({ value }) => {
-      callback(value.data.onUpdateRecord);
+      callback(value.data.onUpdateRecordByRecordId);
     },
     error: error => {
       console.error(error);
@@ -79,5 +80,5 @@ export {
   createRecord,
   updateRecord,
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord
+  subscribeOnUpdateRecordByRecordId
 };

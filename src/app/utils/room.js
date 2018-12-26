@@ -2,8 +2,6 @@ import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
 import * as subscriptions from '../../graphql/subscriptions.js';
-import AnswerWidget from 'app/components/Widgets/AnswerWidget/index.js';
-import room from 'app/reducers/room.js';
 
 Amplify.configure(awsExportConfig);
 
@@ -38,15 +36,6 @@ const getRoom = async (roomId) => {
   const query = ` {
     getRoom(id: "${roomId}") {
       id
-      test {
-        id
-        subjectId
-        description
-        timeBegin
-        timeEnd
-        status
-        tags
-      }
       subjectId
       description
       status
@@ -55,13 +44,6 @@ const getRoom = async (roomId) => {
         name
       }
       password
-      users {
-        items {
-          id
-          name
-        }
-        nextToken
-      }
       currentRecord {
         id
         subjectId
@@ -69,11 +51,27 @@ const getRoom = async (roomId) => {
         timeBegin
         timeEnd
         history
+        ques {
+          type
+          name
+          content
+          test
+        }
       }
     }
   } `;
   const { data } = await API.graphql(graphqlOperation(query));
   return data.getRoom;
+};
+
+const deleteRoom = async id => {
+  const params = {
+    input: {
+      id
+    }
+  };
+  const { data } = await API.graphql(graphqlOperation(mutations.deleteRoom, params));
+  return data.deleteRoom;
 };
 
 const bindRoomCurrentRecord = async (roomId, recordId) => {
@@ -83,9 +81,22 @@ const bindRoomCurrentRecord = async (roomId, recordId) => {
       roomCurrentRecordId: recordId
     }
   };
-  const result = API.graphql(graphqlOperation(mutations.updateRoom),params);
-  console.log(result);
-}
+  const { data } = await API.graphql(graphqlOperation(mutations.updateRoom, params));
+  return data.updateRoom;
+};
+
+const updateRoom = async (id, password) => {
+  const params = {
+    input: {
+      id,
+      password,
+    }
+  };
+  const result = await API.graphql(
+    graphqlOperation(mutations.updateRoom, params)
+  );
+  return result;
+};
 
 const subscribeOnUpdateRoom = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRoom)).subscribe({
@@ -102,6 +113,8 @@ export {
   subscribeOnUpdateRoom,
   createRoom,
   getRoom,
+  deleteRoom,
   bindRoomCurrentRecord,
-  createTest
+  createTest,
+  updateRoom
 };

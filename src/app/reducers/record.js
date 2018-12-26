@@ -11,22 +11,24 @@ const initialState = {
 const record = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_RECORD_STARTED':
+    case 'UPDATE_RECORD_STARTED':
       return {
         ...state,
         loading: true
       };
     case 'CREATE_RECORD_SUCCESS':
-      console.log(action.payload);
+    case 'UPDATE_RECORD_SUCCESS':
       return {
         ...state,
         loading: false,
         error: null,
-        id: action.payload.id,
-        syncCode: action.payload.syncCode,
-        timeBegin: parseInt(new Date().getTime() / 1000, 10),
-        ques: action.payload.ques
+        id: action.payload.result.id,
+        syncCode: action.payload.result.syncCode,
+        timeBegin: action.payload.result.timeBegin,
+        ques: action.payload.result.ques
       };
     case 'CREATE_RECORD_FAILURE':
+    case 'UPDATE_RECORD_FAILURE':
       return {
         ...state,
         loading: false,
@@ -39,6 +41,11 @@ const record = (state = initialState, action) => {
         syncCode: action.payload.syncCode,
         timeBegin: action.payload.timeBegin,
         ques: action.payload.ques
+      };
+    case 'RESET_CURRENT_RECORD': // set current record from room
+      return {
+        ...state,
+        ...initialState
       };
     default:
       return state;

@@ -1,26 +1,13 @@
 .control {
-  display: flex;
+	display: flex;
   border-bottom: 1px solid #E0E0E0;
   padding: 10px 0;
 	background: white;
 	width: 100%;
-	height: 70px;
+	height:45px;
 	align-items: center;
 	justify-content: space-around;
 }
 
-.interviewee {
-	display: flex;
-	align-items: center;
-	font-size: 18px;
 
-	p {
-		margin: 0 0 0 10px;
 
-		span {
-			font-size: 20px;
-			font-weight: 600;
-			margin-left: 5px;
-		}
-	}
-}

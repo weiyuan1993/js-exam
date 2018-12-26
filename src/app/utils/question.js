@@ -57,8 +57,9 @@ const createQuestion = async data => {
 const getQuestion = async id => {
   const query = `query {
     getQuestion(id: "${id}") {
-      content,
-      test,
+      name
+      content
+      test
       tags
     }
   }`;

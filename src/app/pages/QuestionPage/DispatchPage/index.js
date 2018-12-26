@@ -3,31 +3,20 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { transform } from '@babel/standalone';
-import { message, notification } from 'antd';
+import { message } from 'antd';
 
 import {
-  listQuestions,
-  getQuestion,
-  dispatchQuestion
-} from 'app/utils/question';
-import debouncedRunCode from 'app/utils/runCode';
-
-import {
-  createRecord,
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord,
-  listRecords
+  subscribeOnUpdateRecordByRecordId
 } from 'app/utils/record';
 
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
-import UserModal from 'app/components/Modal';
-import CreateRoom from 'app/pages/CreatePage';
 
-import changeTab from 'app/actions/tab';
 import { getRoomInfo } from 'app/actions/room';
 import { fetchQuestionList, fetchQuestion } from 'app/actions/question';
+import { createRecordData, setCurrentRecord } from 'app/actions/record';
 
 const MainView = args => {
   switch (args.categoryIndex) {
@@ -42,29 +31,22 @@ const MainView = args => {
 
 class Page extends Component {
   state = {
-    roomDescription: '',
     categoryIndex: 0,
-    recordId: '',
-    questionName: '',
-    questionContent: '',
+    questionIndex: 0,
     code: '',
     compiledCode: '',
     test: '',
     tape: [],
     tags: [],
-    id: null,
-    questionList: [],
-    questionIndex: 0,
-    isLoading: false,
-    intervieweeName: 'Vic',
-    visibleIntervieweeModal: true,
-    recordList: []
+    isLoading: false
   };
 
   async componentDidMount() {
-    this.getRoom(this.props.match.params.roomId);
+    await this.getRoom(this.props.match.params.roomId);
+    console.log('DidMount', this.props);
   }
 
+  // for observer
   getRoom = async id => {
     this.setState({ isLoading: true });
     await this.props.actions.getRoomInfo(id);
@@ -76,16 +58,15 @@ class Page extends Component {
     await this.props.actions.fetchQuestionList(
       this.state.categoryIndex === 0 ? 'javascript' : 'react'
     );
-
-    if (this.props.record) {
-      const { ques } = this.props.record;
+    this.props.actions.fetchQuestion(this.props.question.list[0].id);
+    // when question has dispatched, append the record data
+    if (this.props.record.id) {
+      this.subscribeRecordUpdate();
+      const { ques, syncCode } = this.props.record;
       if (ques) {
-        const { type, name, content: code, test } = ques;
+        const { content, test } = ques;
         this.setState({
-          questionName: name,
-          questionContent: code,
-          type,
-          code,
+          code: syncCode || content,
           test
         });
       } else {
@@ -95,38 +76,30 @@ class Page extends Component {
       await this.onChangeQuestion(0);
     }
 
-    this.subscribeOnCreateRecord();
-    this.subscribeOnUpdateRecord();
-    // this.subscribeOnUpdateRoom();
-  };
-
-  setIntervieweeName = name => {
-    this.setState({ intervieweeName: name });
-    message.success(name);
+    this.subscribeCreateRecord();
   };
 
   onChangeCategory = async index => {
     this.setState({ categoryIndex: index, isLoading: true });
-    const result = await listQuestions(index === 0 ? 'javascript' : 'react');
-    this.setState({ questionList: result.items, isLoading: false });
+    await this.props.actions.fetchQuestionList(
+      index === 0 ? 'javascript' : 'react'
+    );
     this.onChangeQuestion(0);
   };
 
   onChangeQuestion = async index => {
-    const { id, name, type } = this.props.question.list[index];
+    const { id } = this.props.question.list[index];
     this.setState({ isLoading: true, questionIndex: index });
     await this.props.actions.fetchQuestion(id);
-    const { tags, content: code, test } = this.props.question;
-
-    this.setState({
-      questionName: name,
-      questionContent: code,
-      type: type,
-      tags,
-      code,
-      test,
-      isLoading: false
-    });
+    const { tags, content, test } = this.props.question;
+    if (!this.props.record.content) {
+      this.setState({
+        tags,
+        code: content,
+        test,
+        isLoading: false
+      });
+    }
     this.setState({ isLoading: false });
   };
 
@@ -149,34 +122,30 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const {
-      questionName,
-      type,
-      questionContent,
-      test,
-      intervieweeName
-    } = this.state;
+    const { room, question } = this.props;
     this.setState({ isLoading: true });
     try {
-      if (intervieweeName === '') {
-        message.warning('Please Enter Interviewee First.');
-        this.setState({ isLoading: false });
-      } else {
-        const question = {
-          name: questionName,
-          type,
-          content: questionContent,
-          test
-        };
-        // await dispatchQuestion(question);
-        this.createRecord(intervieweeName, question);
-        message.success(
-          `Dispatching the question "${questionName}" to "${intervieweeName}" successfully!`
-        );
-        this.setState({ isLoading: false });
+      // unsubscribe the old record
+      if (this.subscriptionForUpdateRecordByRecordId) {
+        this.subscriptionForUpdateRecordByRecordId.unsubscribe();
       }
+      const ques = {
+        name: question.name,
+        type: question.type,
+        content: question.content,
+        test: question.test
+      };
+      await this.props.actions.createRecordData({
+        subjectId: room.subjectId,
+        roomId: room.id,
+        ques
+      });
+      message.success(`Dispatch "${question.name}" successfully.`);
+      // re-subscribe the new record
+      this.subscribeRecordUpdate();
+      this.setState({ isLoading: false });
     } catch (e) {
-      message.error(e.errors[0].message, 2);
+      console.log(e);
       this.setState({ isLoading: false });
     }
   };
@@ -194,73 +163,45 @@ class Page extends Component {
     this.setState({ tags });
   };
 
-  setIntervieweeModal = () => {
-    const { visibleIntervieweeModal } = this.state;
-    this.setState({ visibleIntervieweeModal: !visibleIntervieweeModal });
-  };
+  subscribeCreateRecord = () => {
+    this.subscriptionForCreateRecord = subscribeOnCreateRecord(data => {
+      const { room, ques } = data;
+      if (room.id === this.props.room.id) {
+        // unsubscribe the old record
+        if (this.subscriptionForUpdateRecordByRecordId) {
+          this.subscriptionForUpdateRecordByRecordId.unsubscribe();
+        }
+        this.props.actions.setCurrentRecord(data);
+        // to receive new question dispatched
+        this.setState({
+          code: ques.content,
+          test: ques.test
+        });
+        console.log('##onCreateRecord', data);
 
-  createRecord = async (intervieweeName, question) => {
-    const result = await createRecord(
-      intervieweeName,
-      this.props.roomId,
-      question
-    );
-    this.setState({
-      recordId: result.id
-    });
-    // await bindRoomCurrentRecord(this.props.roomId, result.id);
-  };
-
-  subscribeOnCreateRecord = () => {
-    subscribeOnCreateRecord(data => {
-      const { id } = data;
-      this.setState({ recordId: id });
-    });
-  };
-
-  subscribeOnUpdateRecord = () => {
-    subscribeOnUpdateRecord(data => {
-      const { id, syncCode, subjectId } = data;
-      const { recordId, intervieweeName } = this.state;
-      if (id === recordId && intervieweeName === subjectId) {
-        this.setState({ code: syncCode });
+        this.subscribeRecordUpdate();
       }
     });
   };
 
-  getRecordListBySubjectId = async intervieweeName => {
-    const result = await listRecords(intervieweeName);
-    this.setState({
-      recordList: result.sort((a, b) => b.timeBegin - a.timeBegin)
-    });
+  subscribeRecordUpdate = () => {
+    this.subscriptionForUpdateRecordByRecordId = subscribeOnUpdateRecordByRecordId(
+      this.props.record.id,
+      data => {
+        const { room, syncCode } = data;
+        if (room.id === this.props.room.id) {
+          this.props.actions.setCurrentRecord(data);
+          this.setState({
+            code: syncCode || this.props.record.ques.content
+          });
+          console.log('#onRecordUpdate', data);
+        }
+      }
+    );
   };
-
-  joinExam = record => {
-    const { recordId, recordSyncCode } = record;
-    this.setState({
-      recordId,
-      recordList: []
-    });
-    this.handleCodeChange(recordSyncCode);
-    this.setIntervieweeModal();
-  };
-
-  // subscribeOnUpdateRoom = () => {
-  //   subscribeOnUpdateRoom(data => {
-  //     console.log(data);
-  //   });
-  // };
 
   render() {
-    const {
-      roomDescription,
-      categoryIndex,
-      questionIndex,
-      recordId,
-      intervieweeName,
-      visibleIntervieweeModal,
-      recordList
-    } = this.state;
+    const { categoryIndex, questionIndex } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -269,15 +210,12 @@ class Page extends Component {
       addTape,
       resetTape,
       onTagUpdate,
-      setIntervieweeName,
-      setIntervieweeModal,
-      getRecordListBySubjectId,
-      joinExam
+      setIntervieweeModal
     } = this;
-    const { room, record, question } = this.props;
+    const { room, question } = this.props;
     return (
       <React.Fragment>
-        {!room.loading && room.description ? (
+        {!room.loading && room.id ? (
           <>
             <ControlWidget
               onDispatchQuestion={onDispatchQuestion}
@@ -288,6 +226,7 @@ class Page extends Component {
               onChangeQuestion={onChangeQuestion}
               setIntervieweeModal={setIntervieweeModal}
               intervieweeName={room.subjectId}
+              roomDescription={room.description}
             />
             <MainView
               onDispatchQuestion={onDispatchQuestion}
@@ -299,17 +238,6 @@ class Page extends Component {
               onTagUpdate={onTagUpdate}
               {...this.state}
             />
-            {/* <UserModal
-            setIntervieweeModal={setIntervieweeModal}
-            mustEnterName={false}
-            closable
-            setIntervieweeName={setIntervieweeName}
-            getRecordListBySubjectId={getRecordListBySubjectId}
-            visible={visibleIntervieweeModal}
-            searchable
-            recordList={recordList}
-            joinExam={joinExam}
-          /> */}
           </>
         ) : (
           <span>{room.error ? <>Not Found</> : <>Loading...</>}</span>
@@ -332,10 +260,11 @@ export default withRouter(
     dispatch => {
       return {
         actions: {
-          changeTab: key => dispatch(changeTab(key)),
           getRoomInfo: id => dispatch(getRoomInfo(id)),
           fetchQuestionList: type => dispatch(fetchQuestionList(type)),
-          fetchQuestion: id => dispatch(fetchQuestion(id))
+          fetchQuestion: id => dispatch(fetchQuestion(id)),
+          createRecordData: params => dispatch(createRecordData(params)),
+          setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData))
         }
       };
     }
