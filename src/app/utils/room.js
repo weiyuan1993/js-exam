@@ -76,34 +76,6 @@ const getRoom = async (roomId) => {
   return data.getRoom;
 };
 
-const listRooms = async () => {
-  const query = ` {
-    listRooms(limit: 1000) {
-      items {
-        id
-        subjectId
-        description
-        status
-        host {
-          id
-          name
-        }
-        password
-        users {
-          items {
-            id
-            name
-          }
-          nextToken
-        }
-      }
-      nextToken
-    }
-  }`;
-  const result = await API.graphql(graphqlOperation(query));
-  return result.data.listRooms.items;
-};
-
 const bindRoomCurrentRecord = async (roomId, recordId) => {
   const params = {
     input: {
@@ -127,7 +99,6 @@ const subscribeOnUpdateRoom = callback => {
 };
 
 export {
-  listRooms,
   subscribeOnUpdateRoom,
   createRoom,
   getRoom,
