@@ -57,6 +57,7 @@ class Page extends Component {
       isLoading: true,
     });
     await this.props.actions.getRoomInfo(id);
+    console.log(id)
     this.passwordSetting(this.props.room.password);
   };
 
@@ -209,7 +210,12 @@ class Page extends Component {
 
 export default withRouter(
   connect(
-    null,
+    state => {
+      return {
+        room: state.room,
+        record: state.record,
+      };
+    },
     dispatch => {
       return {
         actions: {
