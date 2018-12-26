@@ -209,15 +209,7 @@ class Page extends Component {
 
 export default withRouter(
   connect(
-<<<<<<< Updated upstream
     null,
-=======
-    state => {
-      return {
-        room: state.room,
-      };
-    },
->>>>>>> Stashed changes
     dispatch => {
       return {
         actions: {
