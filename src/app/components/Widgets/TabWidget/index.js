@@ -5,9 +5,16 @@ import { withRouter, Link } from 'react-router-dom';
 import { Menu, Icon, message } from 'antd';
 
 import { deleteRoomAction } from 'app/actions/room';
+
 const SubMenu = Menu.SubMenu;
 
-const TabWidget = ({ match, location: { pathname }, room, history , actions }) => {
+const TabWidget = ({
+  match,
+  location: { pathname },
+  room,
+  history,
+  actions
+}) => {
   const currentKey = pathname.split('/')[2] || 'join';
   return (
     <Menu selectedKeys={[currentKey]} mode="horizontal">
@@ -35,7 +42,7 @@ const TabWidget = ({ match, location: { pathname }, room, history , actions }) =
           {room.subjectId || 'UNSET'}
         </Menu.Item>
       )}
-      {room.description && (
+      {room.id && (
         <SubMenu
           style={{ float: 'right' }}
           key="dispatch"
@@ -49,7 +56,9 @@ const TabWidget = ({ match, location: { pathname }, room, history , actions }) =
           <Menu.Item
             key="link"
             onClick={() => {
-              const link = `${document.location.host}/exam/${match.params.roomId}`;
+              const link = `${document.location.host}/exam/${
+                match.params.roomId
+              }`;
               navigator.clipboard.writeText(link).then(() => {
                 message.success(`Successfully copied the link! -> ${link}`);
               });
@@ -64,7 +73,7 @@ const TabWidget = ({ match, location: { pathname }, room, history , actions }) =
               history.push('/');
             }}
           >
-            <Icon type="delete" /> Delete Room
+            <Icon type="delete" style={{ color: 'red' }} /> Delete Room
           </Menu.Item>
         </SubMenu>
       )}

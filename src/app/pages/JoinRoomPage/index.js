@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { List, Avatar } from 'antd';
 import { listRooms } from 'app/utils/room';
-import changeTab from 'app/actions/tab';
 import { getRoomInfo } from 'app/actions/room';
 
 import style from './JoinRoomPage.module.scss';
@@ -25,7 +24,6 @@ class JoinRoomPage extends React.Component {
   };
 
   handleClickLink = roomId => {
-    this.props.actions.changeTab('dispatch');
     this.props.actions.getRoomInfo(roomId);
   }
 
@@ -67,15 +65,10 @@ class JoinRoomPage extends React.Component {
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        currentKey: state.tab.key
-      };
-    },
+    null,
     dispatch => {
       return {
         actions: {
-          changeTab: key => dispatch(changeTab(key)),
           getRoomInfo: id => dispatch(getRoomInfo(id))
         }
       };

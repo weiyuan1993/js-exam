@@ -217,7 +217,7 @@ class Page extends Component {
     const { room, question } = this.props;
     return (
       <React.Fragment>
-        {!room.loading && room.description ? (
+        {!room.loading && room.id ? (
           <>
             <ControlWidget
               onDispatchQuestion={onDispatchQuestion}

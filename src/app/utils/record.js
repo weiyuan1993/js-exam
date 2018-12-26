@@ -46,17 +46,6 @@ const subscribeOnCreateRecord = callback => {
   });
 };
 
-const subscribeOnUpdateRecord = callback => {
-  API.graphql(graphqlOperation(subscriptions.onUpdateRecord)).subscribe({
-    next: ({ value }) => {
-      callback(value.data.onUpdateRecord);
-    },
-    error: error => {
-      console.error(error);
-    }
-  });
-};
-
 const subscribeOnUpdateRecordByRecordId = (id, callback) => {
   return API.graphql(graphqlOperation(subscriptions.onUpdateRecordByRecordId, { id })).subscribe({
     next: ({ value }) => {
@@ -90,6 +79,5 @@ export {
   createRecord,
   updateRecord,
   subscribeOnCreateRecord,
-  subscribeOnUpdateRecord,
   subscribeOnUpdateRecordByRecordId
 };
