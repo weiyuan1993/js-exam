@@ -2,18 +2,16 @@ import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import awsExportConfig from 'aws-exports';
 import * as mutations from '../../graphql/mutations.js';
 import * as subscriptions from '../../graphql/subscriptions.js';
-import AnswerWidget from 'app/components/Widgets/AnswerWidget/index.js';
-import room from 'app/reducers/room.js';
 
 Amplify.configure(awsExportConfig);
 
-const createRoom = async (subjectId) => {
+const createRoom = async subjectId => {
   const roomNum = Math.floor(Math.random() * 98) + 1;
   const roomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
   const params = {
     input: {
       description: roomChar + roomNum,
-      subjectId,
+      subjectId
     }
   };
   const { data } = await API.graphql(
@@ -22,10 +20,10 @@ const createRoom = async (subjectId) => {
   return data.createRoom;
 };
 
-const createTest = async (subjectId) => {
+const createTest = async subjectId => {
   const params = {
     input: {
-      subjectId,
+      subjectId
     }
   };
   const { data } = await API.graphql(
@@ -34,7 +32,7 @@ const createTest = async (subjectId) => {
   return data.createTest;
 };
 
-const getRoom = async (roomId) => {
+const getRoom = async roomId => {
   const query = ` {
     getRoom(id: "${roomId}") {
       id
@@ -111,9 +109,9 @@ const bindRoomCurrentRecord = async (roomId, recordId) => {
       roomCurrentRecordId: recordId
     }
   };
-  const result = API.graphql(graphqlOperation(mutations.updateRoom),params);
+  const result = API.graphql(graphqlOperation(mutations.updateRoom), params);
   console.log(result);
-}
+};
 
 const subscribeOnUpdateRoom = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRoom)).subscribe({

@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
-import { message } from 'antd';
 
-// import { resetConsole } from 'app/actions/console';
 import ControlWidget from './ControlWidget';
 import createWrappedConsole from 'app/utils/consoleFactory';
 import { subscribeOnCreateQuestionSnapshot } from 'app/utils/question';
@@ -38,7 +36,7 @@ class Page extends Component {
       console: [],
       intervieweeName: '',
       visibleIntervieweeModal: true,
-      roomID: this.props.match.params.roomId,
+      roomID: this.props.match.params.roomId
     };
     this.wrappedConsole = createWrappedConsole(console, this.addConsole);
   }
@@ -46,9 +44,8 @@ class Page extends Component {
   componentDidMount() {
     this.subscribeOnCreateRecord();
     this.subscribeOnDispatchQuestion();
-    console.log(this.state.roomID)
+    console.log(this.state.roomID);
     getRoom(this.state.roomID);
-
   }
 
   componentWillUnmount() {
@@ -100,7 +97,6 @@ class Page extends Component {
     this.setState({ tape: [] });
   };
 
-
   addConsole = (...args) => {
     const { console: _console } = this.state;
     this.setState({ console: [..._console, ...args] });
@@ -109,7 +105,6 @@ class Page extends Component {
   resetConsole = () => {
     this.setState({ console: [] });
   };
-
 
   subscribeOnCreateRecord = () => {
     subscribeOnCreateRecord(data => {
@@ -145,7 +140,7 @@ class Page extends Component {
       addTape,
       resetTape,
       resetConsole,
-      setIntervieweeModal,
+      setIntervieweeModal
     } = this;
     const { intervieweeName } = this.state;
     return (
@@ -170,7 +165,6 @@ class Page extends Component {
     );
   }
 }
-
 
 export default withRouter(
   connect(

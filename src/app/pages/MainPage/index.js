@@ -1,9 +1,7 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 
 import JoinRoomPage from 'app/pages/JoinRoomPage/';
 import CreatePage from 'app/pages/CreatePage';
-// import SearchBox from 'app/Selectors/SearchBox';
 
 import style from './MainPage.module.scss';
 
@@ -18,4 +16,4 @@ const MainPage = () => (
   </div>
 );
 
-export default withRouter(MainPage);
+export default MainPage;

@@ -25,42 +25,35 @@ class JoinRoomPage extends React.Component {
   };
 
   handleClickLink = roomId => {
-    this.props.actions.changeTab('dispatch');
-    this.props.actions.getRoomInfo(roomId);
-  }
+    // this.props.actions.changeTab('dispatch');
+    // this.props.actions.getRoomInfo(roomId);
+  };
 
   render() {
     const { roomList, isLoading } = this.state;
     return (
-      <div className={style.listColumn}>
-        <List
-          itemLayout="horizontal"
-          dataSource={roomList}
-          loading={isLoading}
-          renderItem={item => (
-            <Link
-              to={{
-                pathname: `/admin/dispatch/${item.id}`
-              }}
-              onClick={() => this.handleClickLink(item.id)}
+      <List
+        itemLayout="horizontal"
+        dataSource={roomList}
+        loading={isLoading}
+        renderItem={item => (
+          <Link
+            to={`/admin/dispatch/${item.id}`}
+            onClick={() => this.handleClickLink(item.id)}
+          >
+            <List.Item
+              style={{ borderBottom: '1px solid #ddd' }}
+              className={style.listItem}
             >
-              <List.Item style={{ borderBottom: '1px solid #ddd' }} className={style.listItem}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar icon="home" className={style.avatar} />
-                  }
-                  title={
-                    <>
-                      <p>Room: {item.description}</p>
-                    </>
-                  }
-                  description={item.status}
-                />
-              </List.Item>
-            </Link>
-          )}
-        />
-      </div>
+              <List.Item.Meta
+                avatar={<Avatar icon="home" className={style.avatar} />}
+                title={<p>Room: {item.description}</p>}
+                description={item.status}
+              />
+            </List.Item>
+          </Link>
+        )}
+      />
     );
   }
 }

@@ -1,8 +1,4 @@
-import {
-  getRoom,
-  bindRoomCurrentRecord,
-  subscribeOnUpdateRoom
-} from 'app/utils/room';
+import { getRoom } from 'app/utils/room';
 
 import graphqlActionHelper, {
   ACTION_STATE
@@ -27,7 +23,7 @@ function getRoomInfo(id) {
           result
         })
       );
-      console.log(result)
+      console.log(result);
       dispatch({ type: 'SET_CURRENT_RECORD', payload: result.currentRecord });
     } catch (error) {
       dispatch(

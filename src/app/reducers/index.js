@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import formReducer from 'redux-form/es/reducer';
+
 import javascript from './javascript';
 import react from './react';
 import login from './login';
@@ -11,7 +13,6 @@ import record from './record';
 import code from './code';
 import question from './question';
 
-
 const reducer = combineReducers({
   javascript,
   react,
@@ -23,7 +24,8 @@ const reducer = combineReducers({
   room,
   record,
   code,
-  question
+  question,
+  form: formReducer
 });
 
 export default reducer;

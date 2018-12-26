@@ -3,14 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { transform } from '@babel/standalone';
-import { message, notification } from 'antd';
+import { message } from 'antd';
 
-import {
-  listQuestions,
-  getQuestion,
-  dispatchQuestion
-} from 'app/utils/question';
-import debouncedRunCode from 'app/utils/runCode';
+import { listQuestions } from 'app/utils/question';
 
 import {
   createRecord,
@@ -22,8 +17,6 @@ import {
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
-import UserModal from 'app/components/Modal';
-import CreateRoom from 'app/pages/CreatePage';
 
 import changeTab from 'app/actions/tab';
 import { getRoomInfo } from 'app/actions/room';
@@ -252,15 +245,7 @@ class Page extends Component {
   // };
 
   render() {
-    const {
-      roomDescription,
-      categoryIndex,
-      questionIndex,
-      recordId,
-      intervieweeName,
-      visibleIntervieweeModal,
-      recordList
-    } = this.state;
+    const { categoryIndex, questionIndex } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -269,12 +254,9 @@ class Page extends Component {
       addTape,
       resetTape,
       onTagUpdate,
-      setIntervieweeName,
-      setIntervieweeModal,
-      getRecordListBySubjectId,
-      joinExam
+      setIntervieweeModal
     } = this;
-    const { room, record, question } = this.props;
+    const { room, question } = this.props;
     return (
       <React.Fragment>
         {!room.loading && room.description ? (
@@ -312,7 +294,7 @@ class Page extends Component {
           /> */}
           </>
         ) : (
-          <span>{room.error ? <>Not Found</> : <>Loading...</>}</span>
+          <span>{room.error ? <>Room Not Found</> : <>Loading...</>}</span>
         )}
       </React.Fragment>
     );
