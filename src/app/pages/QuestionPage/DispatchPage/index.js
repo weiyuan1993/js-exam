@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
+import queryString from 'query-string';
 import { transform } from '@babel/standalone';
 import { message } from 'antd';
 
@@ -38,10 +38,14 @@ class Page extends Component {
     test: '',
     tape: [],
     tags: [],
-    isLoading: false
+    isLoading: false,
+    isHost: false
   };
 
   async componentDidMount() {
+    this.setState({
+      isHost: Boolean(queryString.parse(this.props.location.search).host)
+    });
     await this.getRoom(this.props.match.params.roomId);
     console.log('DidMount', this.props);
   }
@@ -201,7 +205,7 @@ class Page extends Component {
   };
 
   render() {
-    const { categoryIndex, questionIndex } = this.state;
+    const { isHost, categoryIndex, questionIndex } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -217,17 +221,19 @@ class Page extends Component {
       <React.Fragment>
         {!room.loading && room.id ? (
           <>
-            <ControlWidget
-              onDispatchQuestion={onDispatchQuestion}
-              onChangeCategory={onChangeCategory}
-              categoryIndex={categoryIndex}
-              questionIndex={questionIndex}
-              questionList={question.list}
-              onChangeQuestion={onChangeQuestion}
-              setIntervieweeModal={setIntervieweeModal}
-              intervieweeName={room.subjectId}
-              roomDescription={room.description}
-            />
+            {isHost && (
+              <ControlWidget
+                onDispatchQuestion={onDispatchQuestion}
+                onChangeCategory={onChangeCategory}
+                categoryIndex={categoryIndex}
+                questionIndex={questionIndex}
+                questionList={question.list}
+                onChangeQuestion={onChangeQuestion}
+                setIntervieweeModal={setIntervieweeModal}
+                intervieweeName={room.subjectId}
+                roomDescription={room.description}
+              />
+            )}
             <MainView
               onDispatchQuestion={onDispatchQuestion}
               onChangeCategory={onChangeCategory}

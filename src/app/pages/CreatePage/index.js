@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Input, message, Icon } from 'antd';
+import { Modal, Button, Input, message, Icon, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -17,21 +17,22 @@ class UserModal extends React.Component {
       userName: '',
       intervieweeName: '',
       roomId: '',
+      isLoading: false
     };
   }
-
 
   handleCancel = () => {
     this.setState({
       visible: false
     });
-  }
+  };
 
   createRoom = async () => {
     if (this.state.userName === '') {
       message.warning('Please enter Name');
     } else {
       const { userName } = this.state;
+      this.setState({ isLoading: true });
       const room = await createRoom(userName);
       await createTest(userName);
       this.setState({
@@ -39,64 +40,63 @@ class UserModal extends React.Component {
         visible: true,
         examLink: `${document.location.hostname}:3000/exam/${room.id}`,
         roomName: room.description,
-        intervieweeName: room.subjectId
+        intervieweeName: room.subjectId,
+        isLoading: false
       });
     }
-  }
+  };
 
   copyLink = () => {
     const link = document.getElementById('ExamLinkCopy');
     link.select();
     document.execCommand('copy');
-    message.success('wer');
-  }
+    message.success('Link has been copied.');
+  };
 
   toRoom = () => {
-    const { roomId, roomName } = this.state;
-    const { actions, history } = this.props;
-    actions.getRoomInfo(roomName);
-    history.push(`/admin/dispatch/${roomId}`);
-  }
-
+    const { roomId } = this.state;
+    const { history } = this.props;
+    history.push(`/admin/dispatch/${roomId}?host=true`);
+  };
 
   render() {
     // const { examLink, visible } = this.props;
-    const { visible, examLink, roomName, userName, intervieweeName } = this.state;
+    const {
+      visible,
+      examLink,
+      roomName,
+      userName,
+      intervieweeName,
+      isLoading
+    } = this.state;
     return (
       <div>
-        <Input
-          placeholder="Enter Name"
-          value={userName}
-          onChange={e => this.setState({ userName: e.target.value.trim() })}
-        />
-        <Button
-          onClick={this.createRoom}
-        >
-          Create Room
-        </Button>
+        <Spin spinning={isLoading} size="large">
+          <Input
+            placeholder="Enter Name"
+            value={userName}
+            onChange={e => this.setState({ userName: e.target.value.trim() })}
+          />
+          <Button onClick={this.createRoom}>Create Room</Button>
 
-        <Modal
-          visible={visible}
-          footer={false}
-          title={`WelCome to Room - ${roomName}`}
-          onCancel={this.handleCancel}
-        >
-          <div>
-            <p>Interviewee : {intervieweeName}</p>
-            <Input
-              size="large"
-              readOnly
-              value={examLink}
-              id="ExamLinkCopy"
-            />
-            <Button onClick={this.copyLink}>
-              <Icon type="copy" />
-            </Button>
-            <Button type="primary" onClick={this.toRoom}>
-              Enter Room
-            </Button>
-          </div>
-        </Modal>
+          <Modal
+            visible={visible}
+            footer={false}
+            title={`Welcome to Room - ${roomName}`}
+            onCancel={this.handleCancel}
+          >
+            <div>
+              <p>Interviewee : {intervieweeName}</p>
+              <Input size="large" readOnly value={examLink} id="ExamLinkCopy" />
+              <Button onClick={this.copyLink}>
+                <Icon type="copy" />
+              </Button>
+              <Button type="primary" onClick={this.toRoom}>
+                Enter Room
+              </Button>
+            </div>
+          </Modal>
+        </Spin>
       </div>
     );
   }
