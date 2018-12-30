@@ -1,74 +1,82 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
+import { graphqlOperation } from 'aws-amplify';
+import { Connect } from 'aws-amplify-react';
 import { List, Avatar } from 'antd';
-import { listRooms } from 'utils/room';
-import changeTab from 'actions/tab';
+
+import { listRooms } from 'graphql/queries';
+import { onCreateRoom } from 'graphql/subscriptions';
 import { getRoomInfo } from 'actions/room';
 
 import style from './JoinRoomPage.module.scss';
 
 class JoinRoomPage extends React.Component {
-  state = {
-    roomList: [],
-    isLoading: true,
-  };
-
-  componentDidMount() {
-    this.getRoomList();
-  }
-
-  getRoomList = async () => {
-    const roomList = await listRooms();
-    this.setState({ roomList, isLoading: false });
-    console.log(roomList);
-  };
-
   handleClickLink = roomId => {
-    // this.props.actions.changeTab('dispatch');
-    // this.props.actions.getRoomInfo(roomId);
+    this.props.actions.getRoomInfo(roomId);
   };
 
   render() {
-    const { roomList, isLoading } = this.state;
-    return (
-      <List
-        itemLayout="horizontal"
-        dataSource={roomList}
-        loading={isLoading}
-        renderItem={item => (
-          <Link
-            to={`/admin/dispatch/${item.id}`}
-            onClick={() => this.handleClickLink(item.id)}
-          >
-            <List.Item
-              style={{ borderBottom: '1px solid #ddd' }}
-              className={style.listItem}
+    const RoomList = ({ rooms, isLoading }) => (
+      <div className={style.listColumn}>
+        <List
+          itemLayout="horizontal"
+          dataSource={rooms}
+          loading={isLoading}
+          renderItem={item => (
+            <Link
+              to={{
+                pathname: `/admin/dispatch/${item.id}`,
+              }}
+              onClick={() => this.handleClickLink(item.id)}
             >
-              <List.Item.Meta
-                avatar={<Avatar icon="home" className={style.avatar} />}
-                title={<p>Room: {item.description}</p>}
-                description={item.status}
-              />
-            </List.Item>
-          </Link>
-        )}
-      />
+              <List.Item
+                style={{ borderBottom: '1px solid #ddd' }}
+                className={style.listItem}
+              >
+                <List.Item.Meta
+                  avatar={<Avatar icon="home" className={style.avatar} />}
+                  title={
+                    <>
+                      <p>Room: {item.description}</p>
+                    </>
+                  }
+                  description={item.status}
+                />
+              </List.Item>
+            </Link>
+          )}
+        />
+      </div>
+    );
+    return (
+      <Connect
+        query={graphqlOperation(listRooms, { limit: 1000 })}
+        subscription={graphqlOperation(onCreateRoom)}
+        onSubscriptionMsg={(prev, { onCreateRoom }) => {
+          console.log('prev:', prev);
+          console.log('Subscription data:', onCreateRoom);
+          prev.listRooms.items.unshift(onCreateRoom);
+          return prev;
+        }}
+      >
+        {({ data: { listRooms }, loading, error }) => {
+          console.log(listRooms);
+          if (error) return <h3>Error</h3>;
+          if (loading || !listRooms) return <RoomList isLoading={loading} />;
+          return <RoomList rooms={listRooms.items} isLoading={loading} />;
+        }}
+      </Connect>
     );
   }
 }
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        currentKey: state.tab.key,
-      };
-    },
+    null,
     dispatch => {
       return {
         actions: {
-          changeTab: key => dispatch(changeTab(key)),
           getRoomInfo: id => dispatch(getRoomInfo(id)),
         },
       };

@@ -11,11 +11,13 @@ const initialState = {
 const record = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_RECORD_STARTED':
+    case 'UPDATE_RECORD_STARTED':
       return {
         ...state,
         loading: true
       };
     case 'CREATE_RECORD_SUCCESS':
+    case 'UPDATE_RECORD_SUCCESS':
       return {
         ...state,
         loading: false,
@@ -26,6 +28,7 @@ const record = (state = initialState, action) => {
         ques: action.payload.result.ques
       };
     case 'CREATE_RECORD_FAILURE':
+    case 'UPDATE_RECORD_FAILURE':
       return {
         ...state,
         loading: false,

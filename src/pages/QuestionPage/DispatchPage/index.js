@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
+import queryString from 'query-string';
 import { transform } from '@babel/standalone';
 import { message } from 'antd';
 
@@ -32,18 +32,20 @@ const MainView = args => {
 class Page extends Component {
   state = {
     categoryIndex: 0,
-    questionName: '',
+    questionIndex: 0,
     code: '',
     compiledCode: '',
     test: '',
     tape: [],
     tags: [],
-    questionList: [],
-    questionIndex: 0,
     isLoading: false,
+    isHost: false,
   };
 
   async componentDidMount() {
+    this.setState({
+      isHost: Boolean(queryString.parse(this.props.location.search).host),
+    });
     await this.getRoom(this.props.match.params.roomId);
     console.log('DidMount', this.props);
   }
@@ -60,15 +62,14 @@ class Page extends Component {
     await this.props.actions.fetchQuestionList(
       this.state.categoryIndex === 0 ? 'javascript' : 'react',
     );
+    this.props.actions.fetchQuestion(this.props.question.list[0].id);
     // when question has dispatched, append the record data
     if (this.props.record.id) {
       this.subscribeRecordUpdate();
       const { ques, syncCode } = this.props.record;
       if (ques) {
-        const { type, name, content, test } = ques;
+        const { content, test } = ques;
         this.setState({
-          questionName: name,
-          type,
           code: syncCode || content,
           test,
         });
@@ -91,18 +92,18 @@ class Page extends Component {
   };
 
   onChangeQuestion = async index => {
-    const { id, type } = this.props.question.list[index];
+    const { id } = this.props.question.list[index];
     this.setState({ isLoading: true, questionIndex: index });
     await this.props.actions.fetchQuestion(id);
-    const { name, tags, content, test } = this.props.question;
-    this.setState({
-      questionName: name,
-      type,
-      tags,
-      code: content,
-      test,
-      isLoading: false,
-    });
+    const { tags, content, test } = this.props.question;
+    if (!this.props.record.content) {
+      this.setState({
+        tags,
+        code: content,
+        test,
+        isLoading: false,
+      });
+    }
     this.setState({ isLoading: false });
   };
 
@@ -125,28 +126,30 @@ class Page extends Component {
   };
 
   onDispatchQuestion = async () => {
-    const { questionName, type, code, test } = this.state;
-    const { room } = this.props;
+    const { room, question } = this.props;
     this.setState({ isLoading: true });
     try {
       // unsubscribe the old record
-      this.subscriptionForUpdateRecordByRecordId.unsubscribe();
-      const question = {
-        name: questionName,
-        type,
-        content: code,
-        test,
+      if (this.subscriptionForUpdateRecordByRecordId) {
+        this.subscriptionForUpdateRecordByRecordId.unsubscribe();
+      }
+      const ques = {
+        name: question.name,
+        type: question.type,
+        content: question.content,
+        test: question.test,
       };
       await this.props.actions.createRecordData({
         subjectId: room.subjectId,
         roomId: room.id,
-        question,
+        ques,
       });
+      message.success(`Dispatch "${question.name}" successfully.`);
       // re-subscribe the new record
       this.subscribeRecordUpdate();
       this.setState({ isLoading: false });
     } catch (e) {
-      message.error(e.errors[0].message, 2);
+      console.log(e);
       this.setState({ isLoading: false });
     }
   };
@@ -175,7 +178,6 @@ class Page extends Component {
         this.props.actions.setCurrentRecord(data);
         // to receive new question dispatched
         this.setState({
-          questionName: ques.name,
           code: ques.content,
           test: ques.test,
         });
@@ -203,7 +205,7 @@ class Page extends Component {
   };
 
   render() {
-    const { categoryIndex, questionIndex } = this.state;
+    const { isHost, categoryIndex, questionIndex } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -217,19 +219,21 @@ class Page extends Component {
     const { room, question } = this.props;
     return (
       <React.Fragment>
-        {!room.loading && room.description ? (
+        {!room.loading && room.id ? (
           <>
-            <ControlWidget
-              onDispatchQuestion={onDispatchQuestion}
-              onChangeCategory={onChangeCategory}
-              categoryIndex={categoryIndex}
-              questionIndex={questionIndex}
-              questionList={question.list}
-              onChangeQuestion={onChangeQuestion}
-              setIntervieweeModal={setIntervieweeModal}
-              intervieweeName={room.subjectId}
-              roomDescription={room.description}
-            />
+            {isHost && (
+              <ControlWidget
+                onDispatchQuestion={onDispatchQuestion}
+                onChangeCategory={onChangeCategory}
+                categoryIndex={categoryIndex}
+                questionIndex={questionIndex}
+                questionList={question.list}
+                onChangeQuestion={onChangeQuestion}
+                setIntervieweeModal={setIntervieweeModal}
+                intervieweeName={room.subjectId}
+                roomDescription={room.description}
+              />
+            )}
             <MainView
               onDispatchQuestion={onDispatchQuestion}
               onChangeCategory={onChangeCategory}
@@ -265,8 +269,7 @@ export default withRouter(
           getRoomInfo: id => dispatch(getRoomInfo(id)),
           fetchQuestionList: type => dispatch(fetchQuestionList(type)),
           fetchQuestion: id => dispatch(fetchQuestion(id)),
-          createRecordData: ({ subjectId, roomId, question }) =>
-            dispatch(createRecordData({ subjectId, roomId, question })),
+          createRecordData: params => dispatch(createRecordData(params)),
           setCurrentRecord: recordData =>
             dispatch(setCurrentRecord(recordData)),
         },

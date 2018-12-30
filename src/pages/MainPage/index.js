@@ -5,13 +5,13 @@ import CreatePage from 'pages/CreatePage';
 
 import style from './MainPage.module.scss';
 
-const MainPage = () => (
+const MainPage = props => (
   <div className={style.Mainpage}>
     <div className={`${style.column} ${style.list}`}>
       <JoinRoomPage />
     </div>
     <div className={`${style.column} ${style.createRoom}`}>
-      <CreatePage />
+      <CreatePage {...props} />
     </div>
   </div>
 );

@@ -4,13 +4,14 @@ export const ACTION_STATE = {
   FAILURE: 'FAILURE'
 };
 
-export default function graphqlActionHelper({ method, dataName, actionState, result }) {
+export default function graphqlActionHelper({ method, dataName, actionState, result, ...rest }) {
   switch (actionState) {
     case ACTION_STATE.SUCCESS:
       return {
         type: `${method}_${dataName}_${ACTION_STATE.SUCCESS}`,
         payload: {
-          result
+          result,
+          ...rest
         }
       };
     case ACTION_STATE.FAILURE:

@@ -5,6 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { Menu, Icon, message } from 'antd';
 
 import { deleteRoomAction } from 'actions/room';
+
 const SubMenu = Menu.SubMenu;
 
 const TabWidget = ({
@@ -14,10 +15,23 @@ const TabWidget = ({
   history,
   actions,
 }) => {
-  const currentKey = pathname.split('/')[2] || 'join';
+  const currentKey = pathname.split('/')[2] || 'room';
   return (
-    <Menu selectedKeys={[currentKey]} mode="horizontal">
-      <Menu.Item key="join">
+    <Menu selectedKeys={[currentKey]} mode="horizontal" theme="dark">
+      <Menu.Item key="title">
+        <Link to="/">
+          <h2
+            style={{
+              display: 'inline',
+              margin: '0 13px 0 13px',
+              color: 'white',
+            }}
+          >
+            JS-EXAM
+          </h2>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="room">
         <Link to="/">
           <Icon type="home" theme="filled" />
           Room
@@ -41,7 +55,7 @@ const TabWidget = ({
           {room.subjectId || 'UNSET'}
         </Menu.Item>
       )}
-      {room.description && (
+      {room.id && (
         <SubMenu
           style={{ float: 'right' }}
           key="dispatch"
@@ -72,7 +86,7 @@ const TabWidget = ({
               history.push('/');
             }}
           >
-            <Icon type="delete" /> Delete Room
+            <Icon type="delete" style={{ color: 'red' }} /> Delete Room
           </Menu.Item>
         </SubMenu>
       )}

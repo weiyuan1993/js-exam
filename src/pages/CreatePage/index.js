@@ -8,10 +8,11 @@ import hasSubmitSucceeded from 'redux-form/es/hasSubmitSucceeded';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
-import { Modal, Button, Input, message, Icon } from 'antd';
+import { Modal, Button, Input, message, Icon, Spin } from 'antd';
 import RoomForm from 'components/RoomForm';
-// import { createRoom, createTest } from 'utils/room';
-import { createRoom } from 'graphql/mutations';
+import { createRoom, createTest } from 'utils/room';
+import { getRoomInfo } from 'actions/room';
+// import { createRoom } from 'graphql/mutations';
 
 import { REDUCER_KEY } from './constants';
 import { changeUsername } from './actions';
@@ -24,9 +25,11 @@ class UserModal extends React.PureComponent {
     this.state = {
       examLink: '',
       visible: false,
-      roomId: '',
+      roomName: '',
       userName: '',
       intervieweeName: '',
+      roomId: '',
+      isLoading: false,
     };
   }
 
@@ -36,49 +39,69 @@ class UserModal extends React.PureComponent {
     });
   };
 
-  // createRoom = async () => {
-  //   if (this.state.userName === '') {
-  //     message.warning('Please enter Name');
-  //   } else {
-  //     const { userName } = this.state;
-  //     const room = await createRoom(userName);
-  //     console.log(room);
-  //     const test = await createTest('WENDY');
-  //     console.log(test);
-  //     this.setState({
-  //       visible: true,
-  //       examLink: `${document.location.hostname}:3000/${room.id}`,
-  //       roomId: room.description,
-  //       intervieweeName: room.subjectId
-  //     });
-  //   }
-  // };
+  createRoom = async () => {
+    if (this.state.userName === '') {
+      message.warning('Please enter Name');
+    } else {
+      const { userName } = this.state;
+      this.setState({ isLoading: true });
+      const room = await createRoom(userName);
+      await createTest(userName);
+      this.setState({
+        roomId: room.id,
+        visible: true,
+        examLink: `${document.location.hostname}:3000/exam/${room.id}`,
+        roomName: room.description,
+        intervieweeName: room.subjectId,
+        isLoading: false,
+      });
+    }
+  };
 
   copyLink = () => {
     const link = document.getElementById('ExamLinkCopy');
     link.select();
     document.execCommand('copy');
-    message.success('wer');
+    message.success('Link has been copied.');
+  };
+
+  toRoom = () => {
+    const { roomId } = this.state;
+    const { history } = this.props;
+    history.push(`/admin/dispatch/${roomId}?host=true`);
   };
 
   render() {
-    const { visible, examLink, roomId, intervieweeName } = this.state;
+    const {
+      visible,
+      examLink,
+      roomName,
+      userName,
+      intervieweeName,
+      isLoading,
+    } = this.state;
     return (
-      <div>
-        <Input
+      <Spin spinning={isLoading} size="large">
+        {/* <Input
           id="username"
           type="text"
           placeholder="mxstbr"
           value={this.props.username}
           onChange={this.props.onChangeUsername}
-        />
-        <Connect mutation={graphqlOperation(createRoom)}>
+        /> */}
+        {/* <Connect mutation={graphqlOperation(createRoom)}>
           {({ mutation }) => <RoomForm onSubmit={mutation} />}
-        </Connect>
+        </Connect> */}
+        <Input
+          placeholder="Enter Name"
+          value={userName}
+          onChange={e => this.setState({ userName: e.target.value.trim() })}
+        />
+        <Button onClick={this.createRoom}>Create Room</Button>
         <Modal
           visible={visible}
           footer={false}
-          title={`WelCome to Room - ${roomId}`}
+          title={`Welcome to Room - ${roomName}`}
           onCancel={this.handleCancel}
         >
           <div>
@@ -87,9 +110,12 @@ class UserModal extends React.PureComponent {
             <Button onClick={this.copyLink}>
               <Icon type="copy" />
             </Button>
+            <Button type="primary" onClick={this.toRoom}>
+              Enter Room
+            </Button>
           </div>
         </Modal>
-      </div>
+      </Spin>
     );
   }
 }
@@ -97,6 +123,7 @@ class UserModal extends React.PureComponent {
 function mapDispatchToProps(dispatch) {
   return {
     onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
+    getRoomInfo: id => dispatch(getRoomInfo(id)),
   };
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import CategorySelector from 'components/Selectors/CategorySelector';
 import QuestionSelector from 'components/Selectors/QuestionSelector';
 
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
 
 const ControlWidget = ({
@@ -11,7 +11,7 @@ const ControlWidget = ({
   onDispatchQuestion,
   onChangeCategory,
   onChangeQuestion,
-  questionList,
+  questionList
 }) => (
   <div className={styles.control}>
     <div>
@@ -25,7 +25,8 @@ const ControlWidget = ({
         list={questionList}
       />
       <Button type="primary" onClick={onDispatchQuestion}>
-        Dispatch Question
+        Dispatch
+        <Icon type="right" />
       </Button>
     </div>
   </div>

@@ -36,15 +36,6 @@ const getRoom = async roomId => {
   const query = ` {
     getRoom(id: "${roomId}") {
       id
-      test {
-        id
-        subjectId
-        description
-        timeBegin
-        timeEnd
-        status
-        tags
-      }
       subjectId
       description
       status
@@ -53,13 +44,6 @@ const getRoom = async roomId => {
         name
       }
       password
-      users {
-        items {
-          id
-          name
-        }
-        nextToken
-      }
       currentRecord {
         id
         subjectId
@@ -67,6 +51,12 @@ const getRoom = async roomId => {
         timeBegin
         timeEnd
         history
+        ques {
+          type
+          name
+          content
+          test
+        }
       }
     }
   } `;
@@ -85,33 +75,6 @@ const deleteRoom = async id => {
   );
   return data.deleteRoom;
 };
-const listRooms = async () => {
-  const query = ` {
-    listRooms(limit: 1000) {
-      items {
-        id
-        subjectId
-        description
-        status
-        host {
-          id
-          name
-        }
-        password
-        users {
-          items {
-            id
-            name
-          }
-          nextToken
-        }
-      }
-      nextToken
-    }
-  }`;
-  const result = await API.graphql(graphqlOperation(query));
-  return result.data.listRooms.items;
-};
 
 const bindRoomCurrentRecord = async (roomId, recordId) => {
   const params = {
@@ -126,6 +89,19 @@ const bindRoomCurrentRecord = async (roomId, recordId) => {
   return data.updateRoom;
 };
 
+const updateRoom = async (id, password) => {
+  const params = {
+    input: {
+      id,
+      password,
+    },
+  };
+  const result = await API.graphql(
+    graphqlOperation(mutations.updateRoom, params),
+  );
+  return result;
+};
+
 const subscribeOnUpdateRoom = callback => {
   API.graphql(graphqlOperation(subscriptions.onUpdateRoom)).subscribe({
     next: ({ value }) => {
@@ -138,11 +114,11 @@ const subscribeOnUpdateRoom = callback => {
 };
 
 export {
-  listRooms,
   subscribeOnUpdateRoom,
   createRoom,
   getRoom,
   deleteRoom,
   bindRoomCurrentRecord,
   createTest,
+  updateRoom,
 };

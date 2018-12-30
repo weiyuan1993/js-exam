@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 import { transform } from '@babel/standalone';
 
@@ -236,8 +235,4 @@ class Page extends Component {
   }
 }
 
-export default connect(state => {
-  return {
-    currentTab: state.tab.key,
-  };
-})(Page);
+export default Page;

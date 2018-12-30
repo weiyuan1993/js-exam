@@ -62,9 +62,6 @@ class ReactPage extends Component {
         minWidth: 100,
         maxWidth: 700,
       },
-      // {
-      //   key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
-      // },
       {
         key: 'result',
         x: 1,
