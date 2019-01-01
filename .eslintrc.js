@@ -78,6 +78,7 @@ module.exports = {
     'redux-saga/yield-effects': 2,
     'require-yield': 0,
     'linebreak-style': 0,
+    'prefer-destructuring': ['error', { object: false, array: false }],
   },
   settings: {
     'import/resolver': {

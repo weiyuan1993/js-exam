@@ -34,5 +34,7 @@ RoomForm.propTypes = {
 };
 
 export default reduxForm({
-  form: 'roomForm',
+  // pass from parent for embed same form multiple times
+  // https://stackoverflow.com/questions/37456526/how-to-embed-the-same-redux-form-multiple-times-on-a-page/37464048#37464048
+  // form: 'roomForm',
 })(RoomForm);

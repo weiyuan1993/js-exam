@@ -4,12 +4,7 @@ import styles from './Border.module.scss';
 class Border extends Component {
   constructor(props) {
     super(props);
-    const {
-      allowWidth,
-      allowHeight,
-      disabled,
-      borderSize
-    } = this.props;
+    const { allowWidth, allowHeight, disabled, borderSize } = this.props;
     this.ref = React.createRef();
     this.resize = this.resize.bind(this);
     this.startResize = this.startResize.bind(this);
@@ -31,7 +26,7 @@ class Border extends Component {
       maxHeight,
       maxWidth,
       minWidth,
-      minHeight
+      minHeight,
     } = this.props;
     let newHeight = allowHeight
       ? e.clientY - this.ref.current.offsetTop
@@ -42,9 +37,7 @@ class Border extends Component {
     if (minHeight && newHeight < minHeight) {
       newHeight = minHeight;
     }
-    let newWidth = allowWidth
-      ? e.clientX - this.ref.current.offsetLeft
-      : width;
+    let newWidth = allowWidth ? e.clientX - this.ref.current.offsetLeft : width;
     if (maxWidth && newWidth > maxWidth) {
       newWidth = maxWidth;
     }
@@ -53,7 +46,7 @@ class Border extends Component {
     }
     onUpdate({
       width: newWidth,
-      height: newHeight
+      height: newHeight,
     });
   }
 
@@ -70,19 +63,12 @@ class Border extends Component {
     }
   }
 
-
   render() {
-    const {
-      width,
-      height,
-      disabled,
-      children,
-      className
-    } = this.props;
+    const { width, height, disabled, children, className } = this.props;
     this.style = {
       ...this.style,
       width: `${width}px`,
-      height: `${height}px`
+      height: `${height}px`,
     };
     let finalClassName = `${styles.border} ${className || ''}`;
     if (!disabled && this.allowWidth) {
@@ -100,7 +86,7 @@ class Border extends Component {
         onMouseDown={!disabled ? this.startResize : null}
         style={this.style}
       >
-        { children }
+        {children}
       </div>
     );
   }

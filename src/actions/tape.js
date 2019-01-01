@@ -1,12 +1,12 @@
 export function resetTape() {
   return {
-    type: 'TAPE/RESET'
+    type: 'TAPE/RESET',
   };
 }
 
 export function addTape(data) {
   return {
     type: 'TAPE/ADD',
-    data
+    data,
   };
 }

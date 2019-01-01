@@ -5,7 +5,7 @@ const initialState = {
   name: '',
   content: '',
   test: '',
-  tags: []
+  tags: [],
 };
 
 const question = (state = initialState, action) => {
@@ -13,14 +13,14 @@ const question = (state = initialState, action) => {
     case 'FETCH_QUESTION_STARTED':
       return {
         ...state,
-        loading: true
+        loading: true,
       };
     case 'FETCH_QUESTION_LIST_SUCCESS':
       return {
         ...state,
         loading: false,
         list: action.payload.result,
-        type: action.payload.type
+        type: action.payload.type,
       };
     case 'FETCH_QUESTION_SUCCESS':
       return {
@@ -29,13 +29,13 @@ const question = (state = initialState, action) => {
         name: action.payload.result.name,
         content: action.payload.result.content,
         test: action.payload.result.test,
-        tags: action.payload.result.tags
+        tags: action.payload.result.tags,
       };
     case 'FETCH_QUESTION_FAILURE':
       return {
         ...state,
         loading: false,
-        error: action.payload.error
+        error: action.payload.error,
       };
 
     default:

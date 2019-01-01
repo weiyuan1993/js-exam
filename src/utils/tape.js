@@ -14,7 +14,7 @@ const combinePatch = (tape, patches) => (...args) => {
   if (typeof cb !== 'function') {
     throw new Error('should provide callback');
   }
-  tape(...args.slice(0, -1), (t) => {
+  tape(...args.slice(0, -1), t => {
     for (let key in patches) {
       t[key] = patches[key](t);
     }
@@ -26,14 +26,14 @@ const combinePatch = (tape, patches) => (...args) => {
   });
 };
 
-const getPatchedTape = (onUpdate) => {
+const getPatchedTape = onUpdate => {
   const harness = createHarness();
   const stream = harness.createStream({ objectMode: true });
   stream.on('data', onUpdate);
   return combinePatch(harness, {
     subtest: tryCatchPatch,
-    should: tryCatchPatch
+    should: tryCatchPatch,
   });
 };
 
-export default getPatchedTape ;
+export default getPatchedTape;

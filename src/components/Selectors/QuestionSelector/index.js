@@ -27,7 +27,11 @@ const QuestionSelector = ({ questionIndex, onChange, list }) => (
     value={questionIndex}
     style={{ minWidth: 200 }}
   >
-    { list.map((q, i) => <Option key={q.id} value={i}>{q.name}</Option>)}
+    {list.map((q, i) => (
+      <Option key={q.id} value={i}>
+        {q.name}
+      </Option>
+    ))}
   </Select>
 );
 

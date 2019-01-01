@@ -7,8 +7,8 @@ const Console = (state = [], action) => {
         ...state,
         {
           key: action.key,
-          args: action.args
-        }
+          args: action.args,
+        },
       ];
     default:
       return state;

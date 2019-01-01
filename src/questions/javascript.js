@@ -47,7 +47,7 @@ test('countChar test', (t) => {
   });
 })
 
-`
+`,
   },
   {
     name: 'forEach, map and reduce',
@@ -91,7 +91,7 @@ test('forEach, map and reduce test', (t) => {
   });
 });
 
-`
+`,
   },
   {
     name: 'adder',
@@ -129,7 +129,7 @@ test('adder test', (t) => {
   });
 })
 
-`
+`,
   },
   {
     name: 'infinite adder',
@@ -166,7 +166,7 @@ test('adder test', (t) => {
   });
 })
 
-`
+`,
   },
   {
     name: 'default function',
@@ -207,7 +207,7 @@ test('defaultWith test', (t) => {
   });
 })
 
-`
+`,
   },
   {
     name: 'sequential',
@@ -262,7 +262,7 @@ test('sequential test', (t) => {
   t.ok(log.calledWith('task 3 done'));
 });
 
-    `
+    `,
   },
   {
     name: 'parallel',
@@ -335,7 +335,7 @@ test('parallel test', t => {
   });
 });
 
-`
+`,
   },
   {
     name: 'combineReducers',
@@ -385,7 +385,7 @@ test('combineReducers', t => {
     t.equal(state.calc, 2);
   });
 })
-`
+`,
   },
   {
     name: 'applyMiddleware',
@@ -496,7 +496,7 @@ test('applyMiddleware test', t => {
     t.equal(logCount, 22);
   });
 })
-`
+`,
   },
   {
     name: 'createStore',
@@ -605,7 +605,7 @@ test('createStore test', t => {
     t.equal(store.getState(), 5);
   });
 })
-`
+`,
   },
   {
     name: 'explain',
@@ -637,7 +637,7 @@ function foo(a, b) {
 }
 
 console.log(foo([1,4,5], [2,3,6]))
-`
+`,
   },
   {
     name: 'mergeSort',
@@ -667,7 +667,7 @@ test('mergeSort', t => {
   const sorted = randomNumbers.slice(0).sort((a, b) => a - b);
   t.deepEqual(mergeSort(randomNumbers), sorted);
 })
-`
+`,
   },
 ];
 

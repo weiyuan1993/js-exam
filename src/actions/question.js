@@ -4,7 +4,6 @@ import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
 function fetchQuestion(id) {
   return async dispatch => {
-    console.log(dispatch);
     dispatch(
       graphqlActionHelper({
         method: 'FETCH',

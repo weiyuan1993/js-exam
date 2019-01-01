@@ -26,11 +26,7 @@ Auth.signIn('Admin', 'Admin@123456')
 const App = () => (
   <Router basename={PUBLIC_URL}>
     <Switch>
-      <PrivateRoute
-        exact
-        path="/"
-        render={props => <MainPage {...props} />}
-      />
+      <PrivateRoute exact path="/" component={MainPage} />
       <PrivateRoute
         exact
         path="/admin/dispatch/:roomId"

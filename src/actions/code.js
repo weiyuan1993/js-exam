@@ -2,20 +2,20 @@ export function changeCode({ compiledCode, rawCode, type }) {
   return {
     type: `${type}/CODE/CHANGE`,
     compiledCode,
-    rawCode
+    rawCode,
   };
 }
 
 export function changeQuestion({ index, type }) {
   return {
     type: `${type}/QUESTION/CHANGE`,
-    index
+    index,
   };
 }
 
 export function resetQuestion({ type }) {
   return {
-    type: `${type}/QUESTION/RESET`
+    type: `${type}/QUESTION/RESET`,
   };
 }
 
@@ -24,6 +24,6 @@ export function remoteChangeQuestion({ type, name, code, test }) {
     type: `${type}/QUESTION/REMOTE/CHANGE`,
     name,
     code,
-    test
+    test,
   };
 }

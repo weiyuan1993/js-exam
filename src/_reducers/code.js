@@ -6,7 +6,7 @@ const code = (state = { index: 0 }, action) => {
       return {
         ...state,
         compiledCode: action.compiledCode || state.compiledCode,
-        code: action.rawCode
+        code: action.rawCode,
       };
     default:
       return state;

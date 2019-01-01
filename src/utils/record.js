@@ -22,7 +22,6 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
 };
 
 const updateRecord = async (id, newCode) => {
-  console.log('UTIL!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   const params = {
     input: {
       id,

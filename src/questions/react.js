@@ -100,7 +100,7 @@ try {
   console.log(e)
 }
 
-`
+`,
   },
 ];
 

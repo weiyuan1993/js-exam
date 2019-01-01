@@ -7,7 +7,7 @@ import spy from './spy';
 import getPatchedTape from './tape';
 
 const wrapCode = (code = '') => {
-  return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, (loopHead) => {
+  return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, loopHead => {
     return `let count = 0;
       const detector = (c) => {
         if (c > 100000) {
@@ -41,7 +41,7 @@ const runCode = ({ code, wrappedConsole = console, onTapeUpdate }) => {
     ReactDOM,
     root: document.getElementById('result'),
     answer: document.getElementById('answer'),
-    renderToString
+    renderToString,
   };
   try {
     script = new vm.Script(wrapCode(code));

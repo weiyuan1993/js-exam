@@ -1,15 +1,17 @@
-import { CHANGE_USERNAME } from './constants';
+import { CREATE_ROOM } from './constants';
 
 const initialState = {
-  username: '',
+  createdRoom: {},
 };
 
 function createPageReducer(state = initialState, action) {
   switch (action.type) {
-    case CHANGE_USERNAME:
+    case CREATE_ROOM.SUCCESS:
       return {
         ...state,
-        username: action.name,
+        createdRoom: {
+          ...action.data,
+        },
       };
     default:
       return state;

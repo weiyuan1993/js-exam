@@ -1,13 +1,11 @@
 import Amplify, { Auth } from 'aws-amplify';
-import aws_exports from 'aws-exports';
+import awsExports from 'aws-exports';
 
-Amplify.configure(aws_exports);
+Amplify.configure(awsExports);
 
 const login = async ({ username, password }) => {
-  result = await Auth.signIn(username, password);
+  const result = await Auth.signIn(username, password);
   return result;
-}
+};
 
-export {
-  login
-}
+export { login };

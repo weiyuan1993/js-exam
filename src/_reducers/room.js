@@ -15,7 +15,7 @@ const room = (state = initialState, action) => {
     case 'UPDATE_ROOM_STARTED':
       return {
         ...state,
-        loading: true
+        loading: true,
       };
     case 'FETCH_ROOM_SUCCESS':
       return {
@@ -32,7 +32,7 @@ const room = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: action.payload.error
+        error: action.payload.error,
       };
     case 'DELETE_ROOM_SUCCESS':
       return initialState;
