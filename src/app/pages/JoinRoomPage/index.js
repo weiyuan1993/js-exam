@@ -37,11 +37,16 @@ class JoinRoomPage extends React.Component {
                   }
                   title={
                     <>
-                      <p>Room: {item.description}</p>
+                      <div className={style.roomName}>{item.description}</div>
                     </>
                   }
-                  description={item.status}
+                  description={
+                    <>
+                      <div className={style.subjectId}>{item.subjectId}</div>
+                    </>
+                  }
                 />
+                <div className={style.roomStatus}>{item.status}</div>
               </List.Item>
             </Link>
           )}
@@ -50,7 +55,7 @@ class JoinRoomPage extends React.Component {
     );
     return (
       <Connect
-        query={graphqlOperation(listRooms)}
+        query={graphqlOperation(listRooms, { limit: 1000 })}
         subscription={graphqlOperation(onCreateRoom)}
         onSubscriptionMsg={(prev, { onCreateRoom }) => {
           console.log('prev:', prev);
