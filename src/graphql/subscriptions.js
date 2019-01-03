@@ -10,6 +10,7 @@ export const onUpdateJeUserByJeUserId = `subscription OnUpdateJeUserByJeUserId($
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -70,6 +71,7 @@ export const onUpdateTestByTestId = `subscription OnUpdateTestByTestId($id: Stri
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -99,7 +101,15 @@ export const onUpdateTestByTestId = `subscription OnUpdateTestByTestId($id: Stri
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -127,6 +137,7 @@ export const onUpdateRoomByRoomId = `subscription OnUpdateRoomByRoomId($id: Stri
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -141,7 +152,15 @@ export const onUpdateRoomByRoomId = `subscription OnUpdateRoomByRoomId($id: Stri
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -157,7 +176,15 @@ export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -185,6 +212,7 @@ export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -209,6 +237,7 @@ export const onCreateRoom = `subscription OnCreateRoom {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -223,7 +252,15 @@ export const onCreateRoom = `subscription OnCreateRoom {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -247,6 +284,7 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -261,7 +299,15 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -285,6 +331,7 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -299,7 +346,15 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -313,6 +368,7 @@ export const onCreateJeUser = `subscription OnCreateJeUser {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -350,6 +406,7 @@ export const onUpdateJeUser = `subscription OnUpdateJeUser {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -387,6 +444,7 @@ export const onDeleteJeUser = `subscription OnDeleteJeUser {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -495,6 +553,7 @@ export const onCreateTest = `subscription OnCreateTest {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -524,7 +583,15 @@ export const onCreateTest = `subscription OnCreateTest {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -541,6 +608,7 @@ export const onUpdateTest = `subscription OnUpdateTest {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -570,7 +638,15 @@ export const onUpdateTest = `subscription OnUpdateTest {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -587,6 +663,7 @@ export const onDeleteTest = `subscription OnDeleteTest {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -616,7 +693,15 @@ export const onDeleteTest = `subscription OnDeleteTest {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -636,7 +721,15 @@ export const onCreateRecord = `subscription OnCreateRecord {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -664,6 +757,7 @@ export const onCreateRecord = `subscription OnCreateRecord {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -680,7 +774,15 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -708,6 +810,7 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -724,7 +827,15 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -752,6 +863,7 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -770,7 +882,15 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -788,7 +908,15 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -806,7 +934,15 @@ export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }

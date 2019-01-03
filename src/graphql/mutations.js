@@ -20,6 +20,7 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -34,7 +35,15 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -58,6 +67,7 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -72,7 +82,15 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -96,6 +114,7 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -110,7 +129,15 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -124,6 +151,7 @@ export const createJeUser = `mutation CreateJeUser($input: CreateJEUserInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -161,6 +189,7 @@ export const updateJeUser = `mutation UpdateJeUser($input: UpdateJEUserInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -198,6 +227,7 @@ export const deleteJeUser = `mutation DeleteJeUser($input: DeleteJEUserInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -306,6 +336,7 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -335,7 +366,15 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -352,6 +391,7 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -381,7 +421,15 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -398,6 +446,7 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -427,7 +476,15 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -447,7 +504,15 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -475,6 +540,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -491,7 +557,15 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -519,6 +593,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -535,7 +610,15 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -563,6 +646,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -581,7 +665,15 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -599,7 +691,15 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -617,7 +717,15 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }

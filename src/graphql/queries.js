@@ -20,6 +20,7 @@ export const getRoom = `query GetRoom($id: ID!) {
       id
       name
     }
+    createTime
     password
     users {
       items {
@@ -34,7 +35,15 @@ export const getRoom = `query GetRoom($id: ID!) {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -63,6 +72,7 @@ export const listRooms = `query ListRooms(
         id
         name
       }
+      createTime
       password
       users {
         items {
@@ -77,7 +87,15 @@ export const listRooms = `query ListRooms(
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
     }
     nextToken
@@ -93,6 +111,7 @@ export const getJeUser = `query GetJeUser($id: ID!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -135,6 +154,7 @@ export const listJeUsers = `query ListJeUsers(
         subjectId
         description
         status
+        createTime
         password
       }
       team {
@@ -228,6 +248,7 @@ export const getTest = `query GetTest($id: ID!) {
       subjectId
       description
       status
+      createTime
       password
     }
     team {
@@ -257,7 +278,15 @@ export const getTest = `query GetTest($id: ID!) {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
       nextToken
     }
@@ -279,6 +308,7 @@ export const listTests = `query ListTests(
         subjectId
         description
         status
+        createTime
         password
       }
       team {
@@ -308,7 +338,15 @@ export const listTests = `query ListTests(
           syncCode
           timeBegin
           timeEnd
-          history
+          comment {
+            author
+            time
+            content
+          }
+          history {
+            time
+            code
+          }
         }
         nextToken
       }
@@ -330,7 +368,15 @@ export const getRecord = `query GetRecord($id: ID!) {
     }
     timeBegin
     timeEnd
-    history
+    comment {
+      author
+      time
+      content
+    }
+    history {
+      time
+      code
+    }
     ques {
       type
       name
@@ -358,6 +404,7 @@ export const getRecord = `query GetRecord($id: ID!) {
       subjectId
       description
       status
+      createTime
       password
     }
   }
@@ -379,7 +426,15 @@ export const listRecords = `query ListRecords(
       }
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
       ques {
         type
         name
@@ -407,6 +462,7 @@ export const listRecords = `query ListRecords(
         subjectId
         description
         status
+        createTime
         password
       }
     }
@@ -427,7 +483,15 @@ export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
       syncCode
       timeBegin
       timeEnd
-      history
+      comment {
+        author
+        time
+        content
+      }
+      history {
+        time
+        code
+      }
     }
   }
 }
@@ -450,7 +514,15 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
       }
     }
     nextToken
