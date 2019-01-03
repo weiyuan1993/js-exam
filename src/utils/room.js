@@ -36,6 +36,15 @@ const getRoom = async roomId => {
   const query = `query {
     getRoom(id: "${roomId}") {
       id
+      test {
+        id
+        subjectId
+        description
+        timeBegin
+        timeEnd
+        status
+        tags
+      }
       subjectId
       description
       status
