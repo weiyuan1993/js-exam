@@ -7,7 +7,7 @@
 /coverage
 
 # production
-# /build
+/build
 
 # misc
 .DS_Store
@@ -24,3 +24,10 @@ yarn-error.log*
 .eslintrc.json
 .jshintrc
 schema_20181108.graphql
+
+# vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
