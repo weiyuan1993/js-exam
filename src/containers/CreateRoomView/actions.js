@@ -35,6 +35,7 @@ export function createRoom(data) {
         graphqlOperation(mutations.createRoom, {
           input: {
             description: roomChar + roomNum,
+            createTime: new Date(),
             ...data.input,
           },
         }),

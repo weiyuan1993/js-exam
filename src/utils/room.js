@@ -33,7 +33,7 @@ const createTest = async subjectId => {
 };
 
 const getRoom = async roomId => {
-  const query = ` {
+  const query = `query {
     getRoom(id: "${roomId}") {
       id
       subjectId
@@ -43,6 +43,7 @@ const getRoom = async roomId => {
         id
         name
       }
+      createTime
       password
       currentRecord {
         id
@@ -50,7 +51,15 @@ const getRoom = async roomId => {
         syncCode
         timeBegin
         timeEnd
-        history
+        comment {
+          author
+          time
+          content
+        }
+        history {
+          time
+          code
+        }
         ques {
           type
           name
@@ -59,7 +68,7 @@ const getRoom = async roomId => {
         }
       }
     }
-  } `;
+  }`;
   const { data } = await API.graphql(graphqlOperation(query));
   return data.getRoom;
 };
