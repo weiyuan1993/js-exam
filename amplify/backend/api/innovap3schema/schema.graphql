@@ -4,7 +4,8 @@ type Room @model { #not used anymore
   subjectId: String #could be email
   description: String
   status: String #open/closed
-  host: JEUser 
+  host: JEUser
+  createTime: AWSDateTime
   password: String
   users: [JEUser] @connection(name: "RoomJEUsers") # host & observers
 	currentRecord: Record @connection(name: "RoomCurrentRecord") # ID for current Record
@@ -32,8 +33,8 @@ type Test @model {
   users: [JEUser] @connection(name: "TestJEUsers") # host & observers
 	host: JEUser @connection(name: "TestHost") # ID for current JEUser
   description: String
-  timeBegin: Int
-  timeEnd: Int 
+  timeBegin: AWSDateTime
+  timeEnd: AWSDateTime 
   records: [Record] @connection(name: "TestRecords")
   status: String #open/inprogress/completed/closed
   tags: [String]
@@ -45,12 +46,25 @@ type Record @model {
   interviewer: JEUser
   timeBegin: Int
   timeEnd: Int
-  history: [String]
+  comment:[Comment]
+  history: [History]
   ques: QuesSnapshot
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
   room: Room @connection(name: "RoomCurrentRecord")
 }
+
+type Comment {
+  author: String
+  time:AWSDateTime
+  content: String
+}
+
+type History {
+  time:AWSDateTime
+  code: String
+}
+
 type QuesSnapshot {
   type: String # eg. javascript
   name: String
