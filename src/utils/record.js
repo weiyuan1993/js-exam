@@ -20,16 +20,18 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
   return data.createRecord;
 };
 
-const updateRecord = async (id, newCode) => {
+const updateRecord = async (id, newCode, history) => {
   const params = {
     input: {
       id,
       syncCode: newCode,
+      history,
     },
   };
   const { data } = await API.graphql(
     graphqlOperation(mutations.updateRecord, params),
   );
+  console.log(data)
   return data.updateRecord;
 };
 

@@ -29,9 +29,9 @@ class Page extends Component {
     categoryIndex: 0,
     code: '',
     compiledCode: '',
-    questionContent: '',
     tape: [],
     console: [],
+    history: [],
     visibleIntervieweeModal: true,
     isLoading: false,
     enableEnter: true,
@@ -50,20 +50,20 @@ class Page extends Component {
       isLoading: true,
     });
     await this.props.actions.getRoomInfo(this.roomId);
-    await this.passwordSetting(this.props.room.password);
+    await this.passwordSetting();
     this.setState({ isLoading: false });
   };
 
-  passwordSetting = async roomPassword => {
+  passwordSetting = async () => {
     const { roomId } = this;
-    const { record } = this.props;
-    if (!roomPassword) {
+    const { record, room } = this.props;
+    if (!room.password) {
       const password = Math.random()
         .toString(15)
         .substr(2);
       localStorage.examRoomPassword = password;
       await this.props.actions.updateRoomInfo(roomId, password);
-    } else if (localStorage.examRoomPassword === roomPassword) {
+    } else if (localStorage.examRoomPassword === room.password) {
       if (record.ques) {
         this.setState({
           categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
@@ -83,6 +83,10 @@ class Page extends Component {
   handleCodeChange = async newCode => {
     const { ques, id } = this.props.record;
     const fullCode = `${newCode} ${ques.test}`;
+    const { history } = this.state;
+    this.setState({
+      history: [...history, { time: new Date(), code: newCode }],
+    });
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -93,12 +97,12 @@ class Page extends Component {
         plugins: ['proposal-object-rest-spread'],
       });
       this.setState({ compiledCode, code: newCode });
-      await updateRecord(id, newCode);
+      await updateRecord(id, newCode, history);
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
-      await updateRecord(id, newCode);
+      await updateRecord(id, newCode, history);
     }
   };
 
