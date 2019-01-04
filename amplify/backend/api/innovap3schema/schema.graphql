@@ -49,6 +49,7 @@ type Record @model {
   comment:[Comment]
   history: [History]
   ques: QuesSnapshot
+  videoUrl: String
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
   room: Room @connection(name: "RoomCurrentRecord")

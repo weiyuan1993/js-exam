@@ -44,6 +44,7 @@ export const getRoom = `query GetRoom($id: ID!) {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -96,6 +97,7 @@ export const listRooms = `query ListRooms(
           time
           code
         }
+        videoUrl
       }
     }
     nextToken
@@ -287,6 +289,7 @@ export const getTest = `query GetTest($id: ID!) {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -347,6 +350,7 @@ export const listTests = `query ListTests(
             time
             code
           }
+          videoUrl
         }
         nextToken
       }
@@ -383,6 +387,7 @@ export const getRecord = `query GetRecord($id: ID!) {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -441,6 +446,7 @@ export const listRecords = `query ListRecords(
         content
         test
       }
+      videoUrl
       question {
         id
         type
@@ -492,6 +498,7 @@ export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -523,6 +530,7 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
           time
           code
         }
+        videoUrl
       }
     }
     nextToken

@@ -110,6 +110,7 @@ export const onUpdateTestByTestId = `subscription OnUpdateTestByTestId($id: Stri
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -161,6 +162,7 @@ export const onUpdateRoomByRoomId = `subscription OnUpdateRoomByRoomId($id: Stri
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -191,6 +193,7 @@ export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -261,6 +264,7 @@ export const onCreateRoom = `subscription OnCreateRoom {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -308,6 +312,7 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -355,6 +360,7 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -592,6 +598,7 @@ export const onCreateTest = `subscription OnCreateTest {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -647,6 +654,7 @@ export const onUpdateTest = `subscription OnUpdateTest {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -702,6 +710,7 @@ export const onDeleteTest = `subscription OnDeleteTest {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -736,6 +745,7 @@ export const onCreateRecord = `subscription OnCreateRecord {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -789,6 +799,7 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -842,6 +853,7 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -891,6 +903,7 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -917,6 +930,7 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -943,6 +957,7 @@ export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
         time
         code
       }
+      videoUrl
     }
   }
 }
