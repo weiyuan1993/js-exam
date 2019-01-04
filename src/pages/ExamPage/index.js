@@ -5,9 +5,9 @@ import { transform } from '@babel/standalone';
 import { message, Spin } from 'antd';
 
 import createWrappedConsole from 'utils/consoleFactory';
-import { subscribeOnCreateRecord } from 'utils/record';
+import { updateRecord, subscribeOnCreateRecord } from 'utils/record';
 import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
-import { setCurrentRecord, updateRecordData } from 'models/record/actions';
+import { setCurrentRecord } from 'models/record/actions';
 
 import ControlWidget from './ControlWidget';
 import ReactPage from './ReactPage';
@@ -25,79 +25,64 @@ const GetPageComponent = args => {
 };
 
 class Page extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      categoryIndex: 0,
-      code: '',
-      compiledCode: '',
-      questionContent: '',
-      test: '',
-      tape: [],
-      recordId: '',
-      console: [],
-      intervieweeName: '',
-      visibleIntervieweeModal: true,
-      roomId: this.props.match.params.roomId,
-      roomPassword: '',
-      isLoading: false,
-      enableEnter: true,
-    };
-    this.wrappedConsole = createWrappedConsole(console, this.addConsole);
-  }
+  state = {
+    categoryIndex: 0,
+    code: '',
+    compiledCode: '',
+    questionContent: '',
+    tape: [],
+    console: [],
+    visibleIntervieweeModal: true,
+    isLoading: false,
+    enableEnter: true,
+  };
+
+  roomId = this.props.match.params.roomId;
 
   componentDidMount() {
-    this.getRoom(this.state.roomId);
+    this.wrappedConsole = createWrappedConsole(console, this.addConsole);
+    this.getRoom();
     this.subscribeCreateRecord();
   }
 
-  getRoom = async id => {
+  getRoom = async () => {
     this.setState({
       isLoading: true,
     });
-    await this.props.actions.getRoomInfo(id);
-    console.log(id);
-    this.passwordSetting(this.props.room.password);
+    await this.props.actions.getRoomInfo(this.roomId);
+    await this.passwordSetting(this.props.room.password);
+    this.setState({ isLoading: false });
   };
 
   passwordSetting = async roomPassword => {
-    const { roomId } = this.state;
+    const { roomId } = this;
+    const { record } = this.props;
     if (!roomPassword) {
       const password = Math.random()
         .toString(15)
         .substr(2);
-      this.setState({
-        roomPassword: password,
-        intervieweeName: this.props.room.subjectId,
-      });
       localStorage.examRoomPassword = password;
       await this.props.actions.updateRoomInfo(roomId, password);
-      this.setState({
-        isLoading: false,
-      });
     } else if (localStorage.examRoomPassword === roomPassword) {
-      this.setState({
-        isLoading: false,
-        intervieweeName: this.props.room.subjectId,
-      });
+      if (record.ques) {
+        this.setState({
+          categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
+          code: record.syncCode || '',
+          test: record.ques.test || '',
+        });
+        this.handleCodeChange(record.syncCode);
+      }
     } else {
       message.error("You Can't Not Enter the Page");
       this.setState({
         enableEnter: false,
-        isLoading: false,
       });
     }
   };
 
-  updateRecordAction = async newCode => {
-    const { recordId } = this.state;
-    await this.props.actions.updateRecordData(recordId, newCode);
-  };
-
-  handleCodeChange = newCode => {
-    const { test } = this.state;
-    const fullCode = `${newCode} ${test}`;
-
+  handleCodeChange = async newCode => {
+    const { ques, id } = this.props.record;
+    const fullCode = `${newCode} ${ques.test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -108,19 +93,19 @@ class Page extends Component {
         plugins: ['proposal-object-rest-spread'],
       });
       this.setState({ compiledCode, code: newCode });
-      this.updateRecordAction(newCode);
+      await updateRecord(id, newCode);
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
-      this.updateRecordAction(newCode);
+      await updateRecord(id, newCode);
     }
   };
 
   onReset = () => {
-    const { questionContent } = this.state;
-    this.setState({ code: questionContent });
-    this.handleCodeChange(questionContent);
+    const { content } = this.props.record.ques;
+    this.setState({ code: content });
+    this.handleCodeChange(content);
   };
 
   addTape = newTape => {
@@ -143,17 +128,16 @@ class Page extends Component {
 
   subscribeCreateRecord = () => {
     subscribeOnCreateRecord(data => {
-      const { room, ques, id } = data;
+      const { room, ques } = data;
       if (room.id === this.props.room.id) {
         this.props.actions.setCurrentRecord(data);
         // to receive new question dispatched
         this.setState({
-          recordId: id,
-          questionName: ques.name,
+          categoryIndex: data.ques.type === 'javascript' ? 0 : 1,
           code: ques.content,
-          questionContent: ques.content,
           test: ques.test,
         });
+        this.handleCodeChange(ques.content);
       }
     });
   };
@@ -166,18 +150,18 @@ class Page extends Component {
       addTape,
       resetTape,
       resetConsole,
-      setIntervieweeModal,
     } = this;
-    const { intervieweeName, isLoading, enableEnter } = this.state;
+    const { isLoading, enableEnter } = this.state;
+    const { room } = this.props;
     return (
       <div>
         <Spin spinning={isLoading}>
           {enableEnter ? (
             <>
               <ControlWidget
-                intervieweeName={intervieweeName}
-                onReset={() => onReset('javascript')}
-                setIntervieweeModal={setIntervieweeModal}
+                roomDescription={room.description}
+                intervieweeName={room.subjectId}
+                onReset={onReset}
               />
               <GetPageComponent
                 handleCodeChange={handleCodeChange}
@@ -186,7 +170,6 @@ class Page extends Component {
                 addTape={addTape}
                 resetTape={resetTape}
                 resetConsole={resetConsole}
-                setIntervieweeModal={setIntervieweeModal}
                 {...this.state}
                 {...this.props}
               />
@@ -204,24 +187,17 @@ class Page extends Component {
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        room: state.room,
-        record: state.record,
-      };
-    },
-    dispatch => {
-      return {
-        actions: {
-          getRoomInfo: id => dispatch(getRoomInfo(id)),
-          updateRoomInfo: (id, password) =>
-            dispatch(updateRoomInfo(id, password)),
-          setCurrentRecord: recordData =>
-            dispatch(setCurrentRecord(recordData)),
-          updateRecordData: (id, syncCode) =>
-            dispatch(updateRecordData(id, syncCode)),
-        },
-      };
-    },
+    state => ({
+      room: state.room,
+      record: state.record,
+    }),
+    dispatch => ({
+      actions: {
+        getRoomInfo: id => dispatch(getRoomInfo(id)),
+        updateRoomInfo: (id, password) =>
+          dispatch(updateRoomInfo(id, password)),
+        setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+      },
+    }),
   )(Page),
 );

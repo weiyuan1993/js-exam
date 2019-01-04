@@ -27,10 +27,10 @@ const updateRecord = async (id, newCode) => {
       syncCode: newCode,
     },
   };
-  const result = await API.graphql(
+  const { data } = await API.graphql(
     graphqlOperation(mutations.updateRecord, params),
   );
-  return result;
+  return data.updateRecord;
 };
 
 const subscribeOnCreateRecord = callback => {
