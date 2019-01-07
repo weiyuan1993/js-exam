@@ -10,6 +10,7 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
     input: {
       subjectId,
       syncCode: ques.content,
+      timeBegin: new Date(),
       ques,
       recordRoomId: roomId,
     },
@@ -25,6 +26,7 @@ const updateRecord = async (id, newCode) => {
     input: {
       id,
       syncCode: newCode,
+      timeEnd: new Date(),
     },
   };
   const result = await API.graphql(
