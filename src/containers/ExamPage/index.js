@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
@@ -9,9 +10,9 @@ import { updateRecord, subscribeOnCreateRecord } from 'utils/record';
 import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
 import { setCurrentRecord } from 'models/record/actions';
 
-import ControlWidget from './ControlWidget';
-import ReactPage from './ReactPage';
-import JavaScriptPage from './JavaScriptPage';
+import ControlWidget from 'components/Widgets/ExamControlWidget';
+import ReactPage from 'components/CodingView/React';
+import JavaScriptPage from 'components/CodingView/JavaScript';
 
 const GetPageComponent = args => {
   switch (args.categoryIndex) {
@@ -24,7 +25,7 @@ const GetPageComponent = args => {
   }
 };
 
-class Page extends Component {
+class ExamPage extends Component {
   state = {
     categoryIndex: 0,
     code: '',
@@ -69,6 +70,7 @@ class Page extends Component {
           categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
           code: record.syncCode || '',
           test: record.ques.test || '',
+          history: record.history || [],
         });
         this.handleCodeChange(record.syncCode);
       }
@@ -84,9 +86,12 @@ class Page extends Component {
     const { ques, id } = this.props.record;
     const fullCode = `${newCode} ${ques.test}`;
     const { history } = this.state;
-    this.setState({
-      history: [...history, { time: new Date(), code: newCode }],
-    });
+
+    if (newCode !== this.state.code) {
+      this.setState({
+        history: [...history, { time: new Date(), code: newCode }],
+      });
+    }
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -189,6 +194,11 @@ class Page extends Component {
   }
 }
 
+ExamPage.propTypes = {
+  room: PropTypes.object,
+  record: PropTypes.object,
+};
+
 export default withRouter(
   connect(
     state => ({
@@ -203,5 +213,5 @@ export default withRouter(
         setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
       },
     }),
-  )(Page),
+  )(ExamPage),
 );
