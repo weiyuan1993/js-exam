@@ -44,25 +44,28 @@ type Record @model {
   subjectId: String #could be email
   syncCode: String  
   interviewer: JEUser
-  timeBegin: Int
-  timeEnd: Int
-  comment:[Comment]
-  history: [History]
+  timeBegin: AWSDateTime
+  timeEnd: AWSDateTime
+  comment:[Comment] @connection(name: "RecordComments")
+  history: [History] @connection(name: "RecordHistories")
   ques: QuesSnapshot
+  videoUrl: String
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
   room: Room @connection(name: "RoomCurrentRecord")
 }
 
-type Comment {
+type Comment @model {
   author: String
-  time:AWSDateTime
+  time: AWSDateTime
   content: String
+  record: Record @connection(name: "RecordComments")
 }
 
-type History {
-  time:AWSDateTime
+type History @model {
+  time: AWSDateTime
   code: String
+  record: Record @connection(name: "RecordHistories")
 }
 
 type QuesSnapshot {
