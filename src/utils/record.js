@@ -10,7 +10,7 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
     input: {
       subjectId,
       syncCode: ques.content,
-      timeBegin: parseInt(new Date().getTime() / 1000, 10), // must to be Int
+      timeBegin: new Date(),
       ques,
       recordRoomId: roomId,
     },
@@ -26,7 +26,7 @@ const updateRecord = async (id, newCode) => {
     input: {
       id,
       syncCode: newCode,
-      timeEnd: parseInt(new Date().getTime() / 1000, 10), // must to be Int
+      timeEnd: new Date(),
     },
   };
   const result = await API.graphql(
