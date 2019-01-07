@@ -44,6 +44,7 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -91,6 +92,7 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -138,6 +140,7 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -375,6 +378,7 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -430,6 +434,7 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -485,6 +490,7 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
           time
           code
         }
+        videoUrl
       }
       nextToken
     }
@@ -519,6 +525,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -572,6 +579,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -625,6 +633,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -674,6 +683,7 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -700,6 +710,7 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
         time
         code
       }
+      videoUrl
     }
   }
 }
@@ -726,6 +737,7 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
         time
         code
       }
+      videoUrl
     }
   }
 }
