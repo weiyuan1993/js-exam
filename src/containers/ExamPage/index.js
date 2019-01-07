@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
 import { message, Spin } from 'antd';
 
 import createWrappedConsole from 'utils/consoleFactory';
-import { updateRecord, subscribeOnCreateRecord } from 'utils/record';
+import { subscribeOnCreateRecord } from 'utils/record';
 import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
 import { setCurrentRecord } from 'models/record/actions';
 
 import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';
 import JavaScriptPage from 'components/CodingView/JavaScript';
+
+import { updateRecordData } from './actions';
+
 
 const GetPageComponent = args => {
   switch (args.categoryIndex) {
@@ -32,7 +35,6 @@ class ExamPage extends Component {
     compiledCode: '',
     tape: [],
     console: [],
-    history: [],
     visibleIntervieweeModal: true,
     isLoading: false,
     enableEnter: true,
@@ -70,7 +72,6 @@ class ExamPage extends Component {
           categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
           code: record.syncCode || '',
           test: record.ques.test || '',
-          history: record.history || [],
         });
         this.handleCodeChange(record.syncCode);
       }
@@ -83,15 +84,9 @@ class ExamPage extends Component {
   };
 
   handleCodeChange = async newCode => {
+    if (newCode === this.state.code) return;
     const { ques, id } = this.props.record;
     const fullCode = `${newCode} ${ques.test}`;
-    const { history } = this.state;
-
-    if (newCode !== this.state.code) {
-      this.setState({
-        history: [...history, { time: new Date(), code: newCode }],
-      });
-    }
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -102,12 +97,12 @@ class ExamPage extends Component {
         plugins: ['proposal-object-rest-spread'],
       });
       this.setState({ compiledCode, code: newCode });
-      await updateRecord(id, newCode, history);
+      await this.props.actions.updateRecordData({ id, newCode });
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
-      await updateRecord(id, newCode, history);
+      await this.props.actions.updateRecordData({ id, newCode });
     }
   };
 
@@ -199,19 +194,23 @@ ExamPage.propTypes = {
   record: PropTypes.object,
 };
 
-export default withRouter(
-  connect(
-    state => ({
-      room: state.room,
-      record: state.record,
-    }),
-    dispatch => ({
-      actions: {
-        getRoomInfo: id => dispatch(getRoomInfo(id)),
-        updateRoomInfo: (id, password) =>
-          dispatch(updateRoomInfo(id, password)),
-        setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
-      },
-    }),
-  )(ExamPage),
+const mapDispatchToProps = dispatch => ({
+  actions: {
+    getRoomInfo: id => dispatch(getRoomInfo(id)),
+    updateRoomInfo: (id, password) => dispatch(updateRoomInfo(id, password)),
+    updateRecordData: recordData => dispatch(updateRecordData(recordData)),
+    setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+  },
+});
+
+const mapStateToProps = state => ({
+  room: state.room,
+  record: state.record,
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
 );
+
+export default compose(withConnect)(ExamPage);

@@ -4,7 +4,6 @@ const initialState = {
   syncCode: '',
   timeBegin: null,
   timeEnd: null,
-  history: [],
   ques: null,
 };
 
@@ -47,8 +46,8 @@ const record = (state = initialState, action) => {
         id: action.payload.id,
         syncCode: action.payload.syncCode,
         timeBegin: action.payload.timeBegin,
+        timeEnd: action.payload.timeEnd,
         ques: action.payload.ques,
-        history: action.payload.history,
       };
     case 'RESET_CURRENT_RECORD': // set current record from room
       return {
