@@ -54,24 +54,23 @@ const getRoom = async roomId => {
       }
       createTime
       password
+      users {
+        items {
+          id
+          name
+        }
+        nextToken
+      }
       currentRecord {
         id
         subjectId
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
+        videoUrl
         ques {
-          type
           name
+          type
           content
           test
         }

@@ -10,6 +10,7 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
     input: {
       subjectId,
       syncCode: ques.content,
+      timeBegin: new Date(),
       ques,
       recordRoomId: roomId,
     },
@@ -20,19 +21,18 @@ const createRecord = async ({ subjectId, roomId, ques }) => {
   return data.createRecord;
 };
 
-const updateRecord = async (id, newCode, history) => {
+const updateRecord = async (id, newCode) => {
   const params = {
     input: {
       id,
       syncCode: newCode,
-      history,
+      timeEnd: new Date(),
     },
   };
-  const { data } = await API.graphql(
+  const result = await API.graphql(
     graphqlOperation(mutations.updateRecord, params),
   );
-  console.log(data)
-  return data.updateRecord;
+  return result;
 };
 
 const subscribeOnCreateRecord = callback => {

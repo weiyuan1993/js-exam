@@ -101,15 +101,7 @@ export const onUpdateTestByTestId = `subscription OnUpdateTestByTestId($id: Stri
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
+        videoUrl
       }
       nextToken
     }
@@ -152,15 +144,7 @@ export const onUpdateRoomByRoomId = `subscription OnUpdateRoomByRoomId($id: Stri
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
@@ -177,13 +161,19 @@ export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -191,6 +181,7 @@ export const onUpdateRecordByRecordId = `subscription OnUpdateRecordByRecordId($
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -252,15 +243,7 @@ export const onCreateRoom = `subscription OnCreateRoom {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
@@ -299,15 +282,7 @@ export const onUpdateRoom = `subscription OnUpdateRoom {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
@@ -346,15 +321,7 @@ export const onDeleteRoom = `subscription OnDeleteRoom {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
@@ -583,15 +550,7 @@ export const onCreateTest = `subscription OnCreateTest {
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
+        videoUrl
       }
       nextToken
     }
@@ -638,15 +597,7 @@ export const onUpdateTest = `subscription OnUpdateTest {
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
+        videoUrl
       }
       nextToken
     }
@@ -693,15 +644,7 @@ export const onDeleteTest = `subscription OnDeleteTest {
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
+        videoUrl
       }
       nextToken
     }
@@ -722,13 +665,19 @@ export const onCreateRecord = `subscription OnCreateRecord {
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -736,6 +685,7 @@ export const onCreateRecord = `subscription OnCreateRecord {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -775,13 +725,19 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -789,6 +745,7 @@ export const onUpdateRecord = `subscription OnUpdateRecord {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -828,13 +785,19 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -842,6 +805,7 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
       content
       test
     }
+    videoUrl
     question {
       id
       type
@@ -869,6 +833,99 @@ export const onDeleteRecord = `subscription OnDeleteRecord {
   }
 }
 `;
+export const onCreateComment = `subscription OnCreateComment {
+  onCreateComment {
+    author
+    time
+    content
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const onUpdateComment = `subscription OnUpdateComment {
+  onUpdateComment {
+    author
+    time
+    content
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const onDeleteComment = `subscription OnDeleteComment {
+  onDeleteComment {
+    author
+    time
+    content
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const onCreateHistory = `subscription OnCreateHistory {
+  onCreateHistory {
+    time
+    code
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const onUpdateHistory = `subscription OnUpdateHistory {
+  onUpdateHistory {
+    time
+    code
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const onDeleteHistory = `subscription OnDeleteHistory {
+  onDeleteHistory {
+    time
+    code
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
 export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
   onCreateQuestionSnapshot {
     id
@@ -882,15 +939,7 @@ export const onCreateQuestionSnapshot = `subscription OnCreateQuestionSnapshot {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
@@ -908,15 +957,7 @@ export const onUpdateQuestionSnapshot = `subscription OnUpdateQuestionSnapshot {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
@@ -934,15 +975,7 @@ export const onDeleteQuestionSnapshot = `subscription OnDeleteQuestionSnapshot {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
+      videoUrl
     }
   }
 }
