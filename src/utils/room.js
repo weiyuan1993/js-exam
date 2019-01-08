@@ -5,33 +5,6 @@ import * as subscriptions from 'graphql/subscriptions';
 
 Amplify.configure(awsExportConfig);
 
-const createRoom = async subjectId => {
-  const roomNum = Math.floor(Math.random() * 98) + 1;
-  const roomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-  const params = {
-    input: {
-      description: roomChar + roomNum,
-      subjectId,
-    },
-  };
-  const { data } = await API.graphql(
-    graphqlOperation(mutations.createRoom, params),
-  );
-  return data.createRoom;
-};
-
-const createTest = async subjectId => {
-  const params = {
-    input: {
-      subjectId,
-    },
-  };
-  const { data } = await API.graphql(
-    graphqlOperation(mutations.createTest, params),
-  );
-  return data.createTest;
-};
-
 const getRoom = async roomId => {
   const query = `query {
     getRoom(id: "${roomId}") {
@@ -117,11 +90,4 @@ const subscribeOnUpdateRoom = callback => {
   });
 };
 
-export {
-  subscribeOnUpdateRoom,
-  createRoom,
-  getRoom,
-  deleteRoom,
-  createTest,
-  updateRoom,
-};
+export { subscribeOnUpdateRoom, getRoom, deleteRoom, updateRoom };

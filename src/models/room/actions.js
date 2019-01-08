@@ -1,3 +1,5 @@
+import { API, graphqlOperation } from 'aws-amplify';
+import * as mutations from 'graphql/mutations';
 import { getRoom, deleteRoom, updateRoom } from 'utils/room';
 import { setCurrentRecord, resetCurrentRecord } from 'models/record/actions';
 
@@ -79,7 +81,7 @@ function updateRoomInfo(id) {
 }
 
 function deleteRoomAction(id) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(
       graphqlActionHelper({
         method: 'DELETE',
@@ -88,6 +90,15 @@ function deleteRoomAction(id) {
       }),
     );
     try {
+      const { id: testId } = getState().room.test;
+      await API.graphql(
+        graphqlOperation(mutations.updateTest, {
+          input: {
+            id: testId,
+            timeEnd: new Date(),
+          },
+        }),
+      );
       await deleteRoom(id);
       dispatch(
         graphqlActionHelper({
