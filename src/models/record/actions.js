@@ -37,7 +37,7 @@ function createRecordData({ subjectId, roomId, ques }) {
   };
 }
 
-function updateRecordData(id, question) {
+function updateRecordData(id, newCode) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
@@ -47,7 +47,7 @@ function updateRecordData(id, question) {
       }),
     );
     try {
-      const result = await updateRecord(id, question);
+      const result = await updateRecord(id, newCode);
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',
@@ -56,6 +56,7 @@ function updateRecordData(id, question) {
           result,
         }),
       );
+      console.log(result)
     } catch (error) {
       dispatch(
         graphqlActionHelper({

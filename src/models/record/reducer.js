@@ -4,7 +4,6 @@ const initialState = {
   syncCode: '',
   timeBegin: null,
   timeEnd: null,
-  history: [],
   ques: null,
 };
 
@@ -17,7 +16,6 @@ const record = (state = initialState, action) => {
         loading: true,
       };
     case 'CREATE_RECORD_SUCCESS':
-    case 'UPDATE_RECORD_SUCCESS':
       return {
         ...state,
         loading: false,
@@ -26,6 +24,14 @@ const record = (state = initialState, action) => {
         syncCode: action.payload.result.syncCode,
         timeBegin: action.payload.result.timeBegin,
         ques: action.payload.result.ques,
+      };
+    case 'UPDATE_RECORD_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        id: action.payload.result.id,
+        syncCode: action.payload.result.syncCode,
       };
     case 'CREATE_RECORD_FAILURE':
     case 'UPDATE_RECORD_FAILURE':
@@ -40,6 +46,7 @@ const record = (state = initialState, action) => {
         id: action.payload.id,
         syncCode: action.payload.syncCode,
         timeBegin: action.payload.timeBegin,
+        timeEnd: action.payload.timeEnd,
         ques: action.payload.ques,
       };
     case 'RESET_CURRENT_RECORD': // set current record from room

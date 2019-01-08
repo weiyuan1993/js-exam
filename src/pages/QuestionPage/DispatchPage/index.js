@@ -68,11 +68,13 @@ class Page extends Component {
       this.subscribeRecordUpdate();
       const { ques, syncCode } = this.props.record;
       if (ques) {
-        const { content, test } = ques;
+        const { type, content, test } = ques;
         this.setState({
+          categoryIndex: type === 'javascript' ? 0 : 1,
           code: syncCode || content,
           test,
         });
+        this.handleCodeChange(syncCode || content);
       } else {
         await this.onChangeQuestion(0);
       }
