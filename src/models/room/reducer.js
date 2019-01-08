@@ -7,6 +7,7 @@ const initialState = {
   error: null,
   password: '',
   isHost: false,
+  testId: '',
 };
 
 const room = (state = initialState, action) => {
@@ -27,6 +28,7 @@ const room = (state = initialState, action) => {
         description: action.payload.result.description,
         subjectId: action.payload.result.subjectId,
         password: action.payload.result.password,
+        testId: action.payload.result.test.id,
       };
     case 'FETCH_ROOM_FAILURE':
     case 'UPDATE_ROOM_FAILURE':

@@ -139,13 +139,12 @@ class Page extends Component {
         content: question.content,
         test: question.test,
       };
-      const result = await this.props.actions.createRecordData({
-        recordTestId: room.test.id,
+      await this.props.actions.createRecordData({
+        recordTestId: room.testId,
         subjectId: room.subjectId,
         roomId: room.id,
         ques,
       });
-      console.log(result)
       message.success(`Dispatch "${question.name}" successfully.`);
       // re-subscribe the new record
       this.subscribeRecordUpdate();

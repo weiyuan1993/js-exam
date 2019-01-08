@@ -43,7 +43,6 @@ export function createRoom(data) {
           },
         }),
       );
-      console.log('werwer', resData)
       dispatch(createRoomActions.success(resData.createRoom));
     } catch (error) {
       dispatch(createRoomActions.failure(error));
