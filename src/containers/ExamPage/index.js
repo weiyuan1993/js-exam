@@ -64,12 +64,15 @@ class ExamPage extends Component {
       await this.props.actions.updateRoomInfo(roomId);
     } else if (localStorage.examRoomPassword === room.password) {
       if (record.ques) {
-        this.setState({
-          categoryIndex: record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
-          code: record.syncCode || '',
-          test: record.ques.test || '',
-        });
-        this.handleCodeChange(record.syncCode);
+        this.setState(
+          {
+            categoryIndex:
+              record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
+            code: record.syncCode || '',
+            test: record.ques.test || '',
+          },
+          () => this.handleCodeChange(record.syncCode),
+        );
       }
     } else {
       message.error("You Can't Not Enter the Page");
@@ -80,7 +83,6 @@ class ExamPage extends Component {
   };
 
   handleCodeChange = async newCode => {
-    if (newCode === this.state.code) return;
     const { ques, id } = this.props.record;
     const fullCode = `${newCode} ${ques.test}`;
     try {
@@ -93,6 +95,7 @@ class ExamPage extends Component {
         plugins: ['proposal-object-rest-spread'],
       });
       this.setState({ compiledCode, code: newCode });
+      if (newCode === this.state.code) return;
       await this.props.actions.updateRecordData({ id, newCode });
     } catch (e) {
       this.setState({ code: newCode });

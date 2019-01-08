@@ -14,7 +14,6 @@ import _console from 'models/console/reducer';
 import tab from 'models/tab/reducer';
 import room from 'models/room/reducer';
 import record from 'models/record/reducer';
-import code from 'models/code/reducer';
 import question from 'models/question/reducer';
 
 /**
@@ -31,7 +30,6 @@ export default function createReducer(injectedReducers = {}) {
     tab,
     room,
     record,
-    code,
     question,
     form: formReducer,
     ...injectedReducers,

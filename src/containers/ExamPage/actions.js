@@ -11,11 +11,8 @@ export function updateRecordData(data) {
           timeEnd: new Date(),
         },
       };
-      const { data: recordResult } = await API.graphql(
-        graphqlOperation(mutations.updateRecord, params),
-      );
+      await API.graphql(graphqlOperation(mutations.updateRecord, params));
       dispatch(createHistory({ historyData: data.newCode }));
-      console.log("#updateRecord", recordResult);
     } catch (error) {
       console.log(error);
     }
@@ -27,7 +24,7 @@ function createHistory(data) {
     const { id: recordId } = getState().record;
     try {
       const createTime = new Date();
-      const { data: historyResult } = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.createHistory, {
           input: {
             time: createTime,
@@ -36,7 +33,6 @@ function createHistory(data) {
           },
         }),
       );
-      console.log("#createHistory", historyResult);
     } catch (error) {
       console.log(error);
     }
