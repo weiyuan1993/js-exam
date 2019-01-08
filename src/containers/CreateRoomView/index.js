@@ -12,6 +12,7 @@ import injectSaga from 'utils/injectSaga';
 import { Modal, Button, Input, message, Icon, Spin } from 'antd';
 import RoomForm from 'components/RoomForm';
 
+import { setRoomHost } from 'models/room/actions';
 import { REDUCER_KEY } from './constants';
 import { createRoom } from './actions';
 import reducer from './reducer';
@@ -33,8 +34,9 @@ class CreateRoomView extends React.PureComponent {
   };
 
   toRoom = () => {
-    const { history, createdRoom } = this.props;
-    history.push(`/admin/dispatch/${createdRoom.id}?host=true`);
+    const { history, createdRoom, onSetRoomHost } = this.props;
+    onSetRoomHost(true);
+    history.push(`/admin/dispatch/${createdRoom.id}`);
   };
 
   render() {
@@ -80,6 +82,7 @@ CreateRoomView.propTypes = {
   history: PropTypes.object.isRequired,
   onCreateRoom: PropTypes.func,
   onResetRoomForm: PropTypes.func,
+  onSetRoomHost: PropTypes.func,
   roomFormSubmitting: PropTypes.bool,
   createRoomFormSucceeded: PropTypes.bool,
   createdRoom: PropTypes.object,
@@ -88,6 +91,7 @@ CreateRoomView.propTypes = {
 const mapDispatchToProps = dispatch => ({
   onCreateRoom: data => dispatch(createRoom(data)),
   onResetRoomForm: () => dispatch(actions.reset(ROOM_FORM_ID)),
+  onSetRoomHost: data => dispatch(setRoomHost(data)),
 });
 
 const mapStateToProps = state => ({

@@ -139,11 +139,13 @@ class Page extends Component {
         content: question.content,
         test: question.test,
       };
-      await this.props.actions.createRecordData({
+      const result = await this.props.actions.createRecordData({
+        recordTestId: room.test.id,
         subjectId: room.subjectId,
         roomId: room.id,
         ques,
       });
+      console.log(result)
       message.success(`Dispatch "${question.name}" successfully.`);
       // re-subscribe the new record
       this.subscribeRecordUpdate();
@@ -221,19 +223,18 @@ class Page extends Component {
       <React.Fragment>
         {!room.loading && room.id ? (
           <>
-            {isHost && (
-              <ControlWidget
-                onDispatchQuestion={onDispatchQuestion}
-                onChangeCategory={onChangeCategory}
-                categoryIndex={categoryIndex}
-                questionIndex={questionIndex}
-                questionList={question.list}
-                onChangeQuestion={onChangeQuestion}
-                setIntervieweeModal={setIntervieweeModal}
-                intervieweeName={room.subjectId}
-                roomDescription={room.description}
-              />
-            )}
+            <ControlWidget
+              isHost={room.isHost}
+              onDispatchQuestion={onDispatchQuestion}
+              onChangeCategory={onChangeCategory}
+              categoryIndex={categoryIndex}
+              questionIndex={questionIndex}
+              questionList={question.list}
+              onChangeQuestion={onChangeQuestion}
+              setIntervieweeModal={setIntervieweeModal}
+              intervieweeName={room.subjectId}
+              roomDescription={room.description}
+            />
             <MainView
               onDispatchQuestion={onDispatchQuestion}
               onChangeCategory={onChangeCategory}
