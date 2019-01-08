@@ -2,7 +2,7 @@ import { createRecord, updateRecord } from 'utils/record';
 import { updateRoom } from 'utils/room';
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
-function createRecordData({ subjectId, roomId, ques }) {
+function createRecordData({ recordTestId, subjectId, roomId, ques }) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
@@ -12,7 +12,12 @@ function createRecordData({ subjectId, roomId, ques }) {
       }),
     );
     try {
-      const result = await createRecord({ subjectId, roomId, ques });
+      const result = await createRecord({
+        recordTestId,
+        subjectId,
+        roomId,
+        ques,
+      });
       dispatch(
         graphqlActionHelper({
           method: 'CREATE',
@@ -48,6 +53,7 @@ function updateRecordData(id, newCode) {
     );
     try {
       const result = await updateRecord(id, newCode);
+      console.log(result)
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',

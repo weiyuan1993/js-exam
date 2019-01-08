@@ -6,6 +6,8 @@ const initialState = {
   subjectId: '',
   error: null,
   password: '',
+  isHost: false,
+  test: {},
 };
 
 const room = (state = initialState, action) => {
@@ -39,6 +41,11 @@ const room = (state = initialState, action) => {
         loading: false,
         error: null,
         ...action.payload.result,
+      };
+    case 'SET_ROOMHOST':
+      return {
+        ...state,
+        isHost: action.isHost,
       };
     default:
       return state;

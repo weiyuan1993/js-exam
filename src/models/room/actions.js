@@ -112,4 +112,11 @@ function deleteRoomAction(id) {
   };
 }
 
-export { getRoomInfo, deleteRoomAction, updateRoomInfo };
+function setRoomHost(isHost) {
+  return {
+    type: 'SET_ROOMHOST',
+    isHost,
+  };
+}
+
+export { getRoomInfo, deleteRoomAction, updateRoomInfo, setRoomHost };

@@ -5,9 +5,10 @@ import * as subscriptions from 'graphql/subscriptions';
 
 Amplify.configure(awsExportConfig);
 
-const createRecord = async ({ subjectId, roomId, ques }) => {
+const createRecord = async ({ recordTestId, subjectId, roomId, ques }) => {
   const params = {
     input: {
+      recordTestId,
       subjectId,
       syncCode: ques.content,
       timeBegin: new Date(),

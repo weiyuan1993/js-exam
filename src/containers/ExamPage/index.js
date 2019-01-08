@@ -83,6 +83,7 @@ class ExamPage extends Component {
   };
 
   handleCodeChange = async newCode => {
+    const { code } = this.state;
     const { ques, id } = this.props.record;
     const fullCode = `${newCode} ${ques.test}`;
     try {
@@ -95,7 +96,7 @@ class ExamPage extends Component {
         plugins: ['proposal-object-rest-spread'],
       });
       this.setState({ compiledCode, code: newCode });
-      if (newCode === this.state.code) return;
+      if (newCode === code) return;
       await this.props.actions.updateRecordData({ id, newCode });
     } catch (e) {
       this.setState({ code: newCode });
