@@ -35,15 +35,6 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
       videoUrl
     }
   }
@@ -83,15 +74,6 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
       videoUrl
     }
   }
@@ -131,15 +113,6 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
       videoUrl
     }
   }
@@ -369,15 +342,6 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
         videoUrl
       }
       nextToken
@@ -425,15 +389,6 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
         videoUrl
       }
       nextToken
@@ -481,15 +436,6 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        comment {
-          author
-          time
-          content
-        }
-        history {
-          time
-          code
-        }
         videoUrl
       }
       nextToken
@@ -511,13 +457,19 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -565,13 +517,19 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -619,13 +577,19 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     timeBegin
     timeEnd
     comment {
-      author
-      time
-      content
+      items {
+        author
+        time
+        content
+      }
+      nextToken
     }
     history {
-      time
-      code
+      items {
+        time
+        code
+      }
+      nextToken
     }
     ques {
       type
@@ -661,6 +625,99 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
   }
 }
 `;
+export const createComment = `mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    author
+    time
+    content
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const updateComment = `mutation UpdateComment($input: UpdateCommentInput!) {
+  updateComment(input: $input) {
+    author
+    time
+    content
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const deleteComment = `mutation DeleteComment($input: DeleteCommentInput!) {
+  deleteComment(input: $input) {
+    author
+    time
+    content
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const createHistory = `mutation CreateHistory($input: CreateHistoryInput!) {
+  createHistory(input: $input) {
+    time
+    code
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const updateHistory = `mutation UpdateHistory($input: UpdateHistoryInput!) {
+  updateHistory(input: $input) {
+    time
+    code
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
+export const deleteHistory = `mutation DeleteHistory($input: DeleteHistoryInput!) {
+  deleteHistory(input: $input) {
+    time
+    code
+    record {
+      id
+      subjectId
+      syncCode
+      timeBegin
+      timeEnd
+      videoUrl
+    }
+  }
+}
+`;
 export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: CreateQuestionSnapshotInput!) {
   createQuestionSnapshot(input: $input) {
     id
@@ -674,15 +731,6 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
       videoUrl
     }
   }
@@ -701,15 +749,6 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
       videoUrl
     }
   }
@@ -728,15 +767,6 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
       syncCode
       timeBegin
       timeEnd
-      comment {
-        author
-        time
-        content
-      }
-      history {
-        time
-        code
-      }
       videoUrl
     }
   }
