@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { transform } from '@babel/standalone';
-import { message, Spin } from 'antd';
+import { message, Spin, Alert } from 'antd';
 
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
@@ -171,6 +171,26 @@ class Page extends Component {
     const { intervieweeName, isLoading, enableEnter } = this.state;
     return (
       <div>
+        {/* eslint-disable camelcase, indent */
+        typeof RecordRTC_Extension === 'undefined' && (
+          <Alert
+            message={
+              <p>
+                Chrome extension is required:&nbsp;
+                <a
+                  target="_blank"
+                  href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
+                >
+                  RecordRTC_Extension
+                </a>
+              </p>
+            }
+            type="warning"
+            closeText="Close"
+          />
+        )
+        /* eslint-enable */
+        }
         <Spin spinning={isLoading}>
           {enableEnter ? (
             <>
