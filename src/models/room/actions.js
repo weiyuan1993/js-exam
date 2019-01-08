@@ -37,12 +37,12 @@ function getRoomInfo(id) {
           result: error,
         }),
       );
-      console.log(error)
+      console.log(error);
     }
   };
 }
 
-function updateRoomInfo(id, password) {
+function updateRoomInfo(id) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
@@ -52,7 +52,11 @@ function updateRoomInfo(id, password) {
       }),
     );
     try {
-      const result = await updateRoom(id, password);
+      const password = Math.random()
+        .toString(15)
+        .substr(2);
+      localStorage.examRoomPassword = password;
+      const result = await updateRoom(id, { password });
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',

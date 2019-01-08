@@ -93,24 +93,11 @@ const deleteRoom = async id => {
   return data.deleteRoom;
 };
 
-const bindRoomCurrentRecord = async (roomId, recordId) => {
-  const params = {
-    input: {
-      id: roomId,
-      roomCurrentRecordId: recordId,
-    },
-  };
-  const { data } = await API.graphql(
-    graphqlOperation(mutations.updateRoom, params),
-  );
-  return data.updateRoom;
-};
-
-const updateRoom = async (id, password) => {
+const updateRoom = async (id, rest) => {
   const params = {
     input: {
       id,
-      password,
+      ...rest,
     },
   };
   const result = await API.graphql(
@@ -135,7 +122,6 @@ export {
   createRoom,
   getRoom,
   deleteRoom,
-  bindRoomCurrentRecord,
   createTest,
   updateRoom,
 };

@@ -15,7 +15,7 @@ import ReactPage from 'components/CodingView/React';
 import JavaScriptPage from 'components/CodingView/JavaScript';
 
 import { updateRecordData } from './actions';
-
+import { QUESTION_TYPE } from './constants';
 
 const GetPageComponent = args => {
   switch (args.categoryIndex) {
@@ -61,15 +61,11 @@ class ExamPage extends Component {
     const { roomId } = this;
     const { record, room } = this.props;
     if (!room.password) {
-      const password = Math.random()
-        .toString(15)
-        .substr(2);
-      localStorage.examRoomPassword = password;
-      await this.props.actions.updateRoomInfo(roomId, password);
+      await this.props.actions.updateRoomInfo(roomId);
     } else if (localStorage.examRoomPassword === room.password) {
       if (record.ques) {
         this.setState({
-          categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
+          categoryIndex: record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
           code: record.syncCode || '',
           test: record.ques.test || '',
         });
@@ -137,7 +133,7 @@ class ExamPage extends Component {
         this.props.actions.setCurrentRecord(data);
         // to receive new question dispatched
         this.setState({
-          categoryIndex: data.ques.type === 'javascript' ? 0 : 1,
+          categoryIndex: data.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
           code: ques.content,
           test: ques.test,
         });

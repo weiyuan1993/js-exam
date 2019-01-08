@@ -22,10 +22,7 @@ const room = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
-        id: action.payload.result.id,
-        description: action.payload.result.description,
-        subjectId: action.payload.result.subjectId,
-        password: action.payload.result.password,
+        ...action.payload.result,
       };
     case 'FETCH_ROOM_FAILURE':
     case 'UPDATE_ROOM_FAILURE':
@@ -41,10 +38,7 @@ const room = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
-        id: action.payload.result.id,
-        description: action.payload.result.description,
-        subjectId: action.payload.result.subjectId,
-        password: action.payload.result.password,
+        ...action.payload.result,
       };
     default:
       return state;
