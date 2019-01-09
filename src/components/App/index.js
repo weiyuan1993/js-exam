@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Amplify, { Auth } from 'aws-amplify';
 import AwsConfig from 'aws-exports';
 
-import ExamPage from 'pages/ExamPage';
+import ExamPage from 'containers/ExamPage';
 import MainPage from 'pages/MainPage';
 import DispatchPage from 'pages/QuestionPage/DispatchPage';
 import PlaybackPage from 'pages/PlayBackPage';

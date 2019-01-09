@@ -1,3 +1,5 @@
+import { API, graphqlOperation } from 'aws-amplify';
+import * as mutations from 'graphql/mutations';
 import { getRoom, deleteRoom, updateRoom } from 'utils/room';
 import { setCurrentRecord, resetCurrentRecord } from 'models/record/actions';
 
@@ -37,11 +39,12 @@ function getRoomInfo(id) {
           result: error,
         }),
       );
+      console.log(error);
     }
   };
 }
 
-function updateRoomInfo(id, password) {
+function updateRoomInfo(id) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
@@ -51,7 +54,11 @@ function updateRoomInfo(id, password) {
       }),
     );
     try {
-      const result = await updateRoom(id, password);
+      const password = Math.random()
+        .toString(15)
+        .substr(2);
+      localStorage.examRoomPassword = password;
+      const result = await updateRoom(id, { password });
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',
@@ -74,7 +81,7 @@ function updateRoomInfo(id, password) {
 }
 
 function deleteRoomAction(id) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(
       graphqlActionHelper({
         method: 'DELETE',
@@ -83,6 +90,15 @@ function deleteRoomAction(id) {
       }),
     );
     try {
+      const { id: testId } = getState().room.test;
+      await API.graphql(
+        graphqlOperation(mutations.updateTest, {
+          input: {
+            id: testId,
+            timeEnd: new Date(),
+          },
+        }),
+      );
       await deleteRoom(id);
       dispatch(
         graphqlActionHelper({
