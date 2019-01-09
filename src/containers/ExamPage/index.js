@@ -35,7 +35,6 @@ class ExamPage extends Component {
     compiledCode: '',
     tape: [],
     console: [],
-    visibleIntervieweeModal: true,
     isLoading: false,
     enableEnter: true,
   };

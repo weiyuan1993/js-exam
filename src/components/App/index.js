@@ -4,6 +4,8 @@ import Amplify, { Auth } from 'aws-amplify';
 import AwsConfig from 'aws-exports';
 
 import ExamPage from 'containers/ExamPage';
+import Playback from 'containers/Playback';
+
 import MainPage from 'pages/MainPage';
 import DispatchPage from 'pages/QuestionPage/DispatchPage';
 import AddAndEditPage from 'pages/QuestionPage/AddAndEditPage';
@@ -42,6 +44,7 @@ const App = () => (
         path="/admin/edit"
         render={props => <AddAndEditPage {...props} type="edit" />}
       />
+      <PrivateRoute exact path="/admin/playback" component={Playback} />
       <Route exact path="/exam/:roomId" component={ExamPage} />
       <Route component={NotFoundPage} />
     </Switch>

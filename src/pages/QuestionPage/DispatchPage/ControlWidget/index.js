@@ -2,8 +2,10 @@ import React from 'react';
 import CategorySelector from 'components/Selectors/CategorySelector';
 import QuestionSelector from 'components/Selectors/QuestionSelector';
 
-import { Button, Icon } from 'antd';
+import { Input, Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
+
+const InputGroup = Input.Group;
 
 const ControlWidget = ({
   categoryIndex,
@@ -12,11 +14,11 @@ const ControlWidget = ({
   onChangeCategory,
   onChangeQuestion,
   questionList,
-  isHost
+  isHost,
 }) => (
   <div className={styles.control}>
     {isHost ? (
-      <div>
+      <InputGroup compact style={{ width: 'auto' }}>
         <CategorySelector
           onChange={onChangeCategory}
           categoryIndex={categoryIndex}
@@ -30,13 +32,11 @@ const ControlWidget = ({
           Dispatch
           <Icon type="right" />
         </Button>
-      </div>
+      </InputGroup>
     ) : (
       <></>
     )}
-    <Button>
-      Comment
-    </Button>
+    <Button>Comment</Button>
   </div>
 );
 
