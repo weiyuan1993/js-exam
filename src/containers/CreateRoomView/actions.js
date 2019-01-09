@@ -26,27 +26,36 @@ export const createRoomActions = {
 };
 
 export function createRoom(data) {
-
   return async dispatch => {
     dispatch(createRoomActions.request(data));
     try {
-      const { data: testData } = await API.graphql(graphqlOperation(mutations.createTest, data));
       const roomNum = Math.floor(Math.random() * 98) + 1;
       const roomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-      const { data: resData } = await API.graphql(
-        graphqlOperation(mutations.createRoom, {
+      const createTime = new Date();
+      const { data: testData } = await API.graphql(
+        graphqlOperation(mutations.createTest, {
           input: {
-            roomTestId: testData.createTest.id,
-            description: roomChar + roomNum,
-            createTime: new Date(),
+            timeBegin: createTime,
             ...data.input,
           },
         }),
       );
-      dispatch(createRoomActions.success(resData.createRoom));
+      const { data: roomData } = await API.graphql(
+        graphqlOperation(mutations.createRoom, {
+          input: {
+            roomTestId: testData.createTest.id,
+            description: roomChar + roomNum,
+            createTime,
+            ...data.input,
+          },
+        }),
+      );
+      console.log(testData, roomData);
+      dispatch(createRoomActions.success(roomData.createRoom));
     } catch (error) {
       dispatch(createRoomActions.failure(error));
       message.error('Create room failed');
+      console.log(error);
     }
   };
 }

@@ -10,7 +10,7 @@ import {
   subscribeOnUpdateRecordByRecordId,
 } from 'utils/record';
 
-import { getRoomInfo } from 'models/room/actions';
+import { getRoomInfo, setRoomHost } from 'models/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'models/question/actions';
 import { createRecordData, setCurrentRecord } from 'models/record/actions';
 
@@ -43,9 +43,9 @@ class Page extends Component {
   };
 
   async componentDidMount() {
-    this.setState({
-      isHost: Boolean(queryString.parse(this.props.location.search).host),
-    });
+    if (queryString.parse(this.props.location.search).host) {
+      this.props.actions.setRoomHost(true);
+    }
     await this.getRoom(this.props.match.params.roomId);
     console.log('DidMount', this.props);
   }
@@ -68,11 +68,13 @@ class Page extends Component {
       this.subscribeRecordUpdate();
       const { ques, syncCode } = this.props.record;
       if (ques) {
-        const { content, test } = ques;
+        const { type, content, test } = ques;
         this.setState({
+          categoryIndex: type === 'javascript' ? 0 : 1,
           code: syncCode || content,
           test,
         });
+        this.handleCodeChange(syncCode || content);
       } else {
         await this.onChangeQuestion(0);
       }
@@ -140,7 +142,7 @@ class Page extends Component {
         test: question.test,
       };
       await this.props.actions.createRecordData({
-        recordTestId: room.testId,
+        recordTestId: room.test.id,
         subjectId: room.subjectId,
         roomId: room.id,
         ques,
@@ -206,7 +208,7 @@ class Page extends Component {
   };
 
   render() {
-    const { isHost, categoryIndex, questionIndex } = this.state;
+    const { categoryIndex, questionIndex } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -255,25 +257,21 @@ class Page extends Component {
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        room: state.room,
-        record: state.record,
-        code: state.code,
-        question: state.question,
-      };
-    },
-    dispatch => {
-      return {
-        actions: {
-          getRoomInfo: id => dispatch(getRoomInfo(id)),
-          fetchQuestionList: type => dispatch(fetchQuestionList(type)),
-          fetchQuestion: id => dispatch(fetchQuestion(id)),
-          createRecordData: params => dispatch(createRecordData(params)),
-          setCurrentRecord: recordData =>
-            dispatch(setCurrentRecord(recordData)),
-        },
-      };
-    },
+    state => ({
+      room: state.room,
+      record: state.record,
+      code: state.code,
+      question: state.question,
+    }),
+    dispatch => ({
+      actions: {
+        getRoomInfo: id => dispatch(getRoomInfo(id)),
+        fetchQuestionList: type => dispatch(fetchQuestionList(type)),
+        fetchQuestion: id => dispatch(fetchQuestion(id)),
+        createRecordData: params => dispatch(createRecordData(params)),
+        setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+        setRoomHost: isHost => dispatch(setRoomHost(isHost)),
+      },
+    }),
   )(Page),
 );

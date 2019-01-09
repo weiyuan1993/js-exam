@@ -2,12 +2,15 @@ import React from 'react';
 import { Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
 
-const ControlWidget = ({ onReset, intervieweeName }) => (
+const ControlWidget = ({ onReset, roomDescription, intervieweeName }) => (
   <div className={styles.control}>
     <div className={styles.interviewee}>
+      <Icon type="home" />
+      <p>
+        <span>{roomDescription || 'UNSET'}</span>
+      </p>
       <Icon type="user" />
       <p>
-        Interviewee:
         <span>{intervieweeName || 'UNSET'}</span>
       </p>
     </div>

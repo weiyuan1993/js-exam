@@ -7,7 +7,7 @@ const initialState = {
   error: null,
   password: '',
   isHost: false,
-  testId: '',
+  test: {},
 };
 
 const room = (state = initialState, action) => {
@@ -24,11 +24,7 @@ const room = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
-        id: action.payload.result.id,
-        description: action.payload.result.description,
-        subjectId: action.payload.result.subjectId,
-        password: action.payload.result.password,
-        testId: action.payload.result.test.id,
+        ...action.payload.result,
       };
     case 'FETCH_ROOM_FAILURE':
     case 'UPDATE_ROOM_FAILURE':
@@ -44,10 +40,7 @@ const room = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
-        id: action.payload.result.id,
-        description: action.payload.result.description,
-        subjectId: action.payload.result.subjectId,
-        password: action.payload.result.password,
+        ...action.payload.result,
       };
     case 'SET_ROOMHOST':
       return {
