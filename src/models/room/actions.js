@@ -37,7 +37,6 @@ function getRoomInfo(id) {
           result: error,
         }),
       );
-      console.log(error)
     }
   };
 }

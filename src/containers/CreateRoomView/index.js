@@ -36,7 +36,7 @@ class CreateRoomView extends React.PureComponent {
   toRoom = () => {
     const { history, createdRoom, onSetRoomHost } = this.props;
     onSetRoomHost(true);
-    history.push(`/admin/dispatch/${createdRoom.id}`);
+    history.push(`/admin/dispatch/${createdRoom.id}?host=true`);
   };
 
   render() {

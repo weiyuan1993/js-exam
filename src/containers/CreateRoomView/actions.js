@@ -26,7 +26,6 @@ export const createRoomActions = {
 };
 
 export function createRoom(data) {
-
   return async dispatch => {
     dispatch(createRoomActions.request(data));
     try {
