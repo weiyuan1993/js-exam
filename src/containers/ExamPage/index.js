@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
 import { message, Spin, Alert } from 'antd';
 
+// import diskStorage from 'utils/DiskStorage';
+import { saveIndexedDB } from 'utils/indexedDbStorage';
+import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
 import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
@@ -13,9 +16,9 @@ import { setCurrentRecord } from 'models/record/actions';
 import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';
 import JavaScriptPage from 'components/CodingView/JavaScript';
+import RecordVideo from 'components/RecordVideo';
 
-import { updateRecordData } from './actions';
-
+import { updateRecordData, updateRecordVideoUrl } from './actions';
 
 const GetPageComponent = args => {
   switch (args.categoryIndex) {
@@ -38,6 +41,7 @@ class ExamPage extends Component {
     visibleIntervieweeModal: true,
     isLoading: false,
     enableEnter: true,
+    isRecording: false,
   };
 
   roomId = this.props.match.params.roomId;
@@ -146,6 +150,31 @@ class ExamPage extends Component {
     });
   };
 
+  handleStartRecording = () => {
+    this.setState({ isRecording: true });
+    startRecording();
+  };
+
+  handleStopRecording = () => {
+    this.setState({ isRecording: false });
+    stopRecording(blob => {
+      const { id } = this.props.record;
+
+      const mimeType = 'video/webm';
+      const fileExtension = 'webm';
+      const file = new File([blob], `${id}.${fileExtension}`, {
+        type: mimeType,
+      });
+      saveIndexedDB(file.name, file, null, () => {
+        this.props.actions.updateRecordVideoUrl({ id, videoUrl: file.name });
+      });
+
+      // diskStorage.StoreFile(file, () => {
+      //   this.props.actions.updateRecordVideoUrl({ id, videoUrl: file.name });
+      // });
+    });
+  };
+
   render() {
     const {
       handleCodeChange,
@@ -155,8 +184,8 @@ class ExamPage extends Component {
       resetTape,
       resetConsole,
     } = this;
-    const { isLoading, enableEnter } = this.state;
-    const { room } = this.props;
+    const { isLoading, enableEnter, isRecording } = this.state;
+    const { room, record } = this.props;
     return (
       <div>
         {/* eslint-disable camelcase, indent */
@@ -167,6 +196,7 @@ class ExamPage extends Component {
                 Chrome extension is required:&nbsp;
                 <a
                   target="_blank"
+                  rel="noopener noreferrer"
                   href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
                 >
                   RecordRTC_Extension
@@ -186,6 +216,10 @@ class ExamPage extends Component {
                 roomDescription={room.description}
                 intervieweeName={room.subjectId}
                 onReset={onReset}
+                onStartRecording={this.handleStartRecording}
+                onStopRecording={this.handleStopRecording}
+                isRecording={isRecording}
+                isProgressing={!!record.id}
               />
               <GetPageComponent
                 handleCodeChange={handleCodeChange}
@@ -197,6 +231,7 @@ class ExamPage extends Component {
                 {...this.state}
                 {...this.props}
               />
+              <RecordVideo fileName={record.videoUrl} />
             </>
           ) : (
             <div>
@@ -220,6 +255,7 @@ const mapDispatchToProps = dispatch => ({
     updateRoomInfo: (id, password) => dispatch(updateRoomInfo(id, password)),
     updateRecordData: recordData => dispatch(updateRecordData(recordData)),
     setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+    updateRecordVideoUrl: data => dispatch(updateRecordVideoUrl(data)),
   },
 });
 

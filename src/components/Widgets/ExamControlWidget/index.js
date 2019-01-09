@@ -2,7 +2,15 @@ import React from 'react';
 import { Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
 
-const ControlWidget = ({ onReset, roomDescription, intervieweeName }) => (
+const ControlWidget = ({
+  onReset,
+  roomDescription,
+  intervieweeName,
+  onStartRecording,
+  onStopRecording,
+  isRecording,
+  isProgressing,
+}) => (
   <div className={styles.control}>
     <div className={styles.interviewee}>
       <Icon type="home" />
@@ -14,7 +22,14 @@ const ControlWidget = ({ onReset, roomDescription, intervieweeName }) => (
         <span>{intervieweeName || 'UNSET'}</span>
       </p>
     </div>
-    <Button type="danger" onClick={onReset}>
+    <Button
+      className={isProgressing ? styles.button : styles.hidden}
+      type={isRecording ? 'danger' : 'primary'}
+      onClick={isRecording ? onStopRecording : onStartRecording}
+    >
+      {isRecording ? 'Stop Recording' : 'Start Recording'}
+    </Button>
+    <Button className={styles.button} type="danger" onClick={onReset}>
       Reset
     </Button>
   </div>

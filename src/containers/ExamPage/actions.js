@@ -15,7 +15,7 @@ export function updateRecordData(data) {
         graphqlOperation(mutations.updateRecord, params),
       );
       dispatch(createHistory({ historyData: data.newCode }));
-      console.log("#updateRecord", recordResult);
+      console.log('#updateRecord', recordResult);
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +36,27 @@ function createHistory(data) {
           },
         }),
       );
-      console.log("#createHistory", historyResult);
+      console.log('#createHistory', historyResult);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+
+export function updateRecordVideoUrl({ id, videoUrl }) {
+  return async () => {
+    try {
+      const params = {
+        input: {
+          id,
+          videoUrl,
+        },
+      };
+      console.log(params);
+      const { data: recordResult } = await API.graphql(
+        graphqlOperation(mutations.updateRecord, params),
+      );
+      console.log('#updateRecordVideoUrl', recordResult);
     } catch (error) {
       console.log(error);
     }

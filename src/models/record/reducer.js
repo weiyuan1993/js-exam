@@ -5,6 +5,7 @@ const initialState = {
   timeBegin: null,
   timeEnd: null,
   ques: null,
+  videoUrl: '',
 };
 
 const record = (state = initialState, action) => {
@@ -24,6 +25,7 @@ const record = (state = initialState, action) => {
         syncCode: action.payload.result.syncCode,
         timeBegin: action.payload.result.timeBegin,
         ques: action.payload.result.ques,
+        videoUrl: action.payload.result.videoUrl,
       };
     case 'UPDATE_RECORD_SUCCESS':
       return {
@@ -32,6 +34,7 @@ const record = (state = initialState, action) => {
         error: null,
         id: action.payload.result.id,
         syncCode: action.payload.result.syncCode,
+        videoUrl: action.payload.result.videoUrl,
       };
     case 'CREATE_RECORD_FAILURE':
     case 'UPDATE_RECORD_FAILURE':
@@ -48,6 +51,7 @@ const record = (state = initialState, action) => {
         timeBegin: action.payload.timeBegin,
         timeEnd: action.payload.timeEnd,
         ques: action.payload.ques,
+        videoUrl: action.payload.videoUrl,
       };
     case 'RESET_CURRENT_RECORD': // set current record from room
       return {
