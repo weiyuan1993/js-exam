@@ -37,7 +37,7 @@ const ControlWidget = ({
       <></>
     )}
     <Button onClick={setCommentBox} disabled={enableComment}>
-      Comment {console.log(enableComment, '20938ytueoj')}
+      Comment
     </Button>
   </div>
 );
