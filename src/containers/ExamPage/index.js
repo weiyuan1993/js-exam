@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
 import { message, Spin, Alert } from 'antd';
 
-// import diskStorage from 'utils/DiskStorage';
 import { saveIndexedDB } from 'utils/indexedDbStorage';
 import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
@@ -16,7 +15,6 @@ import { setCurrentRecord } from 'models/record/actions';
 import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';
 import JavaScriptPage from 'components/CodingView/JavaScript';
-import RecordVideo from 'components/RecordVideo';
 
 import { updateRecordData, updateRecordVideoUrl } from './actions';
 
@@ -231,7 +229,6 @@ class ExamPage extends Component {
                 {...this.state}
                 {...this.props}
               />
-              <RecordVideo fileName={record.videoUrl} />
             </>
           ) : (
             <div>

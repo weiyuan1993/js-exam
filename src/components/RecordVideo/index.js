@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-// import diskStorage from 'utils/DiskStorage';
 import { loadIndexedDB } from 'utils/indexedDbStorage';
 import styles from './RecordVideo.module.scss';
 
@@ -25,20 +24,11 @@ class RecordVideo extends PureComponent {
 
   getFileUrl = fileName => {
     loadIndexedDB(fileName, file => {
-      console.log(file);
       if (file) {
         this.videoRef.current.currentTime = 9999999999;
         this.setState({ src: URL.createObjectURL(file) });
       }
     });
-
-    // diskStorage.Fetch(fileName, file => {
-    //   console.log(file);
-    //   if (file) {
-    //     this.videoRef.current.currentTime = 9999999999;
-    //     this.setState({ src: URL.createObjectURL(file) });
-    //   }
-    // });
   };
 
   render() {

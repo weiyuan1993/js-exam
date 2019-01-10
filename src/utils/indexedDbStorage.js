@@ -17,7 +17,7 @@ function openIndexedDB(fileindex) {
     const db = {};
     db.result = openDB.result;
     db.store = db.result.createObjectStore(dbName, { keyPath: 'id' });
-    if (fileindex) db.index = db.store.createIndex('NameIndex', fileindex);
+    // if (fileindex) db.index = db.store.createIndex('NameIndex', fileindex);
   };
 
   return openDB;
@@ -28,7 +28,7 @@ function getStoreIndexedDB(openDB) {
   db.result = openDB.result;
   db.tx = db.result.transaction(dbName, 'readwrite');
   db.store = db.tx.objectStore(dbName);
-  db.index = db.store.index('NameIndex');
+  // db.index = db.store.index('NameIndex');
 
   return db;
 }
@@ -59,7 +59,7 @@ export function loadIndexedDB(filename, callback, filesearch) {
     if (filename) {
       getData = db.store.get(filename);
     } else {
-      getData = db.index.get(filesearch);
+      // getData = db.index.get(filesearch);
     }
 
     getData.onsuccess = () => {
@@ -71,5 +71,5 @@ export function loadIndexedDB(filename, callback, filesearch) {
     };
   };
 
-  return true;
+  // return true;
 }
