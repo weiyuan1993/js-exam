@@ -4,9 +4,17 @@ import { queryRecordWithHistory } from './queries';
 export function fetchRecordWithHistory(id) {
   return async (dispatch, getState) => {
     try {
-      const { nextToken } = getState().record;
+      const {
+        history: { nextToken },
+      } = getState().record;
+
+      const query = {
+        id,
+        limit: 1000,
+        nextToken,
+      };
       const { data } = await API.graphql(
-        graphqlOperation(queryRecordWithHistory(id, nextToken)),
+        graphqlOperation(queryRecordWithHistory, query),
       );
       console.log('#getRecordWithHistory', data);
 

@@ -13,7 +13,7 @@ const PlayBakPge = props => (
       {/* TODO: Room list with with lazy-loading next dataset. Here we load 1000 rooms instead. */}
       <Connect
         query={graphqlOperation(getTest, {
-          id: 'd1fe7b83-c6fa-4907-a809-6a2c07ad55c5',
+          id: '382c3474-c9ea-4c4b-9c29-fe72af01f6d2',
         })}
       >
         {({ data: { getTest: test }, loading, error }) => {

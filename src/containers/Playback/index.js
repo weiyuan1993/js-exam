@@ -76,11 +76,13 @@ class Playback extends React.Component {
     const { historyIndex } = this.state;
     const { items, nextToken } = this.props.record.history;
     if (historyIndex < items.length - 1) {
+      console.log()
       this.setState({
         code: items[historyIndex + 1].code,
         historyIndex: historyIndex + 1,
       });
-    } else if (nextToken) {
+    }
+    if (historyIndex === items.length - 3 && nextToken) {
       await this.getNextSetHistory();
       console.log('getNextHistorySet');
     }
@@ -127,6 +129,8 @@ class Playback extends React.Component {
           onForward={onForward}
           onBackward={onBackward}
           recordList={records}
+          hasNextHistory={record.nextToken}
+          historyAmount={record.history.items.length}
           historyIndex={historyIndex}
         />
         <PlaybackView

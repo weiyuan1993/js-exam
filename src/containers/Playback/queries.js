@@ -1,9 +1,13 @@
-export const queryRecordWithHistory = (id, nextToken = null) => `
-  query {
-    getRecord(id: "${id}") {
+export const queryRecordWithHistory = `
+  query  GetRecord(
+    $id: ID!
+    $limit: Int
+    $nextToken: String
+  ) {
+    getRecord(id: $id) {
       id
       subjectId
-      history(limit:10 nextToken:${nextToken} sortDirection:ASC) {
+      history(limit: $limit nextToken: $nextToken) {
         items {
           time
           code
@@ -18,4 +22,4 @@ export const queryRecordWithHistory = (id, nextToken = null) => `
       }
     }
   }
-  `;
+`;
