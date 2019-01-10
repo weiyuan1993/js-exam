@@ -53,7 +53,7 @@ function updateRecordData(id, newCode) {
     );
     try {
       const result = await updateRecord(id, newCode);
-      console.log(result)
+      console.log(result);
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',

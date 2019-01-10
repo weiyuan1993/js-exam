@@ -5,6 +5,7 @@ const initialState = {
   timeBegin: null,
   timeEnd: null,
   ques: null,
+  videoUrl: '',
 };
 
 const record = (state = initialState, action) => {
@@ -16,6 +17,12 @@ const record = (state = initialState, action) => {
         loading: true,
       };
     case 'CREATE_RECORD_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        ...action.payload.result,
+      };
     case 'UPDATE_RECORD_SUCCESS':
       return {
         ...state,

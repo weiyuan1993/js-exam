@@ -6,13 +6,12 @@ export function updateRecordData(data) {
     try {
       const params = {
         input: {
-          id: data.id,
-          syncCode: data.newCode,
           timeEnd: new Date(),
+          ...data,
         },
       };
       await API.graphql(graphqlOperation(mutations.updateRecord, params));
-      dispatch(createHistory({ historyData: data.newCode }));
+      dispatch(createHistory({ historyData: data.syncCode }));
     } catch (error) {
       console.log(error);
     }

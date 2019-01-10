@@ -1,26 +1,35 @@
 .control {
   display: flex;
-  border-bottom: 1px solid #E0E0E0;
+  border-bottom: 1px solid #e0e0e0;
   padding: 10px 50px 10px 20px;
-	background: white;
-	width: 100%;
-	height: 50PX;
-	align-items: center;
-	justify-content: space-between;
+  background: white;
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .interviewee {
-	display: flex;
-	align-items: center;
-	font-size: 18px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  flex: 1;
 
-	p {
-		margin: 0 0 0 10px;
+  p {
+    margin: 0 0 0 10px;
 
-		span {
-			font-size: 20px;
-			font-weight: 600;
-			margin: 0 15px 0 0;
-		}
-	}
+    span {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 15px 0 0;
+    }
+  }
+}
+
+.button {
+  margin: 0 8px;
+}
+
+.hidden {
+  display: none;
 }
