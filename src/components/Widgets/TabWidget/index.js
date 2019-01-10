@@ -55,6 +55,12 @@ const TabWidget = ({
           Edit
         </Link>
       </Menu.Item>
+      <Menu.Item key="archive">
+        <Link to="/admin/archive">
+          <Icon type="folder-open" theme="filled" />
+          Archive
+        </Link>
+      </Menu.Item>
       {room.subjectId && (
         <Menu.Item style={{ float: 'right' }} key="subjectId">
           <Icon type="user" />
