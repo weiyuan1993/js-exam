@@ -3,12 +3,18 @@ export const queryRecordWithHistory = (id, nextToken = null) => `
     getRecord(id: "${id}") {
       id
       subjectId
-      history(limit:10 nextToken:${nextToken}) {
+      history(limit:10 nextToken:${nextToken} sortDirection:ASC) {
         items {
           time
           code
         }
         nextToken
+      }
+      ques {
+        type
+        content
+        test
+        name
       }
     }
   }

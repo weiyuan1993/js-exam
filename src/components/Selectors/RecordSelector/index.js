@@ -12,7 +12,7 @@ const RecordSelector = ({ recordIndex, onChange, list }) => (
   >
     {list.map((item, i) => (
       <Option key={item.id} value={i}>
-        {item.ques.name}
+        {item.ques ? item.ques.name : null}
       </Option>
     ))}
   </Select>

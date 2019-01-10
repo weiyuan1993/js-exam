@@ -15,6 +15,8 @@ const ControlWidget = ({
   onChangeQuestion,
   questionList,
   isHost,
+  setCommentBox,
+  enableComment,
 }) => (
   <div className={styles.control}>
     {isHost ? (
@@ -36,7 +38,9 @@ const ControlWidget = ({
     ) : (
       <></>
     )}
-    <Button>Comment</Button>
+    <Button onClick={setCommentBox} disabled={enableComment}>
+      Comment
+    </Button>
   </div>
 );
 

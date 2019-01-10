@@ -1,17 +1,13 @@
 import React from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { graphqlOperation } from 'aws-amplify';
-
-import injectReducer from 'utils/injectReducer';
+import { transform } from '@babel/standalone';
 
 import PlaybackControlWidget from 'components/Widgets/PlaybackControlWidget';
 import ReactPage from 'components/PlaybackView/React';
 import JavaScriptPage from 'components/PlaybackView/JavaScript';
 
-import { REDUCER_KEY } from './constants';
+import { resetCurrentRecord } from 'models/record/actions';
 import { fetchRecordWithHistory } from './actions';
-import reducer from './reducer';
 const PlaybackView = args => {
   switch (args.categoryIndex) {
     case 1: {
@@ -24,29 +20,51 @@ const PlaybackView = args => {
 };
 class Playback extends React.Component {
   state = {
-    categoryIndex: 1,
+    categoryIndex: 0,
     recordIndex: 0,
     code: '',
     compiledCode: '',
     tape: [],
-    console: [],
     isLoading: false,
     historyIndex: 0,
   };
 
   async componentDidMount() {
-    await this.props.actions.fetchRecordWithHistory(
-      '0ba1a9d2-fa7f-4610-8bb3-37397a93b550',
-    );
-    this.setState({ code: this.props.record.history.items[0].code });
-    console.log(this.props);
+    await this.onChangeRecord(0);
   }
 
-  onChangeRecord = async index => {
-    const { id } = this.props.recordList[index];
-    await this.props.actions.fetchRecordWithHistory(id);
+  handleCodeChange = newCode => {
+    const { test } = this.props.record.ques;
+    const fullCode = `${newCode} ${test}`;
+    try {
+      const { code: compiledCode } = transform(fullCode, {
+        presets: [
+          'es2015',
+          ['stage-2', { decoratorsBeforeExport: true }],
+          'react',
+        ],
+        plugins: ['proposal-object-rest-spread'],
+      });
+      this.setState({ code: newCode, compiledCode });
+    } catch (e) {
+      this.setState({ code: newCode });
+    }
+  };
 
-    this.setState({ recordIndex: index });
+  onChangeRecord = async index => {
+    this.setState({ isLoading: true });
+    this.props.actions.resetCurrentRecord();
+    const { id } = this.props.records[index];
+    await this.props.actions.fetchRecordWithHistory(id);
+    const { record } = this.props;
+    if (record.history.items.length > 0) {
+      this.setState({
+        categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
+        recordIndex: index,
+        isLoading: false,
+      });
+      this.handleCodeChange(record.history.items[0].code);
+    }
   };
 
   getNextSetHistory = async () => {
@@ -54,18 +72,29 @@ class Playback extends React.Component {
     await this.props.actions.fetchRecordWithHistory(id);
   };
 
-  onForward = () => {
+  onForward = async () => {
     const { historyIndex } = this.state;
-    const { items } = this.props.record.history;
-    this.setState({
-      code: items[historyIndex],
-      historyIndex: historyIndex + 1,
-    });
+    const { items, nextToken } = this.props.record.history;
+    if (historyIndex < items.length - 1) {
+      this.setState({
+        code: items[historyIndex + 1].code,
+        historyIndex: historyIndex + 1,
+      });
+    } else if (nextToken) {
+      await this.getNextSetHistory();
+      console.log('getNextHistorySet');
+    }
   };
 
   onBackward = () => {
-
-    
+    const { historyIndex } = this.state;
+    const { items } = this.props.record.history;
+    if (historyIndex > 0) {
+      this.setState({
+        code: items[historyIndex - 1].code,
+        historyIndex: historyIndex - 1,
+      });
+    }
   };
 
   addTape = newTape => {
@@ -78,29 +107,33 @@ class Playback extends React.Component {
   };
 
   render() {
-    const { onChangeRecord, addTape, resetTape, onForward, onBackward } = this;
-    const { recordIndex } = this.state;
     const {
-      test = {},
-      recordList = [
-        { id: '0ba1a9d2-fa7f-4610-8bb3-37397a93b550', ques: { name: 'test' } },
-      ],
-    } = this.props;
+      handleCodeChange,
+      onChangeRecord,
+      addTape,
+      resetTape,
+      onForward,
+      onBackward,
+    } = this;
+    const { recordIndex, historyIndex } = this.state;
+    const { testData, records, record } = this.props;
     return (
       <>
         <PlaybackControlWidget
-          testDate={test.timeBegin}
-          interviewee={test.subjectId}
+          testDate={testData.timeBegin}
+          interviewee={testData.subjectId}
           recordIndex={recordIndex}
           onChangeRecord={onChangeRecord}
           onForward={onForward}
           onBackward={onBackward}
-          recordList={recordList}
+          recordList={records}
+          historyIndex={historyIndex}
         />
         <PlaybackView
+          handleCodeChange={handleCodeChange}
           addTape={addTape}
           resetTape={resetTape}
-          {...this.props}
+          test={record.ques.test}
           {...this.state}
         />
       </>
@@ -115,6 +148,7 @@ export default connect(
   dispatch => ({
     actions: {
       fetchRecordWithHistory: id => dispatch(fetchRecordWithHistory(id)),
+      resetCurrentRecord: () => dispatch(resetCurrentRecord()),
     },
   }),
 )(Playback);

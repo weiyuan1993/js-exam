@@ -4,7 +4,12 @@ const initialState = {
   syncCode: '',
   timeBegin: null,
   timeEnd: null,
-  ques: null,
+  ques: {
+    name: '',
+    content: '',
+    test: '',
+    type: '',
+  },
   history: { items: [], nextToken: null },
 };
 

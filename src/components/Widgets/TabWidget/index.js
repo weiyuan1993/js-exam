@@ -37,6 +37,12 @@ const TabWidget = ({
           Room
         </Link>
       </Menu.Item>
+      <Menu.Item key="playback">
+        <Link to="/admin/playback">
+          <Icon type="play-circle" theme="filled" />
+          PlayBack
+        </Link>
+      </Menu.Item>
       <Menu.Item key="add">
         <Link to="/admin/add">
           <Icon type="file-add" theme="filled" />

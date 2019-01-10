@@ -12,6 +12,9 @@ const PlaybackControlWidget = ({
   recordIndex,
   onChangeRecord,
   recordList,
+  historyIndex,
+  onForward,
+  onBackward,
 }) => (
   <div className={styles.control}>
     <div className={styles.info}>
@@ -32,11 +35,15 @@ const PlaybackControlWidget = ({
         list={recordList}
       />
       <Button.Group>
-        <Button type="primary">
+        <Button
+          type="primary"
+          onClick={onBackward}
+          disabled={historyIndex === 0}
+        >
           <Icon type="left" />
           Backward
         </Button>
-        <Button type="primary">
+        <Button type="primary" onClick={onForward}>
           Forward
           <Icon type="right" />
         </Button>
