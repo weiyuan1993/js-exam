@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
-import { message, Spin } from 'antd';
+import { message, Spin, Alert } from 'antd';
 
+import idbStorage from 'utils/idbStorage';
+import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
 import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
@@ -37,6 +39,7 @@ class ExamPage extends Component {
     console: [],
     isLoading: false,
     enableEnter: true,
+    isRecording: false,
   };
 
   roomId = this.props.match.params.roomId;
@@ -96,12 +99,12 @@ class ExamPage extends Component {
       });
       this.setState({ compiledCode, code: newCode });
       if (newCode === code) return;
-      await this.props.actions.updateRecordData({ id, newCode });
+      await this.props.actions.updateRecordData({ id, syncCode: newCode });
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
-      await this.props.actions.updateRecordData({ id, newCode });
+      await this.props.actions.updateRecordData({ id, syncCode: newCode });
     }
   };
 
@@ -145,6 +148,27 @@ class ExamPage extends Component {
     });
   };
 
+  handleStartRecording = () => {
+    this.setState({ isRecording: true });
+    startRecording();
+  };
+
+  handleStopRecording = () => {
+    this.setState({ isRecording: false });
+    stopRecording(blob => {
+      const { id } = this.props.record;
+
+      const mimeType = 'video/webm';
+      const fileExtension = 'webm';
+      const file = new File([blob], `${id}.${fileExtension}`, {
+        type: mimeType,
+      });
+      idbStorage.set(file.name, file).then(() => {
+        this.props.actions.updateRecordData({ id, videoUrl: file.name });
+      });
+    });
+  };
+
   render() {
     const {
       handleCodeChange,
@@ -154,10 +178,31 @@ class ExamPage extends Component {
       resetTape,
       resetConsole,
     } = this;
-    const { isLoading, enableEnter } = this.state;
-    const { room } = this.props;
+    const { isLoading, enableEnter, isRecording } = this.state;
+    const { room, record } = this.props;
     return (
       <div>
+        {/* eslint-disable camelcase, indent */
+        typeof RecordRTC_Extension === 'undefined' && (
+          <Alert
+            message={
+              <p>
+                Chrome extension is required:&nbsp;
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
+                >
+                  RecordRTC_Extension
+                </a>
+              </p>
+            }
+            type="warning"
+            closeText="Close"
+          />
+        )
+        /* eslint-enable */
+        }
         <Spin spinning={isLoading}>
           {enableEnter ? (
             <>
@@ -165,6 +210,10 @@ class ExamPage extends Component {
                 roomDescription={room.description}
                 intervieweeName={room.subjectId}
                 onReset={onReset}
+                onStartRecording={this.handleStartRecording}
+                onStopRecording={this.handleStopRecording}
+                isRecording={isRecording}
+                isProgressing={!!record.id}
               />
               <GetPageComponent
                 handleCodeChange={handleCodeChange}

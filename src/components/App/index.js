@@ -10,6 +10,7 @@ import PlaybackPage from 'pages/PlayBackPage';
 import AddAndEditPage from 'pages/QuestionPage/AddAndEditPage';
 import NotFoundPage from 'pages/NotFoundPage';
 import PrivateRoute from 'components/PrivateRoute';
+import ArchivePage from 'pages/ArchivePage';
 
 const { PUBLIC_URL } = process.env;
 
@@ -36,6 +37,11 @@ const App = () => (
       <PrivateRoute exact path="/admin/playback" component={PlaybackPage} />
       <PrivateRoute
         exact
+        path="/admin/playback"
+        component={PlaybackPage}
+      />
+      <PrivateRoute
+        exact
         path="/admin/add"
         render={props => <AddAndEditPage {...props} type="add" />}
       />
@@ -43,6 +49,11 @@ const App = () => (
         exact
         path="/admin/edit"
         render={props => <AddAndEditPage {...props} type="edit" />}
+      />
+      <PrivateRoute
+        exact
+        path="/admin/archive"
+        component={ArchivePage}
       />
       <Route exact path="/exam/:roomId" component={ExamPage} />
       <Route component={NotFoundPage} />
