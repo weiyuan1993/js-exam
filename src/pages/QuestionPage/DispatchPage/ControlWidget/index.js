@@ -11,24 +11,34 @@ const ControlWidget = ({
   onDispatchQuestion,
   onChangeCategory,
   onChangeQuestion,
-  questionList
+  questionList,
+  isHost,
+  setCommentBox,
+  enableComment,
 }) => (
   <div className={styles.control}>
-    <div>
-      <CategorySelector
-        onChange={onChangeCategory}
-        categoryIndex={categoryIndex}
-      />
-      <QuestionSelector
-        onChange={onChangeQuestion}
-        questionIndex={questionIndex}
-        list={questionList}
-      />
-      <Button type="primary" onClick={onDispatchQuestion}>
-        Dispatch
-        <Icon type="right" />
-      </Button>
-    </div>
+    {isHost ? (
+      <div>
+        <CategorySelector
+          onChange={onChangeCategory}
+          categoryIndex={categoryIndex}
+        />
+        <QuestionSelector
+          onChange={onChangeQuestion}
+          questionIndex={questionIndex}
+          list={questionList}
+        />
+        <Button type="primary" onClick={onDispatchQuestion}>
+          Dispatch
+          <Icon type="right" />
+        </Button>
+      </div>
+    ) : (
+      <></>
+    )}
+    <Button onClick={setCommentBox} disabled={enableComment}>
+      Comment
+    </Button>
   </div>
 );
 

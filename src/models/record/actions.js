@@ -1,8 +1,8 @@
 import { createRecord, updateRecord } from 'utils/record';
-import { bindRoomCurrentRecord } from 'utils/room';
+import { updateRoom } from 'utils/room';
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
-function createRecordData({ subjectId, roomId, ques }) {
+function createRecordData({ recordTestId, subjectId, roomId, ques }) {
   return async dispatch => {
     dispatch(
       graphqlActionHelper({
@@ -12,7 +12,12 @@ function createRecordData({ subjectId, roomId, ques }) {
       }),
     );
     try {
-      const result = await createRecord({ subjectId, roomId, ques });
+      const result = await createRecord({
+        recordTestId,
+        subjectId,
+        roomId,
+        ques,
+      });
       dispatch(
         graphqlActionHelper({
           method: 'CREATE',
@@ -22,7 +27,7 @@ function createRecordData({ subjectId, roomId, ques }) {
         }),
       );
       // bind record to room
-      await bindRoomCurrentRecord(roomId, result.id);
+      await updateRoom(roomId, { roomCurrentRecordId: result.id });
     } catch (error) {
       dispatch(
         graphqlActionHelper({
@@ -48,6 +53,7 @@ function updateRecordData(id, newCode) {
     );
     try {
       const result = await updateRecord(id, newCode);
+      console.log(result);
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',
@@ -56,7 +62,7 @@ function updateRecordData(id, newCode) {
           result,
         }),
       );
-      console.log(result)
+      console.log(result);
     } catch (error) {
       dispatch(
         graphqlActionHelper({

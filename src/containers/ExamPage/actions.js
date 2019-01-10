@@ -6,16 +6,12 @@ export function updateRecordData(data) {
     try {
       const params = {
         input: {
-          id: data.id,
-          syncCode: data.newCode,
           timeEnd: new Date(),
+          ...data,
         },
       };
-      const { data: recordResult } = await API.graphql(
-        graphqlOperation(mutations.updateRecord, params),
-      );
-      dispatch(createHistory({ historyData: data.newCode }));
-      console.log('#updateRecord', recordResult);
+      await API.graphql(graphqlOperation(mutations.updateRecord, params));
+      dispatch(createHistory({ historyData: data.syncCode }));
     } catch (error) {
       console.log(error);
     }
@@ -27,7 +23,7 @@ function createHistory(data) {
     const { id: recordId } = getState().record;
     try {
       const createTime = new Date();
-      const { data: historyResult } = await API.graphql(
+      await API.graphql(
         graphqlOperation(mutations.createHistory, {
           input: {
             time: createTime,
@@ -36,27 +32,6 @@ function createHistory(data) {
           },
         }),
       );
-      console.log('#createHistory', historyResult);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-}
-
-export function updateRecordVideoUrl({ id, videoUrl }) {
-  return async () => {
-    try {
-      const params = {
-        input: {
-          id,
-          videoUrl,
-        },
-      };
-      console.log(params);
-      const { data: recordResult } = await API.graphql(
-        graphqlOperation(mutations.updateRecord, params),
-      );
-      console.log('#updateRecordVideoUrl', recordResult);
     } catch (error) {
       console.log(error);
     }

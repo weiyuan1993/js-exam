@@ -8,3 +8,8 @@ export const CREATE_HISTORY = makeActionType(
 );
 
 export const REDUCER_KEY = 'ExamPage';
+
+export const QUESTION_TYPE = {
+  JAVASCRIPT: 'javascript',
+  REACT: 'react',
+};

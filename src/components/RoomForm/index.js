@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import reduxForm from 'redux-form/es/reduxForm';
 import Field from 'redux-form/es/Field';
 import Button from 'antd/lib/button';
-import RfInput from 'components/RfInput';
+import { RfInput } from 'components/RfInput';
 
 import style from './RoomForm.module.scss';
 

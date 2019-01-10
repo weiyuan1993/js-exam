@@ -6,6 +6,7 @@ import AwsConfig from 'aws-exports';
 import ExamPage from 'containers/ExamPage';
 import MainPage from 'pages/MainPage';
 import DispatchPage from 'pages/QuestionPage/DispatchPage';
+import PlaybackPage from 'pages/PlayBackPage';
 import AddAndEditPage from 'pages/QuestionPage/AddAndEditPage';
 import NotFoundPage from 'pages/NotFoundPage';
 import PrivateRoute from 'components/PrivateRoute';
@@ -31,6 +32,11 @@ const App = () => (
         exact
         path="/admin/dispatch/:roomId"
         component={DispatchPage}
+      />
+      <PrivateRoute
+        exact
+        path="/admin/playback"
+        component={PlaybackPage}
       />
       <PrivateRoute
         exact

@@ -9,11 +9,13 @@ import {
   subscribeOnCreateRecord,
   subscribeOnUpdateRecordByRecordId,
 } from 'utils/record';
+import createComment from 'utils/comment';
 
-import { getRoomInfo } from 'models/room/actions';
+import { getRoomInfo, setRoomHost } from 'models/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'models/question/actions';
 import { createRecordData, setCurrentRecord } from 'models/record/actions';
 
+import CommentBox from 'components/CommentBox';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
@@ -31,6 +33,7 @@ const MainView = args => {
 
 class Page extends Component {
   state = {
+    commentBoxVisible: false,
     categoryIndex: 0,
     questionIndex: 0,
     code: '',
@@ -39,13 +42,13 @@ class Page extends Component {
     tape: [],
     tags: [],
     isLoading: false,
-    isHost: false,
+    isHost: this.props.room.isHost,
   };
 
   async componentDidMount() {
-    this.setState({
-      isHost: Boolean(queryString.parse(this.props.location.search).host),
-    });
+    if (queryString.parse(this.props.location.search).host) {
+      this.props.actions.setRoomHost(true);
+    }
     await this.getRoom(this.props.match.params.roomId);
     console.log('DidMount', this.props);
   }
@@ -142,6 +145,7 @@ class Page extends Component {
         test: question.test,
       };
       await this.props.actions.createRecordData({
+        recordTestId: room.test.id,
         subjectId: room.subjectId,
         roomId: room.id,
         ques,
@@ -206,8 +210,33 @@ class Page extends Component {
     );
   };
 
+  onCreateComment = async data => {
+    const { id } = this.props.record;
+    const { author, content } = data.input;
+    const params = {
+      commentRecordId: id,
+      author,
+      content,
+    };
+    await createComment(params);
+    message.success('Add Comment successfully');
+    this.setCommentBox();
+  };
+
+  setCommentBox = () => {
+    const { commentBoxVisible } = this.state;
+    this.setState({
+      commentBoxVisible: !commentBoxVisible,
+    });
+  };
+
   render() {
-    const { isHost, categoryIndex, questionIndex } = this.state;
+    const {
+      isHost,
+      categoryIndex,
+      questionIndex,
+      commentBoxVisible,
+    } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -217,25 +246,27 @@ class Page extends Component {
       resetTape,
       onTagUpdate,
       setIntervieweeModal,
+      setCommentBox,
     } = this;
-    const { room, question } = this.props;
+    const { room, question, record } = this.props;
     return (
       <React.Fragment>
         {!room.loading && room.id ? (
           <>
-            {isHost && (
-              <ControlWidget
-                onDispatchQuestion={onDispatchQuestion}
-                onChangeCategory={onChangeCategory}
-                categoryIndex={categoryIndex}
-                questionIndex={questionIndex}
-                questionList={question.list}
-                onChangeQuestion={onChangeQuestion}
-                setIntervieweeModal={setIntervieweeModal}
-                intervieweeName={room.subjectId}
-                roomDescription={room.description}
-              />
-            )}
+            <ControlWidget
+              enableComment={!record.id}
+              setCommentBox={setCommentBox}
+              isHost={isHost}
+              onDispatchQuestion={onDispatchQuestion}
+              onChangeCategory={onChangeCategory}
+              categoryIndex={categoryIndex}
+              questionIndex={questionIndex}
+              questionList={question.list}
+              onChangeQuestion={onChangeQuestion}
+              setIntervieweeModal={setIntervieweeModal}
+              intervieweeName={room.subjectId}
+              roomDescription={room.description}
+            />
             <MainView
               onDispatchQuestion={onDispatchQuestion}
               onChangeCategory={onChangeCategory}
@@ -250,6 +281,11 @@ class Page extends Component {
         ) : (
           <span>{room.error ? <>Room Not Found</> : <>Loading...</>}</span>
         )}
+        <CommentBox
+          onSubmit={this.onCreateComment}
+          visible={commentBoxVisible}
+          setVisible={setCommentBox}
+        />
       </React.Fragment>
     );
   }
@@ -257,25 +293,21 @@ class Page extends Component {
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        room: state.room,
-        record: state.record,
-        code: state.code,
-        question: state.question,
-      };
-    },
-    dispatch => {
-      return {
-        actions: {
-          getRoomInfo: id => dispatch(getRoomInfo(id)),
-          fetchQuestionList: type => dispatch(fetchQuestionList(type)),
-          fetchQuestion: id => dispatch(fetchQuestion(id)),
-          createRecordData: params => dispatch(createRecordData(params)),
-          setCurrentRecord: recordData =>
-            dispatch(setCurrentRecord(recordData)),
-        },
-      };
-    },
+    state => ({
+      room: state.room,
+      record: state.record,
+      code: state.code,
+      question: state.question,
+    }),
+    dispatch => ({
+      actions: {
+        getRoomInfo: id => dispatch(getRoomInfo(id)),
+        fetchQuestionList: type => dispatch(fetchQuestionList(type)),
+        fetchQuestion: id => dispatch(fetchQuestion(id)),
+        createRecordData: params => dispatch(createRecordData(params)),
+        setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+        setRoomHost: isHost => dispatch(setRoomHost(isHost)),
+      },
+    }),
   )(Page),
 );

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { loadIndexedDB } from 'utils/indexedDbStorage';
+import idbStorage from 'utils/idbStorage';
 import styles from './RecordVideo.module.scss';
 
 class RecordVideo extends PureComponent {
@@ -14,6 +14,7 @@ class RecordVideo extends PureComponent {
 
   componentDidMount() {
     this.getFileUrl(this.props.fileName);
+    this.videoRef.current.currentTime = 9999999999;
   }
 
   componentDidUpdate(prevProps) {
@@ -23,16 +24,15 @@ class RecordVideo extends PureComponent {
   }
 
   getFileUrl = fileName => {
-    loadIndexedDB(fileName, file => {
+    if (!fileName) return;
+    idbStorage.get(fileName).then(file => {
       if (file) {
-        this.videoRef.current.currentTime = 9999999999;
         this.setState({ src: URL.createObjectURL(file) });
       }
     });
   };
 
   render() {
-    console.log(this.state.src);
     return (
       <video
         ref={this.videoRef}

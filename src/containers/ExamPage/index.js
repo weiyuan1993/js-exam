@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
 import { message, Spin, Alert } from 'antd';
 
-import { saveIndexedDB } from 'utils/indexedDbStorage';
+import idbStorage from 'utils/idbStorage';
 import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
@@ -16,7 +16,8 @@ import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';
 import JavaScriptPage from 'components/CodingView/JavaScript';
 
-import { updateRecordData, updateRecordVideoUrl } from './actions';
+import { updateRecordData } from './actions';
+import { QUESTION_TYPE } from './constants';
 
 const GetPageComponent = args => {
   switch (args.categoryIndex) {
@@ -63,19 +64,18 @@ class ExamPage extends Component {
     const { roomId } = this;
     const { record, room } = this.props;
     if (!room.password) {
-      const password = Math.random()
-        .toString(15)
-        .substr(2);
-      localStorage.examRoomPassword = password;
-      await this.props.actions.updateRoomInfo(roomId, password);
+      await this.props.actions.updateRoomInfo(roomId);
     } else if (localStorage.examRoomPassword === room.password) {
       if (record.ques) {
-        this.setState({
-          categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
-          code: record.syncCode || '',
-          test: record.ques.test || '',
-        });
-        this.handleCodeChange(record.syncCode);
+        this.setState(
+          {
+            categoryIndex:
+              record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
+            code: record.syncCode || '',
+            test: record.ques.test || '',
+          },
+          () => this.handleCodeChange(record.syncCode),
+        );
       }
     } else {
       message.error("You Can't Not Enter the Page");
@@ -86,7 +86,7 @@ class ExamPage extends Component {
   };
 
   handleCodeChange = async newCode => {
-    if (newCode === this.state.code) return;
+    const { code } = this.state;
     const { ques, id } = this.props.record;
     const fullCode = `${newCode} ${ques.test}`;
     try {
@@ -99,12 +99,13 @@ class ExamPage extends Component {
         plugins: ['proposal-object-rest-spread'],
       });
       this.setState({ compiledCode, code: newCode });
-      await this.props.actions.updateRecordData({ id, newCode });
+      if (newCode === code) return;
+      await this.props.actions.updateRecordData({ id, syncCode: newCode });
     } catch (e) {
       this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
-      await this.props.actions.updateRecordData({ id, newCode });
+      await this.props.actions.updateRecordData({ id, syncCode: newCode });
     }
   };
 
@@ -139,7 +140,7 @@ class ExamPage extends Component {
         this.props.actions.setCurrentRecord(data);
         // to receive new question dispatched
         this.setState({
-          categoryIndex: data.ques.type === 'javascript' ? 0 : 1,
+          categoryIndex: data.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
           code: ques.content,
           test: ques.test,
         });
@@ -163,13 +164,9 @@ class ExamPage extends Component {
       const file = new File([blob], `${id}.${fileExtension}`, {
         type: mimeType,
       });
-      saveIndexedDB(file.name, file, null, () => {
-        this.props.actions.updateRecordVideoUrl({ id, videoUrl: file.name });
+      idbStorage.set(file.name, file).then(() => {
+        this.props.actions.updateRecordData({ id, videoUrl: file.name });
       });
-
-      // diskStorage.StoreFile(file, () => {
-      //   this.props.actions.updateRecordVideoUrl({ id, videoUrl: file.name });
-      // });
     });
   };
 
@@ -252,7 +249,6 @@ const mapDispatchToProps = dispatch => ({
     updateRoomInfo: (id, password) => dispatch(updateRoomInfo(id, password)),
     updateRecordData: recordData => dispatch(updateRecordData(recordData)),
     setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
-    updateRecordVideoUrl: data => dispatch(updateRecordVideoUrl(data)),
   },
 });
 
