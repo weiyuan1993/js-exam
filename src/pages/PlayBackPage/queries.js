@@ -1,10 +1,10 @@
-export const getTest = `query GetTest($id: ID!) {
+export const getTest = `query GetTest($id: ID! $limit: Int) {
   getTest(id: $id) {
     id
     subjectId
     timeBegin
     timeEnd
-    records {
+    records(limit: $limit) {
       items {
         id
         subjectId

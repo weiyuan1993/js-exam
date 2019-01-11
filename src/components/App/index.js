@@ -34,12 +34,6 @@ const App = () => (
         path="/admin/dispatch/:roomId"
         component={DispatchPage}
       />
-      <PrivateRoute exact path="/admin/playback" component={PlaybackPage} />
-      <PrivateRoute
-        exact
-        path="/admin/playback"
-        component={PlaybackPage}
-      />
       <PrivateRoute
         exact
         path="/admin/add"
@@ -50,10 +44,11 @@ const App = () => (
         path="/admin/edit"
         render={props => <AddAndEditPage {...props} type="edit" />}
       />
+      <PrivateRoute exact path="/admin/archive" component={ArchivePage} />
       <PrivateRoute
         exact
-        path="/admin/archive"
-        component={ArchivePage}
+        path="/admin/archive/:testId"
+        component={PlaybackPage}
       />
       <Route exact path="/exam/:roomId" component={ExamPage} />
       <Route component={NotFoundPage} />

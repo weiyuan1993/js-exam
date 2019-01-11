@@ -9,6 +9,11 @@ import { getTest } from './queries';
 
 const TabPane = Tabs.TabPane;
 
+const sortRecords = records =>
+  records.sort(
+    (a, b) => new Date(a.timeBegin).getTime() - new Date(b.timeBegin).getTime(),
+  );
+
 class PlayBakPge extends React.PureComponent {
   render() {
     const { testId } = this.props.match.params;
@@ -26,7 +31,7 @@ class PlayBakPge extends React.PureComponent {
             return (
               <Tabs tabPosition="left" size="large">
                 <TabPane tab="Comment" key="1">
-                  <Playback testData={test} records={test.records.items} />
+                  <Playback testData={test} records={sortRecords(test.records.items)} />
                 </TabPane>
                 <TabPane tab="Video" key="2">Content of Tab 2</TabPane>
               </Tabs>
@@ -37,5 +42,6 @@ class PlayBakPge extends React.PureComponent {
     );
   };
 };
+
 
 export default PlayBakPge;

@@ -16,9 +16,15 @@ export function fetchRecordWithHistory(id) {
       const { data } = await API.graphql(
         graphqlOperation(queryRecordWithHistory, query),
       );
-      console.log('#getRecordWithHistory', data);
 
-      dispatch(setCurrentRecordWithHistory(data.getRecord));
+      const histories = data.getRecord.history.items;
+      const result = {
+        history: sortByTime(histories),
+        ...data.getRecord,
+      };
+
+      console.log('#getRecordWithHistory', result);
+      dispatch(setCurrentRecordWithHistory(result));
     } catch (e) {
       console.log(e);
     }
@@ -30,4 +36,10 @@ function setCurrentRecordWithHistory(result) {
     type: 'SET_CURRENT_RECORD_WITH_HISTORY',
     payload: result,
   };
+}
+
+function sortByTime(data) {
+  return data.sort(
+    (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
+  );
 }
