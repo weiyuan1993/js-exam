@@ -37,12 +37,6 @@ const TabWidget = ({
           Room
         </Link>
       </Menu.Item>
-      <Menu.Item key="playback">
-        <Link to="/admin/playback">
-          <Icon type="play-circle" theme="filled" />
-          PlayBack
-        </Link>
-      </Menu.Item>
       <Menu.Item key="add">
         <Link to="/admin/add">
           <Icon type="file-add" theme="filled" />
@@ -85,7 +79,7 @@ const TabWidget = ({
                 match.params.roomId
               }`;
               navigator.clipboard.writeText(link).then(() => {
-                message.success(`Successfully copied the link! -> ${link}`);
+                message.success(`Successfully copied the link!`);
               });
             }}
           >
@@ -108,17 +102,13 @@ const TabWidget = ({
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        room: state.room,
-      };
-    },
-    dispatch => {
-      return {
-        actions: {
-          deleteRoomAction: id => dispatch(deleteRoomAction(id)),
-        },
-      };
-    },
+    state => ({
+      room: state.room,
+    }),
+    dispatch => ({
+      actions: {
+        deleteRoomAction: id => dispatch(deleteRoomAction(id)),
+      },
+    }),
   )(TabWidget),
 );

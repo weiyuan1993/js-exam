@@ -7,10 +7,8 @@ import style from './TestList.module.scss';
 
 function getDateTime(string) {
   const T = new Date(string);
-  return (
-    (T.getMonth() + 1) + '-' + T.getDate() + '-' + T.getFullYear() + ' ' +
-    T.getHours() + ':' + T.getMinutes() + ':' + T.getSeconds()
-  );
+  return `${T.getMonth() +
+    1}-${T.getDate()}-${T.getFullYear()} ${T.getHours()}:${T.getMinutes()}:${T.getSeconds()}`;
 }
 
 const TestList = ({ data, isLoading }) => (
@@ -23,7 +21,7 @@ const TestList = ({ data, isLoading }) => (
           <a>Overview</a>,
           <Link
             to={{
-              pathname: '/admin/archive/${item.id}',
+              pathname: `/admin/archive/${item.id}`,
             }}
           >
             Playback

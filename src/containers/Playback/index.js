@@ -30,7 +30,9 @@ class Playback extends React.Component {
   };
 
   async componentDidMount() {
-    await this.onChangeRecord(0);
+    if (this.props.records.length > 0) {
+      await this.onChangeRecord(0);
+    }
   }
 
   handleCodeChange = newCode => {
@@ -64,6 +66,11 @@ class Playback extends React.Component {
         isLoading: false,
       });
       this.handleCodeChange(record.history.items[0].code);
+    } else {
+      this.setState({
+        isLoading: false,
+        code: '',
+      });
     }
   };
 
@@ -75,14 +82,15 @@ class Playback extends React.Component {
   onForward = async () => {
     const { historyIndex } = this.state;
     const { items, nextToken } = this.props.record.history;
+
     if (historyIndex < items.length - 1) {
-      console.log()
       this.setState({
         code: items[historyIndex + 1].code,
         historyIndex: historyIndex + 1,
       });
     }
-    if (historyIndex === items.length - 3 && nextToken) {
+
+    if (nextToken && historyIndex === items.length - 2) {
       await this.getNextSetHistory();
       console.log('getNextHistorySet');
     }
@@ -129,7 +137,7 @@ class Playback extends React.Component {
           onForward={onForward}
           onBackward={onBackward}
           recordList={records}
-          hasNextHistory={record.nextToken}
+          hasNextHistory={Boolean(record.nextToken)}
           historyAmount={record.history.items.length}
           historyIndex={historyIndex}
         />
