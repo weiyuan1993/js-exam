@@ -60,25 +60,7 @@ const subscribeOnUpdateRecordByRecordId = (id, callback) => {
   });
 };
 
-const listRecords = async subjectId => {
-  const query = `query {listRecords(filter:{subjectId:{eq:"${subjectId}"}}limit: 1000){
-    items {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-    }
-    nextToken
-  }
-  }
- `;
-  const { data } = await API.graphql(graphqlOperation(query));
-  return data.listRecords.items;
-};
-
 export {
-  listRecords,
   createRecord,
   updateRecord,
   subscribeOnCreateRecord,

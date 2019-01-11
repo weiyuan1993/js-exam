@@ -4,7 +4,13 @@ const initialState = {
   syncCode: '',
   timeBegin: null,
   timeEnd: null,
-  ques: null,
+  ques: {
+    name: '',
+    content: '',
+    test: '',
+    type: '',
+  },
+  history: { items: [], nextToken: null },
   videoUrl: '',
 };
 
@@ -46,6 +52,15 @@ const record = (state = initialState, action) => {
       return {
         ...state,
         ...initialState,
+      };
+    case 'SET_CURRENT_RECORD_WITH_HISTORY': // set current record from room
+      return {
+        ...state,
+        ...action.payload,
+        history: {
+          items: [...state.history.items, ...action.payload.history.items],
+          nextToken: action.payload.history.nextToken,
+        },
       };
     default:
       return state;

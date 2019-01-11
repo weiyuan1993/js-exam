@@ -34,6 +34,7 @@ const App = () => (
         path="/admin/dispatch/:roomId"
         component={DispatchPage}
       />
+      <PrivateRoute exact path="/admin/playback" component={PlaybackPage} />
       <PrivateRoute
         exact
         path="/admin/playback"
