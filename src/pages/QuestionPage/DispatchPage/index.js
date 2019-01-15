@@ -42,7 +42,6 @@ class Page extends Component {
     tape: [],
     tags: [],
     isLoading: false,
-    isHost: this.props.room.isHost,
   };
 
   async componentDidMount() {
@@ -231,12 +230,7 @@ class Page extends Component {
   };
 
   render() {
-    const {
-      isHost,
-      categoryIndex,
-      questionIndex,
-      commentBoxVisible,
-    } = this.state;
+    const { categoryIndex, questionIndex, commentBoxVisible } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -256,7 +250,7 @@ class Page extends Component {
             <ControlWidget
               enableComment={!record.id}
               setCommentBox={setCommentBox}
-              isHost={isHost}
+              isHost={room.isHost}
               onDispatchQuestion={onDispatchQuestion}
               onChangeCategory={onChangeCategory}
               categoryIndex={categoryIndex}

@@ -3,6 +3,7 @@ import { Button, Icon } from 'antd';
 import styles from './ControlWidget.module.scss';
 
 const ControlWidget = ({
+  onRunCode,
   onReset,
   roomDescription,
   intervieweeName,
@@ -29,6 +30,11 @@ const ControlWidget = ({
     >
       {isRecording ? 'Stop Recording' : 'Start Recording'}
     </Button>
+    <Button className={styles.button} type="primary" onClick={onRunCode}>
+      <Icon type="play-circle" />
+      Run code
+    </Button>
+
     <Button className={styles.button} type="danger" onClick={onReset}>
       Reset
     </Button>

@@ -84,10 +84,17 @@ class ExamPage extends Component {
     }
   };
 
-  handleCodeChange = async newCode => {
+  handleCodeChange = newCode => {
+    const { id } = this.props.record;
+    this.setState({ code: newCode }, () =>
+      this.props.actions.updateRecordData({ id, syncCode: newCode }),
+    );
+  };
+
+  onRunCode = () => {
     const { code } = this.state;
-    const { ques, id } = this.props.record;
-    const fullCode = `${newCode} ${ques.test}`;
+    const { ques } = this.props.record;
+    const fullCode = `${code} ${ques.test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -97,14 +104,10 @@ class ExamPage extends Component {
         ],
         plugins: ['proposal-object-rest-spread'],
       });
-      this.setState({ compiledCode, code: newCode });
-      if (newCode === code) return;
-      await this.props.actions.updateRecordData({ id, syncCode: newCode });
+      this.setState({ compiledCode });
     } catch (e) {
-      this.setState({ code: newCode });
       this.resetConsole();
       this.wrappedConsole.log(e);
-      await this.props.actions.updateRecordData({ id, syncCode: newCode });
     }
   };
 
@@ -173,6 +176,7 @@ class ExamPage extends Component {
     const {
       handleCodeChange,
       wrappedConsole,
+      onRunCode,
       onReset,
       addTape,
       resetTape,
@@ -209,6 +213,7 @@ class ExamPage extends Component {
               <ControlWidget
                 roomDescription={room.description}
                 intervieweeName={room.subjectId}
+                onRunCode={onRunCode}
                 onReset={onReset}
                 onStartRecording={this.handleStartRecording}
                 onStopRecording={this.handleStopRecording}
