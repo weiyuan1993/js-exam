@@ -11,6 +11,14 @@ export const getTest = `query GetTest($id: ID! $limit: Int) {
         syncCode
         timeBegin
         timeEnd
+        comment {
+          items {
+            author
+            time
+            content
+          }
+          nextToken
+        }
         videoUrl
         ques {
           type 

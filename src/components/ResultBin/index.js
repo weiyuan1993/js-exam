@@ -31,11 +31,9 @@ function compare(a, b) {
 }
 
 function getFullDate(dateOb) {
-  return (
-    (Months[dateOb.getMonth()]) + ' ' +
-    dateOb.getDate() + ', ' +
-    dateOb.getFullYear()
-  );
+  return `${Months[dateOb.getMonth()]} 
+    ${dateOb.getDate()}, 
+    ${dateOb.getFullYear()}`;
 }
 
 const ResultBin = ({ tests, isLoading }) => {
@@ -53,11 +51,11 @@ const ResultBin = ({ tests, isLoading }) => {
         currentT = new Date(test.timeBegin);
         currentD = getFullDate(currentT);
 
-        if (tests[i + 1] != undefined) {
+        if (tests[i + 1] !== undefined) {
           nextD = getFullDate(new Date(tests[i + 1].timeBegin));
         }
 
-        if (nextD !== currentD || tests[i + 1] == undefined) {
+        if (nextD !== currentD || tests[i + 1] === undefined) {
           const dataOfDay = tests.slice(head, i + 1);
           head = i + 1;
           return (

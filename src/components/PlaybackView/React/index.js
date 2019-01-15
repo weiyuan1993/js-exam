@@ -12,6 +12,7 @@ import GridItem from 'components/Grid/GridItem';
 import CodeWidget from 'components/Widgets/CodeWidget';
 import ResultWidget from 'components/Widgets/ResultWidget';
 import AnswerWidget from 'components/Widgets/AnswerWidget';
+import CommentArea from '../Comment';
 
 import debouncedRunCode from 'utils/runCode';
 
@@ -35,7 +36,7 @@ class ReactPage extends Component {
   }
 
   render() {
-    const { handleCodeChange, test, code, isLoading } = this.props;
+    const { handleCodeChange, test, code, isLoading, comments } = this.props;
     const layout = [
       {
         key: 'code',
@@ -112,7 +113,9 @@ class ReactPage extends Component {
             <GridItem key="result">
               <ResultWidget />
             </GridItem>
-            <GridItem key="comment">Comment</GridItem>
+            <GridItem key="comment">
+              <CommentArea comments={comments} />
+            </GridItem>
           </Grid>
         </Spin>
       </div>
