@@ -86,7 +86,7 @@ class Playback extends React.Component {
 
     if (historyIndex < items.length - 1) {
       this.setState({
-        code: items[historyIndex + 1].code,
+        code: items[historyIndex + 1].code || '',
         historyIndex: historyIndex + 1,
       });
     }
@@ -102,7 +102,7 @@ class Playback extends React.Component {
     const { items } = this.props.record.history;
     if (historyIndex > 0) {
       this.setState({
-        code: items[historyIndex - 1].code,
+        code: items[historyIndex - 1].code || '',
         historyIndex: historyIndex - 1,
       });
     }

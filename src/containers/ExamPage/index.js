@@ -86,9 +86,11 @@ class ExamPage extends Component {
 
   handleCodeChange = newCode => {
     const { id } = this.props.record;
-    this.setState({ code: newCode }, () =>
-      this.props.actions.updateRecordData({ id, syncCode: newCode }),
-    );
+    if (this.state.code !== newCode && newCode !== null) {
+      this.setState({ code: newCode }, () =>
+        this.props.actions.updateRecordData({ id, syncCode: newCode }),
+      );
+    }
   };
 
   onRunCode = () => {
