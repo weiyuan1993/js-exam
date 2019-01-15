@@ -28,6 +28,8 @@ class RecordVideo extends PureComponent {
     idbStorage.get(fileName).then(file => {
       if (file) {
         this.setState({ src: URL.createObjectURL(file) });
+        if (this.videoRef.current)
+          this.videoRef.current.currentTime = 9999999999;
       }
     });
   };

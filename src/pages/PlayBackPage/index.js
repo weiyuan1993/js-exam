@@ -37,7 +37,7 @@ class PlayBakPge extends React.PureComponent {
       videoUrl: recordList[index].videoUrl,
       recordIndex: index,
     });
-  }
+  };
 
   render() {
     const { testId } = this.props.match.params;
@@ -55,40 +55,30 @@ class PlayBakPge extends React.PureComponent {
             if (loading || !test) return <h3>Loading...</h3>;
             setRecord(test.records.items);
             return (
-              <>
-                <Tabs tabPosition="left" size="large">
-                  <TabPane tab="Comment" key="1">
-                    <Playback
-                      testData={test}
-                      records={sortRecords(test.records.items)}
-                    />
-                  </TabPane>
-                  <TabPane
-                    tab="Video"
-                    key="2"
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      paddingTop: '10px',
-                    }}
+              <Tabs defaultActiveKey="1" tabPosition="left" size="large">
+                <TabPane tab="Comment" key="1">
+                  <Playback
+                    testData={test}
+                    records={sortRecords(test.records.items)}
+                  />
+                </TabPane>
+                <TabPane tab="Video" key="2" style={{ paddingTop: '10px' }}>
+                  <Select
+                    onChange={onChange}
+                    defaultValue={recordIndex}
+                    value={recordIndex}
+                    style={{ minWidth: 200, width: 350, marginBottom: 20 }}
+                    size="large"
                   >
-                    <Select
-                      onChange={onChange}
-                      defaultValue={recordIndex}
-                      value={recordIndex}
-                      style={{ minWidth: 200, width: 350, marginBottom: 20 }}
-                      size="large"
-                    >
-                      {recordList.map((item, i) => (
-                        <Option key={item.id} value={i}>
-                          {item.ques ? item.ques.name : null}
-                        </Option>
-                      ))}
-                    </Select>
-                    <RecordVideo fileName={videoUrl} />
-                  </TabPane>
-                </Tabs>
-              </>
+                    {recordList.map((item, i) => (
+                      <Option key={item.id} value={i}>
+                        {item.ques ? item.ques.name : null}
+                      </Option>
+                    ))}
+                  </Select>
+                  <RecordVideo fileName={videoUrl} />
+                </TabPane>
+              </Tabs>
             );
           }}
         </Connect>
