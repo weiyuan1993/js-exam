@@ -70,6 +70,7 @@ class Playback extends React.Component {
     } else {
       this.setState({
         isLoading: false,
+        historyIndex: 0,
         code: '',
       });
     }
