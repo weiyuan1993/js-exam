@@ -36,6 +36,11 @@ const App = () => (
       />
       <PrivateRoute
         exact
+        path="/admin/playback/:testId"
+        component={PlaybackPage}
+      />
+      <PrivateRoute
+        exact
         path="/admin/add"
         render={props => <AddAndEditPage {...props} type="add" />}
       />
@@ -45,11 +50,6 @@ const App = () => (
         render={props => <AddAndEditPage {...props} type="edit" />}
       />
       <PrivateRoute exact path="/admin/archive" component={ArchivePage} />
-      <PrivateRoute
-        exact
-        path="/admin/archive/:testId"
-        component={PlaybackPage}
-      />
       <Route exact path="/exam/:roomId" component={ExamPage} />
       <Route component={NotFoundPage} />
     </Switch>

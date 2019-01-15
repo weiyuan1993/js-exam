@@ -15,6 +15,7 @@ import TapeWidget from 'components/Widgets/TapeWidget';
 import debouncedRunCode from 'utils/runCode';
 
 import styles from './JavaScriptPage.module.scss';
+import CommentArea from '../Comment';
 
 class JavaScriptPage extends Component {
   componentDidMount() {
@@ -37,7 +38,7 @@ class JavaScriptPage extends Component {
   }
 
   render() {
-    const { handleCodeChange, code, test, tape, isLoading } = this.props;
+    const { handleCodeChange, code, test, tape, isLoading, comments } = this.props;
     const layout = [
       {
         key: 'code',
@@ -100,7 +101,9 @@ class JavaScriptPage extends Component {
             <GridItem key="tape">
               <TapeWidget data={tape} />
             </GridItem>
-            <GridItem key="comment">Comment</GridItem>
+            <GridItem key="comment">
+              <CommentArea comments={comments} />
+            </GridItem>
           </Grid>
         </Spin>
       </div>

@@ -7,6 +7,14 @@ export const queryRecordWithHistory = `
     getRecord(id: $id) {
       id
       subjectId
+      comment {
+        items {
+          author
+          time
+          content
+        }
+        nextToken
+      }
       history(limit: $limit nextToken: $nextToken) {
         items {
           time

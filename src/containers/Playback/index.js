@@ -61,6 +61,7 @@ class Playback extends React.Component {
     const { record } = this.props;
     if (record.history.items.length > 0) {
       this.setState({
+        historyIndex: 0,
         categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
         recordIndex: index,
         isLoading: false,
@@ -146,6 +147,7 @@ class Playback extends React.Component {
           addTape={addTape}
           resetTape={resetTape}
           test={record.ques.test}
+          comments={record.comment}
           {...this.state}
         />
       </>
