@@ -148,7 +148,8 @@ class ExamPage extends Component {
           code: ques.content,
           test: ques.test,
         });
-        this.handleCodeChange(ques.content);
+        this.resetTape();
+        this.resetConsole();
       }
     });
   };

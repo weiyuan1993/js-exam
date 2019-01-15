@@ -74,6 +74,9 @@ class Page extends Component {
         this.setState({
           categoryIndex: type === 'javascript' ? 0 : 1,
           code: syncCode || content,
+          questionIndex: this.props.question.list.findIndex(
+            question => question.name === ques.name,
+          ),
           test,
         });
         this.handleCodeChange(syncCode || content);
