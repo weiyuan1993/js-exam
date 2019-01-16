@@ -7,13 +7,15 @@ const CodeWidget = ({
   handleCodeChange,
   data,
   mode,
-  theme
+  theme,
+  readOnly = false
 }) => (
   <AceEditor
     className={styles.code}
     showPrintMargin={false}
     mode={mode}
     theme={theme}
+    readOnly={readOnly}
     onChange={handleCodeChange}
     value={data}
     tabSize={2}
