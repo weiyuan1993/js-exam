@@ -49,10 +49,10 @@ const TabWidget = ({
           Edit
         </Link>
       </Menu.Item>
-      <Menu.Item key="archive">
-        <Link to="/admin/archive">
-          <Icon type="folder-open" theme="filled" />
-          Archive
+      <Menu.Item key="candidates">
+        <Link to="/admin/candidates">
+          <Icon type="user" />
+          Candidates
         </Link>
       </Menu.Item>
       {room.subjectId && (
