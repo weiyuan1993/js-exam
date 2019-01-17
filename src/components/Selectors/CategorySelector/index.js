@@ -1,9 +1,14 @@
 import React from 'react';
 import { Select } from 'antd';
 
-import { getCategories } from 'questions/index';
-
-const categories = getCategories();
+const categories = [
+  {
+    name: 'javascript',
+  },
+  {
+    name: 'react',
+  },
+];
 const { Option } = Select;
 
 const CategorySelector = ({ categoryIndex, onChange }) => (
