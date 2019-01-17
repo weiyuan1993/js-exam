@@ -16,7 +16,7 @@ const sortRecords = records =>
     (a, b) => new Date(a.timeBegin).getTime() - new Date(b.timeBegin).getTime(),
   );
 
-class PlayBakPge extends React.PureComponent {
+class PlaybackPage extends React.PureComponent {
   state = {
     recordIndex: 0,
     recordList: [],
@@ -75,11 +75,14 @@ class PlayBakPge extends React.PureComponent {
                     }}
                     size="large"
                   >
-                    {recordList.map((item, i) => (
-                      <Option key={item.id} value={i}>
-                        {item.ques ? item.ques.name : null}
-                      </Option>
-                    ))}
+                    {recordList.map(
+                      (item, i) =>
+                        item.videoUrl && (
+                          <Option key={item.id} value={i}>
+                            {item.ques ? item.ques.name : null}
+                          </Option>
+                        ),
+                    )}
                   </Select>
                   <RecordVideo fileName={videoUrl} />
                 </TabPane>
@@ -92,4 +95,4 @@ class PlayBakPge extends React.PureComponent {
   }
 }
 
-export default PlayBakPge;
+export default PlaybackPage;

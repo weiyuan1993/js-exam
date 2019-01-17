@@ -73,7 +73,10 @@ class ExamPage extends Component {
             code: record.syncCode || '',
             test: record.ques.test || '',
           },
-          () => this.handleCodeChange(record.syncCode),
+          () => {
+            this.handleCodeChange(record.syncCode);
+            this.onRunCode();
+          },
         );
       }
     } else {
@@ -85,8 +88,9 @@ class ExamPage extends Component {
   };
 
   handleCodeChange = newCode => {
+    const { code } = this.state;
     const { id } = this.props.record;
-    if (this.state.code !== newCode && newCode) {
+    if (newCode && newCode !== code) {
       this.setState({ code: newCode }, () =>
         this.props.actions.updateRecordData({ id, syncCode: newCode }),
       );
@@ -117,6 +121,8 @@ class ExamPage extends Component {
     const { content } = this.props.record.ques;
     this.setState({ code: content });
     this.handleCodeChange(content);
+    this.resetTape();
+    this.resetConsole();
   };
 
   addTape = newTape => {
@@ -150,6 +156,7 @@ class ExamPage extends Component {
         });
         this.resetTape();
         this.resetConsole();
+        this.onRunCode();
       }
     });
   };
