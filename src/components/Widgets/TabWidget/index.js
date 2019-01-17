@@ -37,18 +37,26 @@ const TabWidget = ({
           Room
         </Link>
       </Menu.Item>
-      <Menu.Item key="add">
-        <Link to="/admin/add">
-          <Icon type="file-add" theme="filled" />
-          Add
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="edit">
-        <Link to="/admin/edit">
-          <Icon type="edit" theme="filled" />
-          Edit
-        </Link>
-      </Menu.Item>
+      <SubMenu
+        title={
+          <div>
+            <Icon type="database" theme="filled" /> Library
+          </div>
+        }
+      >
+        <Menu.Item key="add">
+          <Link to="/admin/add">
+            <Icon type="file-add" theme="filled" />
+            Add
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="edit">
+          <Link to="/admin/edit">
+            <Icon type="edit" theme="filled" />
+            Edit
+          </Link>
+        </Menu.Item>
+      </SubMenu>
       <Menu.Item key="archive">
         <Link to="/admin/archive">
           <Icon type="folder-open" theme="filled" />
