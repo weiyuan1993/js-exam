@@ -14,11 +14,7 @@ class CommentBox extends React.Component {
         <Modal visible={visible} footer={false} onCancel={setVisible}>
           <h1>Write a Comment</h1>
           <form onSubmit={handleSubmit(data => onSubmit({ input: data }))}>
-            <Field
-              name="author"
-              component={RfInput}
-              placeholder="Interviewee Name"
-            />
+            <Field name="author" component={RfInput} placeholder="Your Name" />
             <Field
               name="content"
               component={RfTextArea}

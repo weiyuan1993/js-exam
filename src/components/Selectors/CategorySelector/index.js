@@ -10,6 +10,7 @@ const CategorySelector = ({ categoryIndex, onChange }) => (
   <Select
     onChange={onChange}
     defaultValue={categoryIndex}
+    value={categoryIndex}
     style={{ minWidth: 200 }}
   >
     {categories.map((q, i) => (

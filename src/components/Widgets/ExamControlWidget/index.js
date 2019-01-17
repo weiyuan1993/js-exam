@@ -15,13 +15,9 @@ const ControlWidget = ({
   <div className={styles.control}>
     <div className={styles.interviewee}>
       <Icon type="home" />
-      <p>
-        <span>{roomDescription || 'UNSET'}</span>
-      </p>
+      <p>{roomDescription || 'UNSET'}</p>
       <Icon type="user" />
-      <p>
-        <span>{intervieweeName || 'UNSET'}</span>
-      </p>
+      <p>{intervieweeName || 'UNSET'}</p>
     </div>
     <Button
       className={isProgressing ? styles.button : styles.hidden}
@@ -30,12 +26,12 @@ const ControlWidget = ({
     >
       {isRecording ? 'Stop Recording' : 'Start Recording'}
     </Button>
-    <Button className={styles.button} type="primary" onClick={onRunCode}>
+    <Button className={styles.button} type="default" onClick={onRunCode} ghost>
       <Icon type="play-circle" />
       Run code
     </Button>
 
-    <Button className={styles.button} type="danger" onClick={onReset}>
+    <Button className={styles.button} type="danger" onClick={onReset} ghost>
       Reset
     </Button>
   </div>
