@@ -5,7 +5,6 @@ import * as mutations from 'graphql/mutations';
 Amplify.configure(awsExportConfig);
 
 const createComment = async commentData => {
-  console.log(commentData, '***********************');
   const { author, content, commentRecordId } = commentData;
   const params = {
     input: {
@@ -18,7 +17,6 @@ const createComment = async commentData => {
   const { data } = await API.graphql(
     graphqlOperation(mutations.createComment, params),
   );
-  console.log(data, '####');
   return data.createComment;
 };
 

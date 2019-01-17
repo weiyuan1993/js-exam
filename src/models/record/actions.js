@@ -53,7 +53,6 @@ function updateRecordData(id, newCode) {
     );
     try {
       const result = await updateRecord(id, newCode);
-      console.log(result);
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',
@@ -62,7 +61,6 @@ function updateRecordData(id, newCode) {
           result,
         }),
       );
-      console.log(result);
     } catch (error) {
       dispatch(
         graphqlActionHelper({

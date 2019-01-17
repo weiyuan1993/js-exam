@@ -18,14 +18,11 @@ const MainPage = props => (
         query={graphqlOperation(listRooms, { limit: 1000 })}
         subscription={graphqlOperation(onCreateRoom)}
         onSubscriptionMsg={(prev, { onCreateRoom: createdRoom }) => {
-          console.log('subscription prev: ', prev);
-          console.log('subscription createdRoom: ', createdRoom);
           prev.listRooms.items.unshift(createdRoom);
           return prev;
         }}
       >
         {({ data: { listRooms: rooms }, loading, error }) => {
-          console.log('rooms: ', rooms);
           if (error) return <h3>Error</h3>;
           if (loading || !listRooms) return <RoomList isLoading={loading} />;
           return <RoomList rooms={rooms.items} isLoading={loading} />;

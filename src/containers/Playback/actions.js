@@ -23,7 +23,6 @@ export function fetchRecordWithHistory(id) {
         ...data.getRecord,
       };
 
-      console.log('#getRecordWithHistory', result);
       dispatch(setCurrentRecordWithHistory(result));
     } catch (e) {
       console.log(e);

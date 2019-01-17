@@ -50,7 +50,6 @@ export function createRoom(data) {
           },
         }),
       );
-      console.log(testData, roomData);
       dispatch(createRoomActions.success(roomData.createRoom));
     } catch (error) {
       dispatch(createRoomActions.failure(error));

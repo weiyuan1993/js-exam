@@ -49,7 +49,6 @@ class Page extends Component {
       this.props.actions.setRoomHost(true);
     }
     await this.getRoom(this.props.match.params.roomId);
-    console.log('DidMount', this.props);
   }
 
   // for observer
@@ -189,8 +188,6 @@ class Page extends Component {
           code: ques.content,
           test: ques.test,
         });
-        console.log('##onCreateRecord', data);
-
         this.subscribeRecordUpdate();
       }
     });
@@ -206,7 +203,6 @@ class Page extends Component {
           this.setState({
             code: syncCode || this.props.record.ques.content,
           });
-          console.log('#onRecordUpdate', data);
         }
       },
     );
