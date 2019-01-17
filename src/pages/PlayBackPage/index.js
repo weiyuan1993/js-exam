@@ -67,7 +67,12 @@ class PlaybackPage extends React.PureComponent {
                     onChange={onChange}
                     defaultValue={recordIndex}
                     value={recordIndex}
-                    style={{ minWidth: 200, width: 350, marginBottom: 20 }}
+                    style={{
+                      minWidth: 200,
+                      width: 350,
+                      marginBottom: 20,
+                      display: 'block',
+                    }}
                     size="large"
                   >
                     {recordList.map(

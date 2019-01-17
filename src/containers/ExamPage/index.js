@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
-import { message, Spin, Alert } from 'antd';
+import { message, Spin, Alert, Modal } from 'antd';
 
 import idbStorage from 'utils/idbStorage';
 import { startRecording, stopRecording } from 'utils/recordRTCHelper';
@@ -182,12 +182,23 @@ class ExamPage extends Component {
     });
   };
 
+  showResetAlert = () => {
+    const self = this;
+    Modal.confirm({
+      title: 'Do you want to reset your code?',
+      onOk() {
+        self.onReset();
+      },
+      onCancel() {},
+    });
+  };
+
   render() {
     const {
       handleCodeChange,
       wrappedConsole,
       onRunCode,
-      onReset,
+      showResetAlert,
       addTape,
       resetTape,
       resetConsole,
@@ -224,7 +235,7 @@ class ExamPage extends Component {
                 roomDescription={room.description}
                 intervieweeName={room.subjectId}
                 onRunCode={onRunCode}
-                onReset={onReset}
+                onReset={showResetAlert}
                 onStartRecording={this.handleStartRecording}
                 onStopRecording={this.handleStopRecording}
                 isRecording={isRecording}
@@ -233,7 +244,7 @@ class ExamPage extends Component {
               <GetPageComponent
                 handleCodeChange={handleCodeChange}
                 wrappedConsole={wrappedConsole}
-                onReset={onReset}
+                onReset={showResetAlert}
                 addTape={addTape}
                 resetTape={resetTape}
                 resetConsole={resetConsole}
