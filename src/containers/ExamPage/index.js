@@ -55,7 +55,18 @@ class ExamPage extends Component {
       isLoading: true,
     });
     await this.props.actions.getRoomInfo(this.roomId);
-    await this.passwordSetting();
+    if (this.props.room.description) {
+      await this.passwordSetting();
+      window.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.keyCode === 13) {
+          this.onRunCode();
+        }
+      });
+    } else {
+      this.setState({
+        enableEnter: false,
+      });
+    }
     this.setState({ isLoading: false });
   };
 
