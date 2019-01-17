@@ -38,6 +38,7 @@ const TabWidget = ({
         </Link>
       </Menu.Item>
       <SubMenu
+        key="library"
         title={
           <div>
             <Icon type="database" theme="filled" /> Library
@@ -57,10 +58,10 @@ const TabWidget = ({
           </Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="archive">
-        <Link to="/admin/archive">
-          <Icon type="folder-open" theme="filled" />
-          Archive
+      <Menu.Item key="candidates">
+        <Link to="/admin/candidates">
+          <Icon type="user" />
+          Candidates
         </Link>
       </Menu.Item>
       {room.subjectId && (
