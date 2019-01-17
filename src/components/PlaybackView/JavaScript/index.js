@@ -93,10 +93,11 @@ class JavaScriptPage extends Component {
                 data={code}
                 mode="javascript"
                 theme="monokai"
+                readOnly
               />
             </GridItem>
             <GridItem key="test">
-              <TestWidget data={test} readOnly={false} />
+              <TestWidget data={test} readOnly />
             </GridItem>
             <GridItem key="tape">
               <TapeWidget data={tape} />
