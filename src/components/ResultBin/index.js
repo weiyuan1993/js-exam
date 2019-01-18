@@ -58,7 +58,7 @@ const ResultBin = ({ tests, isLoading }) => {
           const dataOfDay = tests.slice(head, i + 1);
           head = i + 1;
           return (
-            <Panel header={currentD}>
+            <Panel header={currentD} key={test.id}>
               <TestList data={dataOfDay} />
             </Panel>
           );

@@ -37,22 +37,31 @@ const TabWidget = ({
           Room
         </Link>
       </Menu.Item>
-      <Menu.Item key="add">
-        <Link to="/admin/add">
-          <Icon type="file-add" theme="filled" />
-          Add
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="edit">
-        <Link to="/admin/edit">
-          <Icon type="edit" theme="filled" />
-          Edit
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="archive">
-        <Link to="/admin/archive">
-          <Icon type="folder-open" theme="filled" />
-          Archive
+      <SubMenu
+        key="library"
+        title={
+          <div>
+            <Icon type="database" theme="filled" /> Library
+          </div>
+        }
+      >
+        <Menu.Item key="add">
+          <Link to="/admin/add">
+            <Icon type="file-add" theme="filled" />
+            Add
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="edit">
+          <Link to="/admin/edit">
+            <Icon type="edit" theme="filled" />
+            Edit
+          </Link>
+        </Menu.Item>
+      </SubMenu>
+      <Menu.Item key="candidates">
+        <Link to="/admin/candidates">
+          <Icon type="user" />
+          Candidates
         </Link>
       </Menu.Item>
       {room.subjectId && (

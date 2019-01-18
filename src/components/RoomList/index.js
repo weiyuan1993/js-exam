@@ -22,12 +22,19 @@ const RoomList = ({ rooms, isLoading }) => (
         >
           <List.Item.Meta
             avatar={<Avatar icon="home" className={style.avatar} />}
-            title={<div className={style.roomName}>{room.description}</div>}
+            title={
+              <div>
+                <div className={style.roomNameHeader}>Room </div>
+                <div className={style.roomName}>{room.description}</div>
+              </div>
+            }
             description={
-              <div className={style.subjectId}>{room.subjectId}</div>
+              <div>
+                <div className={style.subjectIdHeader}>Candidate </div>
+                <div className={style.subjectId}>{room.subjectId}</div>
+              </div>
             }
           />
-          <div className={style.roomStatus}>{room.status}</div>
         </List.Item>
       </Link>
     )}

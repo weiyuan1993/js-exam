@@ -7,9 +7,9 @@ import { onCreateTest } from 'graphql/subscriptions';
 
 import ResultBin from 'components/ResultBin';
 
-import { Skeleton, Spin } from 'antd';
+import { Skeleton } from 'antd';
 
-const ArchivePage = () => (
+const CandidateListPage = () => (
   <Connect
     query={graphqlOperation(listTests, { limit: 1000 })}
     subscription={graphqlOperation(onCreateTest)}
@@ -28,4 +28,4 @@ const ArchivePage = () => (
   </Connect>
 );
 
-export default ArchivePage;
+export default CandidateListPage;

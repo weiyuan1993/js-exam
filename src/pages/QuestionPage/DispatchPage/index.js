@@ -60,33 +60,41 @@ class Page extends Component {
   };
 
   setRoomSetting = async () => {
-    await this.props.actions.fetchQuestionList(
-      this.state.categoryIndex === 0 ? 'javascript' : 'react',
-    );
-    this.props.actions.fetchQuestion(this.props.question.list[0].id);
     // when question has dispatched, append the record data
     if (this.props.record.id) {
       this.subscribeRecordUpdate();
       const { ques, syncCode } = this.props.record;
       if (ques) {
         const { type, content, test } = ques;
+        this.getQuestionList(type);
         this.setState({
           categoryIndex: type === 'javascript' ? 0 : 1,
           code: syncCode || content,
-          questionIndex: this.props.question.list.findIndex(
-            question => question.name === ques.name,
-          ),
           test,
         });
         this.handleCodeChange(syncCode || content);
+        // to show the question name
+        await this.getQuestionList(type);
+        this.setState({
+          questionIndex: this.props.question.list.findIndex(
+            question => question.name === ques.name,
+          ),
+        });
       } else {
+        await this.getQuestionList('javascript');
         await this.onChangeQuestion(0);
       }
     } else {
+      await this.getQuestionList('javascript');
       await this.onChangeQuestion(0);
     }
 
     this.subscribeCreateRecord();
+  };
+
+  getQuestionList = async category => {
+    await this.props.actions.fetchQuestionList(category);
+    this.props.actions.fetchQuestion(this.props.question.list[0].id);
   };
 
   onChangeCategory = async index => {
