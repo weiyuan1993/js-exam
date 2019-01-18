@@ -22,9 +22,11 @@ export function startRecording() {
 export function stopRecording(callback) {
   if (recorder !== null) {
     recorder.stopRecording(blob => {
-      console.log(blob.size, blob);
-      const url = URL.createObjectURL(blob);
-      callback(blob, url);
+      if (blob) {
+        console.log(blob.size, blob);
+        const url = URL.createObjectURL(blob);
+        callback(blob, url);
+      }
       recorder = null;
     });
   }
