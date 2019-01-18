@@ -24,7 +24,7 @@ function getRoomInfo(id) {
           result,
         }),
       );
-      if (result.currentRecord) {
+      if (result && result.currentRecord) {
         dispatch(setCurrentRecord(result.currentRecord));
       } else {
         dispatch(resetCurrentRecord());
