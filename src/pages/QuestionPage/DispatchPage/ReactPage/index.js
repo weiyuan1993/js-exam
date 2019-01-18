@@ -121,7 +121,7 @@ class ReactPage extends Component {
               <ResultWidget />
             </GridItem>
             <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} />
+              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
             </GridItem>
           </Grid>
         </Spin>

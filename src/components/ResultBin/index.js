@@ -25,9 +25,12 @@ const Months = [
 function compare(a, b) {
   const A = new Date(a.timeBegin);
   const B = new Date(b.timeBegin);
-  if (A.getTime() < B.getTime()) return -1;
-  if (A.getTime() > B.getTime()) return 1;
-  return 0;
+  let result;
+  if (A.getTime() < B.getTime()) result = -1;
+  if (A.getTime() > B.getTime()) result = 1;
+  else result = 0;
+
+  return result * -1;
 }
 
 function getFullDate(dateOb) {
