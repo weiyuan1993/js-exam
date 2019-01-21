@@ -1,9 +1,6 @@
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import awsExportConfig from 'aws-exports';
+import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
 import * as subscriptions from 'graphql/subscriptions';
-
-Amplify.configure(awsExportConfig);
 
 const getRoom = async roomId => {
   const query = `query {

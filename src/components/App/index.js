@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Amplify, { Auth } from 'aws-amplify';
-import AwsConfig from 'aws-exports';
+import { Auth } from 'aws-amplify';
 
 import ExamPage from 'containers/ExamPage';
 import MainPage from 'pages/MainPage';
@@ -15,7 +14,6 @@ import CandidateListPage from 'pages/CandidateListPage';
 const { PUBLIC_URL } = process.env;
 
 // for graphql test
-Amplify.configure(AwsConfig);
 Auth.signIn('Admin', 'Admin@123456')
   .then(user => {
     console.log(user);

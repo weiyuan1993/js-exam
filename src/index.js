@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import Amplify from 'aws-amplify';
+import awsConfig from 'aws-exports';
 // import { createStore, applyMiddleware, compose } from 'redux';
 // import thunk from 'redux-thunk';
 
@@ -12,6 +14,9 @@ import App from 'components/App';
 import configureStore from './configureStore';
 // import reducer from './reducers';
 import './index.css';
+
+// set amplify default config
+Amplify.configure(awsConfig);
 
 initErrorLogging();
 
