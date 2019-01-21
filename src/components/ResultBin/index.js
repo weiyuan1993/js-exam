@@ -45,7 +45,6 @@ const ResultBin = ({ tests, isLoading }) => {
   let nextD;
   let head = 0;
 
-  console.log('tests: ', tests);
   tests.sort(compare);
 
   return (

@@ -14,8 +14,6 @@ const CandidateListPage = () => (
     query={graphqlOperation(listTests, { limit: 1000 })}
     subscription={graphqlOperation(onCreateTest)}
     onSubscriptionMsg={(prev, { onCreateTest: createdTest }) => {
-      console.log('subscription prev: ', prev);
-      console.log('subscription createdRoom: ', createdTest);
       prev.listTests.items.unshift(createdTest);
       return prev;
     }}

@@ -94,7 +94,6 @@ class Playback extends React.Component {
 
     if (nextToken && historyIndex === items.length - 2) {
       await this.getNextSetHistory();
-      console.log('getNextHistorySet');
     }
   };
 

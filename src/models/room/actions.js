@@ -29,7 +29,6 @@ function getRoomInfo(id) {
       } else {
         dispatch(resetCurrentRecord());
       }
-      console.log('#get room', result);
     } catch (error) {
       dispatch(
         graphqlActionHelper({
