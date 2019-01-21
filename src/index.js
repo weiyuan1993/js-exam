@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import Amplify from 'aws-amplify';
+import Amplify, { Auth } from 'aws-amplify';
 import awsConfig from 'aws-exports';
 // import { createStore, applyMiddleware, compose } from 'redux';
 // import thunk from 'redux-thunk';
@@ -9,7 +9,7 @@ import awsConfig from 'aws-exports';
 import 'antd/dist/antd.css';
 import initErrorLogging from 'utils/sentry';
 
-import App from 'components/App';
+import route from './route';
 
 import configureStore from './configureStore';
 // import reducer from './reducers';
@@ -31,9 +31,14 @@ const MOUNT_NODE = document.getElementById('root');
 //   /* preloadedState, */ composeEnhancers(applyMiddleware(thunk))
 // );
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  MOUNT_NODE,
-);
+// for graphql test
+Auth.signIn('Admin', 'Admin@123456')
+  .then(user => {
+    console.log(user);
+    Auth.currentSession()
+      .then(data => console.log(data.getAccessToken().getJwtToken()))
+      .catch(error => console.log(error));
+  })
+  .catch(error => console.log(error));
+
+ReactDOM.render(<Provider store={store}>{route()}</Provider>, MOUNT_NODE);

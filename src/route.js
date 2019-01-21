@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
 
 import ExamPage from 'containers/ExamPage';
 import MainPage from 'pages/MainPage';
@@ -13,17 +12,7 @@ import CandidateListPage from 'pages/CandidateListPage';
 
 const { PUBLIC_URL } = process.env;
 
-// for graphql test
-Auth.signIn('Admin', 'Admin@123456')
-  .then(user => {
-    console.log(user);
-    Auth.currentSession()
-      .then(data => console.log(data.getAccessToken().getJwtToken()))
-      .catch(error => console.log(error));
-  })
-  .catch(error => console.log(error));
-
-const App = () => (
+export default () => (
   <Router basename={PUBLIC_URL}>
     <Switch>
       <PrivateRoute exact path="/" component={MainPage} />
@@ -57,5 +46,3 @@ const App = () => (
     </Switch>
   </Router>
 );
-
-export default App;
