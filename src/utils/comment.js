@@ -1,8 +1,5 @@
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import awsExportConfig from 'aws-exports';
+import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
-
-Amplify.configure(awsExportConfig);
 
 const createComment = async commentData => {
   const { author, content, commentRecordId } = commentData;
