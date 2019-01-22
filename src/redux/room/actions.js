@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
 import { getRoom, deleteRoom, updateRoom } from 'utils/room';
-import { setCurrentRecord, resetCurrentRecord } from 'models/record/actions';
+import { setCurrentRecord, resetCurrentRecord } from 'redux/record/actions';
 
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
