@@ -75,26 +75,30 @@ class ExamPage extends Component {
     const { record, room } = this.props;
     if (!room.password) {
       await this.props.actions.updateRoomInfo(roomId);
+      this.getRecordOnEntry(record);
     } else if (localStorage.examRoomPassword === room.password) {
-      if (record.ques) {
-        this.setState(
-          {
-            categoryIndex:
-              record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
-            code: record.syncCode || '',
-            test: record.ques.test || '',
-          },
-          () => {
-            this.handleCodeChange(record.syncCode);
-            this.onRunCode();
-          },
-        );
-      }
+      this.getRecordOnEntry(record);
     } else {
       message.error("You Can't Not Enter the Page");
       this.setState({
         enableEnter: false,
       });
+    }
+  };
+
+  getRecordOnEntry = record => {
+    if (record.ques) {
+      this.setState(
+        {
+          categoryIndex: record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
+          code: record.syncCode || '',
+          test: record.ques.test || '',
+        },
+        () => {
+          this.handleCodeChange(record.syncCode);
+          this.onRunCode();
+        },
+      );
     }
   };
 
@@ -200,7 +204,7 @@ class ExamPage extends Component {
       onOk() {
         self.onReset();
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
@@ -219,25 +223,25 @@ class ExamPage extends Component {
     return (
       <div>
         {/* eslint-disable camelcase, indent */
-        typeof RecordRTC_Extension === 'undefined' && (
-          <Alert
-            message={
-              <p>
-                Chrome extension is required:&nbsp;
+          typeof RecordRTC_Extension === 'undefined' && (
+            <Alert
+              message={
+                <p>
+                  Chrome extension is required:&nbsp;
                 <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
-                >
-                  RecordRTC_Extension
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
+                  >
+                    RecordRTC_Extension
                 </a>
-              </p>
-            }
-            type="warning"
-            closeText="Close"
-          />
-        )
-        /* eslint-enable */
+                </p>
+              }
+              type="warning"
+              closeText="Close"
+            />
+          )
+          /* eslint-enable */
         }
         <Spin spinning={isLoading}>
           {enableEnter ? (
@@ -264,10 +268,10 @@ class ExamPage extends Component {
               />
             </>
           ) : (
-            <div>
-              <h1>WRONG EXAM ROOM</h1>
-            </div>
-          )}
+              <div>
+                <h1>WRONG EXAM ROOM</h1>
+              </div>
+            )}
         </Spin>
       </div>
     );
