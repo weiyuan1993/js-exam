@@ -31,20 +31,30 @@ export function createRoom(data) {
     try {
       const roomNum = Math.floor(Math.random() * 98) + 1;
       const roomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-      const { data: resData } = await API.graphql(
-        graphqlOperation(mutations.createRoom, {
+      const createTime = new Date();
+      const { data: testData } = await API.graphql(
+        graphqlOperation(mutations.createTest, {
           input: {
-            description: roomChar + roomNum,
+            timeBegin: createTime,
             ...data.input,
           },
         }),
       );
-      await API.graphql(graphqlOperation(mutations.createTest, data));
-
-      dispatch(createRoomActions.success(resData.createRoom));
+      const { data: roomData } = await API.graphql(
+        graphqlOperation(mutations.createRoom, {
+          input: {
+            roomTestId: testData.createTest.id,
+            description: roomChar + roomNum,
+            createTime,
+            ...data.input,
+          },
+        }),
+      );
+      dispatch(createRoomActions.success(roomData.createRoom));
     } catch (error) {
       dispatch(createRoomActions.failure(error));
       message.error('Create room failed');
+      console.log(error);
     }
   };
 }

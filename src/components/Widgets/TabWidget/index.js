@@ -37,16 +37,31 @@ const TabWidget = ({
           Room
         </Link>
       </Menu.Item>
-      <Menu.Item key="add">
-        <Link to="/admin/add">
-          <Icon type="file-add" theme="filled" />
-          Add
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="edit">
-        <Link to="/admin/edit">
-          <Icon type="edit" theme="filled" />
-          Edit
+      <SubMenu
+        key="library"
+        title={
+          <div>
+            <Icon type="database" theme="filled" /> Library
+          </div>
+        }
+      >
+        <Menu.Item key="add">
+          <Link to="/admin/add">
+            <Icon type="file-add" theme="filled" />
+            Add
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="edit">
+          <Link to="/admin/edit">
+            <Icon type="edit" theme="filled" />
+            Edit
+          </Link>
+        </Menu.Item>
+      </SubMenu>
+      <Menu.Item key="candidates">
+        <Link to="/admin/candidates">
+          <Icon type="user" />
+          Candidates
         </Link>
       </Menu.Item>
       {room.subjectId && (
@@ -73,7 +88,7 @@ const TabWidget = ({
                 match.params.roomId
               }`;
               navigator.clipboard.writeText(link).then(() => {
-                message.success(`Successfully copied the link! -> ${link}`);
+                message.success(`Successfully copied the link!`);
               });
             }}
           >
@@ -96,17 +111,13 @@ const TabWidget = ({
 
 export default withRouter(
   connect(
-    state => {
-      return {
-        room: state.room,
-      };
-    },
-    dispatch => {
-      return {
-        actions: {
-          deleteRoomAction: id => dispatch(deleteRoomAction(id)),
-        },
-      };
-    },
+    state => ({
+      room: state.room,
+    }),
+    dispatch => ({
+      actions: {
+        deleteRoomAction: id => dispatch(deleteRoomAction(id)),
+      },
+    }),
   )(TabWidget),
 );

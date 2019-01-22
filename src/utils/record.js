@@ -1,13 +1,11 @@
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-import awsExportConfig from 'aws-exports';
+import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
 import * as subscriptions from 'graphql/subscriptions';
 
-Amplify.configure(awsExportConfig);
-
-const createRecord = async ({ subjectId, roomId, ques }) => {
+const createRecord = async ({ recordTestId, subjectId, roomId, ques }) => {
   const params = {
     input: {
+      recordTestId,
       subjectId,
       syncCode: ques.content,
       timeBegin: new Date(),
@@ -59,25 +57,7 @@ const subscribeOnUpdateRecordByRecordId = (id, callback) => {
   });
 };
 
-const listRecords = async subjectId => {
-  const query = `query {listRecords(filter:{subjectId:{eq:"${subjectId}"}}limit: 1000){
-    items {
-      id
-      subjectId
-      syncCode
-      timeBegin
-      timeEnd
-    }
-    nextToken
-  }
-  }
- `;
-  const { data } = await API.graphql(graphqlOperation(query));
-  return data.listRecords.items;
-};
-
 export {
-  listRecords,
   createRecord,
   updateRecord,
   subscribeOnCreateRecord,

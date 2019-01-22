@@ -2,7 +2,10 @@ import invariant from 'invariant';
 import { isEmpty, isFunction, isString, conformsTo } from 'lodash';
 
 import checkStore from './checkStore';
-import { DAEMON, ONCE_TILL_UNMOUNT, RESTART_ON_REMOUNT } from './constants';
+
+export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';
+export const DAEMON = '@@saga-injector/daemon';
+export const ONCE_TILL_UNMOUNT = '@@saga-injector/once-till-unmount';
 
 const allowedModes = [RESTART_ON_REMOUNT, DAEMON, ONCE_TILL_UNMOUNT];
 

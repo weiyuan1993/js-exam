@@ -22,6 +22,7 @@
     "babel-eslint": "9.0.0",
     "babel-loader": "8.0.4",
     "babel-plugin-lodash": "3.3.4",
+    "cross-env": "^5.2.0",
     "eslint": "5.6.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-airbnb-base": "13.1.0",
@@ -46,6 +47,7 @@
     "gh-pages": "^2.0.0",
     "history": "^4.7.2",
     "hoist-non-react-statics": "^3.2.1",
+    "idb": "^2.1.3",
     "invariant": "^2.2.4",
     "lodash": "4.17.11",
     "prop-types": "15.6.2",
@@ -64,8 +66,8 @@
     "tape-dom": "0.0.12"
   },
   "scripts": {
-    "start": "react-scripts --max_old_space_size=4096 start",
-    "build": "react-scripts --max_old_space_size=4096 build",
+    "start": "cross-env NODE_PATH=src/ react-scripts --max_old_space_size=4096 start",
+    "build": "cross-env NODE_PATH=src/ react-scripts --max_old_space_size=4096 build",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build"
   },

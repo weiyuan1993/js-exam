@@ -110,7 +110,7 @@ class JavaScriptPage extends Component {
               <TapeWidget data={tape} />
             </GridItem>
             <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} />
+              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
             </GridItem>
           </Grid>
         </Spin>
