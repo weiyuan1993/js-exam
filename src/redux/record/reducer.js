@@ -11,7 +11,6 @@ const initialState = {
     type: '',
   },
   history: { items: [], nextToken: null },
-  videoUrl: '',
 };
 
 const record = (state = initialState, action) => {

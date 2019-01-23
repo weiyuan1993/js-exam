@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
-import { message, Spin, Alert, Modal } from 'antd';
+import { message, Spin, Modal } from 'antd';
 
-import idbStorage from 'utils/idbStorage';
-import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
 import { getRoomInfo, updateRoomInfo } from 'redux/room/actions';
@@ -39,7 +37,6 @@ class ExamPage extends Component {
     console: [],
     isLoading: false,
     enableEnter: true,
-    isRecording: false,
   };
 
   roomId = this.props.match.params.roomId;
@@ -176,27 +173,6 @@ class ExamPage extends Component {
     });
   };
 
-  handleStartRecording = () => {
-    this.setState({ isRecording: true });
-    startRecording();
-  };
-
-  handleStopRecording = () => {
-    this.setState({ isRecording: false });
-    stopRecording(blob => {
-      const { id } = this.props.record;
-
-      const mimeType = 'video/webm';
-      const fileExtension = 'webm';
-      const file = new File([blob], `${id}.${fileExtension}`, {
-        type: mimeType,
-      });
-      idbStorage.set(file.name, file).then(() => {
-        this.props.actions.updateRecordData({ id, videoUrl: file.name });
-      });
-    });
-  };
-
   showResetAlert = () => {
     const self = this;
     Modal.confirm({
@@ -218,31 +194,10 @@ class ExamPage extends Component {
       resetTape,
       resetConsole,
     } = this;
-    const { isLoading, enableEnter, isRecording } = this.state;
-    const { room, record } = this.props;
+    const { isLoading, enableEnter } = this.state;
+    const { room } = this.props;
     return (
       <div>
-        {/* eslint-disable camelcase, indent */
-          typeof RecordRTC_Extension === 'undefined' && (
-            <Alert
-              message={
-                <p>
-                  Chrome extension is required:&nbsp;
-                <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
-                  >
-                    RecordRTC_Extension
-                </a>
-                </p>
-              }
-              type="warning"
-              closeText="Close"
-            />
-          )
-          /* eslint-enable */
-        }
         <Spin spinning={isLoading}>
           {enableEnter ? (
             <>
@@ -251,10 +206,6 @@ class ExamPage extends Component {
                 intervieweeName={room.subjectId}
                 onRunCode={onRunCode}
                 onReset={showResetAlert}
-                onStartRecording={this.handleStartRecording}
-                onStopRecording={this.handleStopRecording}
-                isRecording={isRecording}
-                isProgressing={!!record.id}
               />
               <GetPageComponent
                 handleCodeChange={handleCodeChange}
