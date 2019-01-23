@@ -11,9 +11,9 @@ import {
 } from 'utils/record';
 import createComment from 'utils/comment';
 
-import { getRoomInfo, setRoomHost } from 'models/room/actions';
-import { fetchQuestionList, fetchQuestion } from 'models/question/actions';
-import { createRecordData, setCurrentRecord } from 'models/record/actions';
+import { getRoomInfo, setRoomHost } from 'redux/room/actions';
+import { fetchQuestionList, fetchQuestion } from 'redux/question/actions';
+import { createRecordData, setCurrentRecord } from 'redux/record/actions';
 
 import CommentBox from 'components/CommentBox';
 import ReactPage from './ReactPage';

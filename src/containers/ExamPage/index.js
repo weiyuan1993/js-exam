@@ -9,8 +9,8 @@ import idbStorage from 'utils/idbStorage';
 import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
-import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
-import { setCurrentRecord } from 'models/record/actions';
+import { getRoomInfo, updateRoomInfo } from 'redux/room/actions';
+import { setCurrentRecord } from 'redux/record/actions';
 
 import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';

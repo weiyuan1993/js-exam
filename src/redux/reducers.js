@@ -5,10 +5,10 @@
 import { combineReducers } from 'redux';
 import formReducer from 'redux-form/es/reducer';
 
-import login from 'models/login/reducer';
-import room from 'models/room/reducer';
-import record from 'models/record/reducer';
-import question from 'models/question/reducer';
+import login from 'redux/login/reducer';
+import room from 'redux/room/reducer';
+import record from 'redux/record/reducer';
+import question from 'redux/question/reducer';
 
 /**
  * Merges the dynamically injected reducers

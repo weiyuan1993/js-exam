@@ -6,7 +6,7 @@ import PlaybackControlWidget from 'components/Widgets/PlaybackControlWidget';
 import ReactPage from 'components/PlaybackView/React';
 import JavaScriptPage from 'components/PlaybackView/JavaScript';
 
-import { resetCurrentRecord } from 'models/record/actions';
+import { resetCurrentRecord } from 'redux/record/actions';
 import { fetchRecordWithHistory } from './actions';
 const PlaybackView = args => {
   switch (args.categoryIndex) {
