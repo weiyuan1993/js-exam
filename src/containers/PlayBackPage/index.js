@@ -3,8 +3,8 @@ import { Connect } from 'aws-amplify-react';
 import { graphqlOperation } from 'aws-amplify';
 import { Tabs, Select } from 'antd';
 
-import Playback from 'containers/Playback';
-import RecordVideo from 'components/RecordVideo';
+import Comment from './Comment';
+import Video from './Video';
 
 import { getTest } from './queries';
 
@@ -57,7 +57,7 @@ class PlaybackPage extends React.PureComponent {
             return (
               <Tabs defaultActiveKey="1" tabPosition="left" size="large">
                 <TabPane tab="Comment" key="1">
-                  <Playback
+                  <Comment
                     testData={test}
                     records={sortRecords(test.records.items)}
                   />
@@ -84,7 +84,7 @@ class PlaybackPage extends React.PureComponent {
                         ),
                     )}
                   </Select>
-                  <RecordVideo fileName={videoUrl} />
+                  <Video fileName={videoUrl} />
                 </TabPane>
               </Tabs>
             );

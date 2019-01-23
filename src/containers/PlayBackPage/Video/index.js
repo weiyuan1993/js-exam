@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import idbStorage from 'utils/idbStorage';
-import styles from './RecordVideo.module.scss';
+import styles from './Video.module.scss';
 
 class RecordVideo extends PureComponent {
   constructor(props) {

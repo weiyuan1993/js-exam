@@ -2,13 +2,13 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import ExamPage from 'containers/ExamPage';
-import MainPage from 'pages/MainPage';
-import DispatchPage from 'pages/QuestionPage/DispatchPage';
-import PlaybackPage from 'pages/PlayBackPage';
-import AddAndEditPage from 'pages/QuestionPage/AddAndEditPage';
-import NotFoundPage from 'pages/NotFoundPage';
+import MainPage from 'containers/MainPage';
+import DispatchPage from 'containers/QuestionPage/DispatchPage';
+import PlaybackPage from 'containers/PlayBackPage';
+import AddAndEditPage from 'containers/QuestionPage/AddAndEditPage';
+import NotFoundPage from 'containers/NotFoundPage';
 import PrivateRoute from 'components/PrivateRoute';
-import CandidateListPage from 'pages/CandidateListPage';
+import CandidateListPage from 'containers/CandidateListPage';
 
 const { PUBLIC_URL } = process.env;
 

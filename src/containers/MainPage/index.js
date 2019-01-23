@@ -5,8 +5,8 @@ import { graphqlOperation } from 'aws-amplify';
 import { listRooms } from 'graphql/queries';
 import { onCreateRoom } from 'graphql/subscriptions';
 
-import RoomList from 'components/RoomList';
-import CreateRoomView from 'containers/CreateRoomView';
+import RoomList from './RoomList';
+import CreateRoomView from './CreateRoomView';
 
 import style from './MainPage.module.scss';
 
