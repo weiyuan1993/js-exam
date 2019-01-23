@@ -11,9 +11,9 @@ import initErrorLogging from 'utils/sentry';
 
 import route from './route';
 
-import configureStore from './configureStore';
+import configureStore from './redux/configureStore';
 // import reducer from './reducers';
-import './index.css';
+import './asset/css/index.css';
 
 // set amplify default config
 Amplify.configure(awsConfig);

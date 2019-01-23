@@ -12,7 +12,7 @@ import injectSaga from 'utils/injectSaga';
 import { Modal, Button, Input, message, Icon, Spin } from 'antd';
 import RoomForm from 'components/RoomForm';
 
-import { setRoomHost } from 'models/room/actions';
+import { setRoomHost } from 'redux/room/actions';
 import { REDUCER_KEY } from './constants';
 import { createRoom } from './actions';
 import reducer from './reducer';

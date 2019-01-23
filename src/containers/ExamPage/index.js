@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
-import { message, Spin, Alert, Modal } from 'antd';
+import { message, Spin, Modal } from 'antd';
 
-import idbStorage from 'utils/idbStorage';
-import { startRecording, stopRecording } from 'utils/recordRTCHelper';
 import createWrappedConsole from 'utils/consoleFactory';
 import { subscribeOnCreateRecord } from 'utils/record';
-import { getRoomInfo, updateRoomInfo } from 'models/room/actions';
-import { setCurrentRecord } from 'models/record/actions';
+import { getRoomInfo, updateRoomInfo } from 'redux/room/actions';
+import { setCurrentRecord } from 'redux/record/actions';
 
 import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';
@@ -39,7 +37,6 @@ class ExamPage extends Component {
     console: [],
     isLoading: false,
     enableEnter: true,
-    isRecording: false,
   };
 
   roomId = this.props.match.params.roomId;
@@ -75,26 +72,30 @@ class ExamPage extends Component {
     const { record, room } = this.props;
     if (!room.password) {
       await this.props.actions.updateRoomInfo(roomId);
+      this.getRecordOnEntry(record);
     } else if (localStorage.examRoomPassword === room.password) {
-      if (record.ques) {
-        this.setState(
-          {
-            categoryIndex:
-              record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
-            code: record.syncCode || '',
-            test: record.ques.test || '',
-          },
-          () => {
-            this.handleCodeChange(record.syncCode);
-            this.onRunCode();
-          },
-        );
-      }
+      this.getRecordOnEntry(record);
     } else {
       message.error("You Can't Not Enter the Page");
       this.setState({
         enableEnter: false,
       });
+    }
+  };
+
+  getRecordOnEntry = record => {
+    if (record.ques) {
+      this.setState(
+        {
+          categoryIndex: record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
+          code: record.syncCode || '',
+          test: record.ques.test || '',
+        },
+        () => {
+          this.handleCodeChange(record.syncCode);
+          this.onRunCode();
+        },
+      );
     }
   };
 
@@ -172,27 +173,6 @@ class ExamPage extends Component {
     });
   };
 
-  handleStartRecording = () => {
-    this.setState({ isRecording: true });
-    startRecording();
-  };
-
-  handleStopRecording = () => {
-    this.setState({ isRecording: false });
-    stopRecording(blob => {
-      const { id } = this.props.record;
-
-      const mimeType = 'video/webm';
-      const fileExtension = 'webm';
-      const file = new File([blob], `${id}.${fileExtension}`, {
-        type: mimeType,
-      });
-      idbStorage.set(file.name, file).then(() => {
-        this.props.actions.updateRecordData({ id, videoUrl: file.name });
-      });
-    });
-  };
-
   showResetAlert = () => {
     const self = this;
     Modal.confirm({
@@ -200,7 +180,7 @@ class ExamPage extends Component {
       onOk() {
         self.onReset();
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
@@ -214,31 +194,10 @@ class ExamPage extends Component {
       resetTape,
       resetConsole,
     } = this;
-    const { isLoading, enableEnter, isRecording } = this.state;
-    const { room, record } = this.props;
+    const { isLoading, enableEnter } = this.state;
+    const { room } = this.props;
     return (
       <div>
-        {/* eslint-disable camelcase, indent */
-        typeof RecordRTC_Extension === 'undefined' && (
-          <Alert
-            message={
-              <p>
-                Chrome extension is required:&nbsp;
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp"
-                >
-                  RecordRTC_Extension
-                </a>
-              </p>
-            }
-            type="warning"
-            closeText="Close"
-          />
-        )
-        /* eslint-enable */
-        }
         <Spin spinning={isLoading}>
           {enableEnter ? (
             <>
@@ -247,10 +206,6 @@ class ExamPage extends Component {
                 intervieweeName={room.subjectId}
                 onRunCode={onRunCode}
                 onReset={showResetAlert}
-                onStartRecording={this.handleStartRecording}
-                onStopRecording={this.handleStopRecording}
-                isRecording={isRecording}
-                isProgressing={!!record.id}
               />
               <GetPageComponent
                 handleCodeChange={handleCodeChange}
@@ -264,10 +219,10 @@ class ExamPage extends Component {
               />
             </>
           ) : (
-            <div>
-              <h1>WRONG EXAM ROOM</h1>
-            </div>
-          )}
+              <div>
+                <h1>WRONG EXAM ROOM</h1>
+              </div>
+            )}
         </Spin>
       </div>
     );

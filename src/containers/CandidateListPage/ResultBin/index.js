@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Collapse } from 'antd';
 
-import TestList from 'components/TestList';
+import TestList from '../TestList';
 
 const Panel = Collapse.Panel;
 
