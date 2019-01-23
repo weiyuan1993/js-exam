@@ -19,7 +19,6 @@ export const getTest = `query GetTest($id: ID! $limit: Int) {
           }
           nextToken
         }
-        videoUrl
         ques {
           type 
           content

@@ -37,7 +37,6 @@ const getRoom = async roomId => {
         syncCode
         timeBegin
         timeEnd
-        videoUrl
         ques {
           name
           type

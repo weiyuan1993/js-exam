@@ -1,5 +1,5 @@
 import React from 'react';
-import Border from 'components/Border';
+import Border from './Border';
 import styles from './Grid.module.scss';
 
 export default class Grid extends React.Component {

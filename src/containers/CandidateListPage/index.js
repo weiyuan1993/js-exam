@@ -5,7 +5,7 @@ import { graphqlOperation } from 'aws-amplify';
 import { listTests } from 'graphql/queries';
 import { onCreateTest } from 'graphql/subscriptions';
 
-import ResultBin from 'components/ResultBin';
+import ResultBin from './ResultBin';
 
 import { Skeleton } from 'antd';
 
