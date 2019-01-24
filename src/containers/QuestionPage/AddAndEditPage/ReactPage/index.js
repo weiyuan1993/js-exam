@@ -14,6 +14,7 @@ import ResultWidget from 'components/Widgets/ResultWidget';
 import AnswerWidget from 'components/Widgets/AnswerWidget';
 
 import debouncedRunCode from 'utils/runCode';
+import { REACT as GRID_LABEL_REACT } from 'utils/gridLabel';
 
 import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
@@ -102,7 +103,7 @@ class ReactPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_REACT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
@@ -110,7 +111,7 @@ class ReactPage extends Component {
                 theme="monokai"
               />
             </GridItem>
-            <GridItem key="test">
+            <GridItem key="test" label={GRID_LABEL_REACT.test}>
               <CodeWidget
                 handleCodeChange={handleTestChange}
                 data={test}
@@ -118,13 +119,13 @@ class ReactPage extends Component {
                 theme="textmate"
               />
             </GridItem>
-            <GridItem key="answer">
+            <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
               <AnswerWidget />
             </GridItem>
-            <GridItem key="result">
+            <GridItem key="result" label={GRID_LABEL_REACT.result}>
               <ResultWidget />
             </GridItem>
-            <GridItem key="tag">
+            <GridItem key="tag" label={GRID_LABEL_REACT.tag}>
               <TagWidget data={tags} onTagUpdate={onTagUpdate} />
             </GridItem>
           </Grid>
