@@ -9,7 +9,7 @@ class Border extends Component {
     this.resize = this.resize.bind(this);
     this.startResize = this.startResize.bind(this);
     this.endResize = this.endResize.bind(this);
-    this.borderSize = borderSize || 10;
+    this.borderSize = borderSize || 5;
     this.disabled = disabled;
     this.allowWidth = allowWidth;
     this.allowHeight = allowHeight;

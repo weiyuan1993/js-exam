@@ -13,6 +13,7 @@ import TestWidget from 'components/Widgets/TestWidget';
 import TapeWidget from 'components/Widgets/TapeWidget';
 
 import debouncedRunCode from 'utils/runCode';
+import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT  } from 'utils/gridLabel';
 
 import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
@@ -95,7 +96,7 @@ class JavaScriptPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_JAVASCRIPT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
@@ -103,13 +104,13 @@ class JavaScriptPage extends Component {
                 theme="monokai"
               />
             </GridItem>
-            <GridItem key="test">
+            <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
               <TestWidget data={test} readOnly={false} />
             </GridItem>
-            <GridItem key="tape">
+            <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
               <TapeWidget data={tape} />
             </GridItem>
-            <GridItem key="tag">
+            <GridItem key="tag" label={GRID_LABEL_JAVASCRIPT.tag}>
               <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
             </GridItem>
           </Grid>
