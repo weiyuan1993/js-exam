@@ -14,17 +14,15 @@ import ResultWidget from 'components/Widgets/ResultWidget';
 import AnswerWidget from 'components/Widgets/AnswerWidget';
 
 import debouncedRunCode from 'utils/runCode';
-import { REACT as GRID_LABEL_REACT  } from 'utils/gridLabel';
+import { REACT as GRID_LABEL_REACT } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
+import TagWidget from '../TagWidget';
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
-  controlHeight = 70;
-
-  async componentDidMount() {
-    const { compiledCode, addTape } = this.props;
-    debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
+  componentDidMount() {
+    const { compiledCode } = this.props;
+    debouncedRunCode({ code: compiledCode });
   }
 
   shouldComponentUpdate(nextProps) {
@@ -38,12 +36,13 @@ class ReactPage extends Component {
 
   render() {
     const {
-      onTagUpdate,
-      handleCodeChange,
+      isLoading,
       test,
       code,
       tags,
-      isLoading,
+      onTagUpdate,
+      handleCodeChange,
+      handleTestChange,
     } = this.props;
     const layout = [
       {
@@ -71,7 +70,7 @@ class ReactPage extends Component {
         x: 1,
         y: 0,
         width: window.innerWidth / 2,
-        height: (window.innerHeight - this.controlHeight) / 2 - 100,
+        height: window.innerHeight / 2 - 100,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
@@ -82,7 +81,7 @@ class ReactPage extends Component {
         x: 1,
         y: 1,
         width: window.innerWidth / 2,
-        height: (window.innerHeight - this.controlHeight) / 2 - 100,
+        height: window.innerHeight / 2 - 100,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
@@ -113,7 +112,12 @@ class ReactPage extends Component {
               />
             </GridItem>
             <GridItem key="test" label={GRID_LABEL_REACT.test}>
-              <CodeWidget data={test} mode="jsx" theme="textmate" />
+              <CodeWidget
+                handleCodeChange={handleTestChange}
+                data={test}
+                mode="jsx"
+                theme="textmate"
+              />
             </GridItem>
             <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
               <AnswerWidget />
@@ -122,7 +126,7 @@ class ReactPage extends Component {
               <ResultWidget />
             </GridItem>
             <GridItem key="tag" label={GRID_LABEL_REACT.tag}>
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
+              <TagWidget data={tags} onTagUpdate={onTagUpdate} />
             </GridItem>
           </Grid>
         </Spin>

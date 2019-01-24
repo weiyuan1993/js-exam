@@ -15,7 +15,7 @@ import TapeWidget from 'components/Widgets/TapeWidget';
 import debouncedRunCode from 'utils/runCode';
 import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
+import TagWidget from '../TagWidget';
 import styles from './JavaScriptPage.module.scss';
 
 class JavaScriptPage extends Component {

@@ -15,7 +15,6 @@ import TapeWidget from 'components/Widgets/TapeWidget';
 import debouncedRunCode from 'utils/runCode';
 import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT  } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
 
 class JavaScriptPage extends Component {
@@ -45,7 +44,6 @@ class JavaScriptPage extends Component {
       code,
       test,
       tape,
-      tags,
       isLoading,
     } = this.props;
     const layout = [
@@ -54,16 +52,16 @@ class JavaScriptPage extends Component {
         x: 0,
         y: 0,
         width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
+        height: window.innerHeight,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
-        maxHeight: 500,
+        maxHeight: window.innerHeight,
       },
       {
         key: 'test',
-        x: 0,
-        y: 1,
+        x: 1,
+        y: 0,
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
         minWidth: 100,
@@ -71,17 +69,6 @@ class JavaScriptPage extends Component {
       },
       {
         key: 'tape',
-        x: 1,
-        y: 0,
-        width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
-        minWidth: 100,
-        minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
-      },
-      {
-        key: 'tag',
         x: 1,
         y: 1,
         width: window.innerWidth / 2,
@@ -109,9 +96,6 @@ class JavaScriptPage extends Component {
             </GridItem>
             <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
               <TapeWidget data={tape} />
-            </GridItem>
-            <GridItem key="tag" label={GRID_LABEL_JAVASCRIPT.tag}>
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
             </GridItem>
           </Grid>
         </Spin>
