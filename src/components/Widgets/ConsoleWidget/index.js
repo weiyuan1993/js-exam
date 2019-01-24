@@ -7,7 +7,6 @@ const Text = ({ text }) => <>{ `${text}`.trim() === '' ? <br /> : `${text}`.trim
 
 const ConsoleWidget = ({ data, className }) => (
   <div className={`${styles['console-widget']} ${className || ''}`}>
-    Console:
     {
       data.map((text, index) => (
         <div className={styles.console} key={index}>
