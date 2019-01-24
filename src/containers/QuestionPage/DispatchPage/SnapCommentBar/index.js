@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import reduxForm from 'redux-form/es/reduxForm';
 import Field from 'redux-form/es/Field';
 import actions from 'redux-form/es/actions';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as subscriptions from 'graphql/subscriptions';
 import Button from 'antd/lib/button';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
@@ -14,7 +16,38 @@ import { RfInput } from 'components/RfInput';
 import { cannedMessages } from './constants';
 import style from './SnapCommentBar.module.scss';
 
+let subscription = null;
 class SnapCommentBar extends PureComponent {
+  componentDidMount() {
+    this.subscribeOnCreateHistory();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeOnCreateHistory();
+  }
+
+  subscribeOnCreateHistory = () => {
+    if (!subscription) {
+      console.log('subscribeOnCreateHistory');
+      subscription = API.graphql(
+        graphqlOperation(subscriptions.onCreateHistory),
+      ).subscribe({
+        next: ({ value }) => {
+          console.log(value.data.onCreateHistory);
+        },
+        error: error => {
+          console.error(error);
+        },
+      });
+    }
+  };
+
+  unsubscribeOnCreateHistory = () => {
+    console.log('unsubscribeOnCreateHistory');
+    subscription.unsubscribe();
+    subscription = null;
+  };
+
   handleClickTag = content => () => {
     if (content) this.props.onChangeSnapComment(content);
   };
