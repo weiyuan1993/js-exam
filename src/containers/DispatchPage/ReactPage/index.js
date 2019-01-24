@@ -97,10 +97,11 @@ class ReactPage extends Component {
                 data={code}
                 mode="jsx"
                 theme="monokai"
+                readOnly
               />
             </GridItem>
             <GridItem key="test" label={GRID_LABEL_REACT.test}>
-              <CodeWidget data={test} mode="jsx" theme="textmate" />
+              <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
             </GridItem>
             <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
               <AnswerWidget />

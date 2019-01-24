@@ -89,10 +89,11 @@ class JavaScriptPage extends Component {
                 data={code}
                 mode="javascript"
                 theme="monokai"
+                readOnly
               />
             </GridItem>
             <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
-              <TestWidget data={test} readOnly={false} />
+              <TestWidget data={test} readOnly />
             </GridItem>
             <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
               <TapeWidget data={tape} />
