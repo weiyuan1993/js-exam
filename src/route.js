@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import ExamPage from 'containers/ExamPage';
 import MainPage from 'containers/MainPage';
-import DispatchPage from 'containers/QuestionPage/DispatchPage';
+import DispatchPage from 'containers/DispatchPage';
 import PlaybackPage from 'containers/PlayBackPage';
-import AddAndEditPage from 'containers/QuestionPage/AddAndEditPage';
+import EditQuestionPage from 'containers/EditQuestionPage';
 import NotFoundPage from 'containers/NotFoundPage';
 import PrivateRoute from 'components/PrivateRoute';
 import CandidateListPage from 'containers/CandidateListPage';
@@ -29,12 +29,12 @@ export default () => (
       <PrivateRoute
         exact
         path="/admin/add"
-        render={props => <AddAndEditPage {...props} type="add" />}
+        render={props => <EditQuestionPage {...props} type="add" />}
       />
       <PrivateRoute
         exact
         path="/admin/edit"
-        render={props => <AddAndEditPage {...props} type="edit" />}
+        render={props => <EditQuestionPage {...props} type="edit" />}
       />
       <PrivateRoute
         exact

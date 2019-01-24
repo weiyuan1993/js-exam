@@ -16,7 +16,6 @@ import AnswerWidget from 'components/Widgets/AnswerWidget';
 import debouncedRunCode from 'utils/runCode';
 import { REACT as GRID_LABEL_REACT  } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
@@ -42,7 +41,6 @@ class ReactPage extends Component {
       handleCodeChange,
       test,
       code,
-      tags,
       isLoading,
     } = this.props;
     const layout = [
@@ -54,8 +52,8 @@ class ReactPage extends Component {
         height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
+        maxWidth: window.innerWidth,
+        maxHeight: window.innerHeight,
       },
       {
         key: 'test',
@@ -88,17 +86,6 @@ class ReactPage extends Component {
         maxWidth: 700,
         maxHeight: 500,
       },
-      {
-        key: 'tag',
-        x: 1,
-        y: 3,
-        width: window.innerWidth / 2,
-        height: 200,
-        minWidth: 100,
-        minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
-      },
     ];
     return (
       <div className={styles.app}>
@@ -120,9 +107,6 @@ class ReactPage extends Component {
             </GridItem>
             <GridItem key="result" label={GRID_LABEL_REACT.result}>
               <ResultWidget />
-            </GridItem>
-            <GridItem key="tag" label={GRID_LABEL_REACT.tag}>
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
             </GridItem>
           </Grid>
         </Spin>
