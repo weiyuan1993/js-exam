@@ -19,6 +19,7 @@ import CommentBox from 'components/CommentBox';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
+import SnapCommentBar from './SnapCommentBar';
 
 const MainView = args => {
   switch (args.categoryIndex) {
@@ -278,6 +279,7 @@ class Page extends Component {
               onTagUpdate={onTagUpdate}
               {...this.state}
             />
+            <SnapCommentBar />
           </>
         ) : (
           <span>{room.error ? <>Room Not Found</> : <>Loading...</>}</span>

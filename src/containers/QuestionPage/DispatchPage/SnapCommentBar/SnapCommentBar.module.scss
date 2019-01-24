@@ -1,0 +1,27 @@
+.root {
+  display: flex;
+  position: relative;
+  box-shadow: 0 -4px 5px -5px #333;
+  z-index: 10;
+}
+
+.input {
+  flex: 1;
+}
+
+.dropdownBtn {
+  margin: auto 0;
+}
+
+.actions {
+  width: 100%;
+}
+
+.tags {
+  margin: 4px;
+}
+
+.commentAction {
+  display: flex;
+  margin: 4px;
+}

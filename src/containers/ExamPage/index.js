@@ -180,7 +180,7 @@ class ExamPage extends Component {
       onOk() {
         self.onReset();
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
@@ -219,10 +219,10 @@ class ExamPage extends Component {
               />
             </>
           ) : (
-              <div>
-                <h1>WRONG EXAM ROOM</h1>
-              </div>
-            )}
+            <div>
+              <h1>WRONG EXAM ROOM</h1>
+            </div>
+          )}
         </Spin>
       </div>
     );
