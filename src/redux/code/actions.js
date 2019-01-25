@@ -1,12 +1,12 @@
-export function codeChange({ code, compileCode }) {
+export function changeCode({ rawCode, compiledCode }) {
   return {
     type: 'CODE_CHANGE',
-    code,
-    compileCode,
+    rawCode,
+    compiledCode,
   };
 }
 
-export function codeReset() {
+export function resetCode() {
   return {
     type: 'CODE_RESET',
   };

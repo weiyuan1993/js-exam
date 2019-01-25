@@ -1,5 +1,5 @@
 const initialState = {
-  code: '',
+  rawCode: '',
   compiledCode: '',
 };
 const code = (state = initialState, action) => {
@@ -7,13 +7,13 @@ const code = (state = initialState, action) => {
     case 'CODE_CHANGE':
       return {
         ...state,
-        code: action.code,
+        rawCode: action.rawCode || state.rawCode,
         compiledCode: action.compiledCode || state.compiledCode,
       };
     case 'CODE_RESET':
       return {
         ...state,
-        code: '',
+        rawCode: '',
       };
     default:
       return state;
