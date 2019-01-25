@@ -13,8 +13,8 @@ import TestWidget from 'components/Widgets/TestWidget';
 import TapeWidget from 'components/Widgets/TapeWidget';
 
 import debouncedRunCode from 'utils/runCode';
+import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT  } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
 import styles from './JavaScriptPage.module.scss';
 
 class JavaScriptPage extends Component {
@@ -44,7 +44,6 @@ class JavaScriptPage extends Component {
       code,
       test,
       tape,
-      tags,
       isLoading,
     } = this.props;
     const layout = [
@@ -53,16 +52,16 @@ class JavaScriptPage extends Component {
         x: 0,
         y: 0,
         width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
+        height: window.innerHeight,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
-        maxHeight: 500,
+        maxHeight: window.innerHeight,
       },
       {
         key: 'test',
-        x: 0,
-        y: 1,
+        x: 1,
+        y: 0,
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
         minWidth: 100,
@@ -70,17 +69,6 @@ class JavaScriptPage extends Component {
       },
       {
         key: 'tape',
-        x: 1,
-        y: 0,
-        width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
-        minWidth: 100,
-        minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
-      },
-      {
-        key: 'tag',
         x: 1,
         y: 1,
         width: window.innerWidth / 2,
@@ -95,7 +83,7 @@ class JavaScriptPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_JAVASCRIPT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
@@ -103,14 +91,11 @@ class JavaScriptPage extends Component {
                 theme="monokai"
               />
             </GridItem>
-            <GridItem key="test">
+            <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
               <TestWidget data={test} readOnly={false} />
             </GridItem>
-            <GridItem key="tape">
+            <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
               <TapeWidget data={tape} />
-            </GridItem>
-            <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
             </GridItem>
           </Grid>
         </Spin>

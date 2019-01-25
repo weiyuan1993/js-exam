@@ -15,6 +15,7 @@ import AnswerWidget from 'components/Widgets/AnswerWidget';
 import CommentArea from '../Comment';
 
 import debouncedRunCode from 'utils/runCode';
+import { REACT as GRID_LABEL_REACT } from 'utils/gridLabel';
 
 import styles from './ReactPage.module.scss';
 
@@ -96,7 +97,7 @@ class ReactPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_REACT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
@@ -105,16 +106,16 @@ class ReactPage extends Component {
                 readOnly
               />
             </GridItem>
-            <GridItem key="test">
+            <GridItem key="test" label={GRID_LABEL_REACT.test}>
               <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
             </GridItem>
-            <GridItem key="answer">
+            <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
               <AnswerWidget />
             </GridItem>
-            <GridItem key="result">
+            <GridItem key="result" label={GRID_LABEL_REACT.result}>
               <ResultWidget />
             </GridItem>
-            <GridItem key="comment">
+            <GridItem key="comment" label="comment">
               <CommentArea comments={comments} />
             </GridItem>
           </Grid>
