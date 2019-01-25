@@ -15,7 +15,6 @@ export const getRoom = `query GetRoom($id: ID!) {
     }
     subjectId
     description
-    status
     host {
       id
       name
@@ -35,7 +34,7 @@ export const getRoom = `query GetRoom($id: ID!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -59,7 +58,6 @@ export const listRooms = `query ListRooms(
       }
       subjectId
       description
-      status
       host {
         id
         name
@@ -79,7 +77,7 @@ export const listRooms = `query ListRooms(
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
     }
     nextToken
@@ -94,7 +92,6 @@ export const getJeUser = `query GetJeUser($id: ID!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -137,7 +134,6 @@ export const listJeUsers = `query ListJeUsers(
         id
         subjectId
         description
-        status
         createTime
         password
       }
@@ -231,7 +227,6 @@ export const getTest = `query GetTest($id: ID!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -262,7 +257,7 @@ export const getTest = `query GetTest($id: ID!) {
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
       nextToken
     }
@@ -283,7 +278,6 @@ export const listTests = `query ListTests(
         id
         subjectId
         description
-        status
         createTime
         password
       }
@@ -314,7 +308,7 @@ export const listTests = `query ListTests(
           syncCode
           timeBegin
           timeEnd
-          videoUrl
+          status
         }
         nextToken
       }
@@ -336,6 +330,7 @@ export const getRecord = `query GetRecord($id: ID!) {
     }
     timeBegin
     timeEnd
+    status
     comment {
       items {
         author
@@ -346,6 +341,7 @@ export const getRecord = `query GetRecord($id: ID!) {
     }
     history {
       items {
+        id
         time
         code
       }
@@ -357,7 +353,6 @@ export const getRecord = `query GetRecord($id: ID!) {
       content
       test
     }
-    videoUrl
     question {
       id
       type
@@ -378,7 +373,6 @@ export const getRecord = `query GetRecord($id: ID!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -401,6 +395,7 @@ export const listRecords = `query ListRecords(
       }
       timeBegin
       timeEnd
+      status
       comment {
         items {
           author
@@ -411,6 +406,7 @@ export const listRecords = `query ListRecords(
       }
       history {
         items {
+          id
           time
           code
         }
@@ -422,7 +418,6 @@ export const listRecords = `query ListRecords(
         content
         test
       }
-      videoUrl
       question {
         id
         type
@@ -443,7 +438,6 @@ export const listRecords = `query ListRecords(
         id
         subjectId
         description
-        status
         createTime
         password
       }
@@ -463,7 +457,7 @@ export const getComment = `query GetComment($id: ID!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -484,7 +478,7 @@ export const listComments = `query ListComments(
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
     }
     nextToken
@@ -493,6 +487,7 @@ export const listComments = `query ListComments(
 `;
 export const getHistory = `query GetHistory($id: ID!) {
   getHistory(id: $id) {
+    id
     time
     code
     record {
@@ -501,7 +496,16 @@ export const getHistory = `query GetHistory($id: ID!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
+    }
+    snapComments {
+      items {
+        id
+        time
+        author
+        content
+      }
+      nextToken
     }
   }
 }
@@ -513,6 +517,7 @@ export const listHistorys = `query ListHistorys(
 ) {
   listHistorys(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
+      id
       time
       code
       record {
@@ -521,7 +526,51 @@ export const listHistorys = `query ListHistorys(
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
+      }
+      snapComments {
+        items {
+          id
+          time
+          author
+          content
+        }
+        nextToken
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getSnapComment = `query GetSnapComment($id: ID!) {
+  getSnapComment(id: $id) {
+    id
+    time
+    author
+    content
+    history {
+      id
+      time
+      code
+    }
+  }
+}
+`;
+export const listSnapComments = `query ListSnapComments(
+  $filter: ModelSnapCommentFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listSnapComments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      time
+      author
+      content
+      history {
+        id
+        time
+        code
       }
     }
     nextToken
@@ -541,7 +590,7 @@ export const getQuestionSnapshot = `query GetQuestionSnapshot($id: ID!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -564,7 +613,7 @@ export const listQuestionSnapshots = `query ListQuestionSnapshots(
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
     }
     nextToken
