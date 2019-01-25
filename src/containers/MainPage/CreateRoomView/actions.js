@@ -36,7 +36,8 @@ export function createRoom(data) {
         graphqlOperation(mutations.createTest, {
           input: {
             timeBegin: createTime,
-            ...data.input,
+            status: 'open',
+            ...data,
           },
         }),
       );
@@ -46,7 +47,7 @@ export function createRoom(data) {
             roomTestId: testData.createTest.id,
             description: roomChar + roomNum,
             createTime,
-            ...data.input,
+            ...data,
           },
         }),
       );
