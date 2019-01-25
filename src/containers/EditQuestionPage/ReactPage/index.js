@@ -16,7 +16,7 @@ import AnswerWidget from 'components/Widgets/AnswerWidget';
 import debouncedRunCode from 'utils/runCode';
 import { REACT as GRID_LABEL_REACT } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
+import TagWidget from '../TagWidget';
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
