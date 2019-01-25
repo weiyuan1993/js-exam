@@ -1,8 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
-import { getRoom, deleteRoom, updateRoom } from 'utils/room';
 import { setCurrentRecord, resetCurrentRecord } from 'redux/record/actions';
-
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
 function getRoomInfo(id) {
@@ -15,7 +13,57 @@ function getRoomInfo(id) {
       }),
     );
     try {
-      const result = await getRoom(id);
+      const {
+        data: { getRoom: result },
+      } = await API.graphql(
+        graphqlOperation(
+          `query GetRoom($id: ID!) {
+        getRoom(id: $id) {
+          id
+          test {
+            id
+            subjectId
+            description
+            timeBegin
+            timeEnd
+            status
+            tags
+          }
+          subjectId
+          description
+          host {
+            id
+            name
+          }
+          createTime
+          password
+          users {
+            items {
+              id
+              name
+            }
+            nextToken
+          }
+          currentRecord {
+            id
+            subjectId
+            syncCode
+            timeBegin
+            timeEnd
+            status
+            ques {
+              name
+              type
+              content
+              test
+            }
+          }
+        }
+      }
+      `,
+          { id },
+        ),
+      );
       dispatch(
         graphqlActionHelper({
           method: 'FETCH',
@@ -57,7 +105,14 @@ function updateRoomInfo(id) {
         .toString(15)
         .substr(2);
       localStorage.examRoomPassword = password;
-      const result = await updateRoom(id, { password });
+      const result = await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id,
+            password,
+          },
+        }),
+      );
       dispatch(
         graphqlActionHelper({
           method: 'UPDATE',
@@ -98,7 +153,13 @@ function deleteRoomAction(id) {
           },
         }),
       );
-      await deleteRoom(id);
+      await API.graphql(
+        graphqlOperation(mutations.deleteRoom, {
+          input: {
+            id,
+          },
+        }),
+      );
       dispatch(
         graphqlActionHelper({
           method: 'DELETE',

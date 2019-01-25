@@ -1,5 +1,6 @@
+import { API, graphqlOperation } from 'aws-amplify';
+import * as mutations from 'graphql/mutations';
 import { createRecord, updateRecord } from 'utils/record';
-import { updateRoom } from 'utils/room';
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
 function createRecordData({ recordTestId, subjectId, roomId, ques }) {
@@ -27,7 +28,14 @@ function createRecordData({ recordTestId, subjectId, roomId, ques }) {
         }),
       );
       // bind record to room
-      await updateRoom(roomId, { roomCurrentRecordId: result.id });
+      await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id: roomId,
+            roomCurrentRecordId: result.id,
+          },
+        }),
+      );
     } catch (error) {
       dispatch(
         graphqlActionHelper({
