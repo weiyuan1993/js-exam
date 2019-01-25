@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import 'brace';
 import 'brace/mode/javascript';
@@ -18,10 +19,20 @@ import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT } from 'utils/gridLabel';
 import styles from './JavaScriptPage.module.scss';
 
 class JavaScriptPage extends Component {
-  constructor(props) {
-    super(props);
-    this.controlHeight = 70;
-  }
+  static propTypes = {
+    code: PropTypes.string,
+    compiledCode: PropTypes.string,
+    test: PropTypes.string,
+    consoleMsg: PropTypes.array,
+    tape: PropTypes.array,
+    handleCodeChange: PropTypes.func,
+    wrappedConsole: PropTypes.object,
+    resetConsole: PropTypes.func,
+    addTape: PropTypes.func,
+    resetTape: PropTypes.func,
+  };
+
+  controlHeight = 70;
 
   componentDidMount() {
     const { compiledCode, wrappedConsole, resetConsole, addTape } = this.props;
@@ -54,13 +65,7 @@ class JavaScriptPage extends Component {
   }
 
   render() {
-    const {
-      code,
-      test,
-      handleCodeChange,
-      tape,
-      console: _console,
-    } = this.props;
+    const { code, test, handleCodeChange, tape, consoleMsg } = this.props;
     const layout = [
       {
         key: 'code',
@@ -82,9 +87,6 @@ class JavaScriptPage extends Component {
         minWidth: 100,
         maxWidth: 700,
       },
-      // {
-      //   key: 'control', x: 1, y: 0, width: window.innerWidth / 2, height: this.controlHeight, static: true
-      // },
       {
         key: 'tape',
         x: 1,
@@ -126,7 +128,7 @@ class JavaScriptPage extends Component {
             <TapeWidget data={tape} />
           </GridItem>
           <GridItem key="console" label={GRID_LABEL_JAVASCRIPT.console}>
-            <ConsoleWidget data={_console} />
+            <ConsoleWidget data={consoleMsg} />
           </GridItem>
         </Grid>
       </div>

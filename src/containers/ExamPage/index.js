@@ -14,6 +14,10 @@ import ControlWidget from 'components/Widgets/ExamControlWidget';
 import ReactPage from 'components/CodingView/React';
 import JavaScriptPage from 'components/CodingView/JavaScript';
 
+import { changeCode, resetCode } from 'redux/code/actions';
+import { addConsole, resetConsole } from 'redux/consoleMsg/actions';
+import { addTape, resetTape } from 'redux/tape/actions';
+
 import { updateRecordData } from './actions';
 import { QUESTION_TYPE } from './constants';
 
@@ -31,18 +35,15 @@ const GetPageComponent = args => {
 class ExamPage extends Component {
   state = {
     categoryIndex: 0,
-    code: '',
-    compiledCode: '',
-    tape: [],
-    console: [],
     isLoading: false,
     enableEnter: true,
   };
 
   roomId = this.props.match.params.roomId;
 
+  wrappedConsole = createWrappedConsole(console, this.props.actions.addConsole);
+
   componentDidMount() {
-    this.wrappedConsole = createWrappedConsole(console, this.addConsole);
     this.getRoom();
     this.subscribeCreateRecord();
   }
@@ -85,34 +86,27 @@ class ExamPage extends Component {
 
   getRecordOnEntry = record => {
     if (record.ques) {
-      this.setState(
-        {
-          categoryIndex: record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
-          code: record.syncCode || '',
-          test: record.ques.test || '',
-        },
-        () => {
-          this.handleCodeChange(record.syncCode);
-          this.onRunCode();
-        },
-      );
+      this.setState({
+        categoryIndex: record.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
+      });
+      this.handleCodeChange(record.syncCode || '');
+      this.onRunCode();
     }
   };
 
   handleCodeChange = newCode => {
-    const { code } = this.state;
+    const { rawCode } = this.props.code;
     const { id } = this.props.record;
-    if (newCode && newCode !== code) {
-      this.setState({ code: newCode }, () =>
-        this.props.actions.updateRecordData({ id, syncCode: newCode }),
-      );
+    if (newCode && newCode !== rawCode) {
+      this.props.actions.changeCode({ rawCode: newCode });
+      this.props.actions.updateRecordData({ id, syncCode: newCode });
     }
   };
 
   onRunCode = () => {
-    const { code } = this.state;
+    const { rawCode } = this.props.code;
     const { ques } = this.props.record;
-    const fullCode = `${code} ${ques.test}`;
+    const fullCode = `${rawCode} ${ques.test}`;
     try {
       const { code: compiledCode } = transform(fullCode, {
         presets: [
@@ -122,37 +116,18 @@ class ExamPage extends Component {
         ],
         plugins: ['proposal-object-rest-spread'],
       });
-      this.setState({ compiledCode });
+      this.props.actions.changeCode({ compiledCode });
     } catch (e) {
-      this.resetConsole();
+      this.props.actions.resetConsole();
       this.wrappedConsole.log(e);
     }
   };
 
   onReset = () => {
     const { content } = this.props.record.ques;
-    this.setState({ code: content });
     this.handleCodeChange(content);
-    this.resetTape();
-    this.resetConsole();
-  };
-
-  addTape = newTape => {
-    const { tape } = this.state;
-    this.setState({ tape: [...tape, newTape] });
-  };
-
-  resetTape = () => {
-    this.setState({ tape: [] });
-  };
-
-  addConsole = (...args) => {
-    const { console: _console } = this.state;
-    this.setState({ console: [..._console, ...args] });
-  };
-
-  resetConsole = () => {
-    this.setState({ console: [] });
+    this.props.actions.resetTape();
+    this.props.actions.resetConsole();
   };
 
   subscribeCreateRecord = () => {
@@ -160,14 +135,12 @@ class ExamPage extends Component {
       const { room, ques } = data;
       if (room.id === this.props.room.id) {
         this.props.actions.setCurrentRecord(data);
-        // to receive new question dispatched
         this.setState({
           categoryIndex: data.ques.type === QUESTION_TYPE.JAVASCRIPT ? 0 : 1,
-          code: ques.content,
-          test: ques.test,
         });
-        this.resetTape();
-        this.resetConsole();
+        this.handleCodeChange(ques.content);
+        this.props.actions.resetTape();
+        this.props.actions.resetConsole();
         this.onRunCode();
       }
     });
@@ -180,7 +153,7 @@ class ExamPage extends Component {
       onOk() {
         self.onReset();
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
@@ -190,12 +163,11 @@ class ExamPage extends Component {
       wrappedConsole,
       onRunCode,
       showResetAlert,
-      addTape,
-      resetTape,
-      resetConsole,
     } = this;
-    const { isLoading, enableEnter } = this.state;
-    const { room } = this.props;
+    const { categoryIndex, isLoading, enableEnter } = this.state;
+    const { room, record, code, consoleMsg, tape } = this.props;
+    const { addTape, resetTape, resetConsole } = this.props.actions;
+
     return (
       <div>
         <Spin spinning={isLoading}>
@@ -208,21 +180,24 @@ class ExamPage extends Component {
                 onReset={showResetAlert}
               />
               <GetPageComponent
+                categoryIndex={categoryIndex}
                 handleCodeChange={handleCodeChange}
                 wrappedConsole={wrappedConsole}
-                onReset={showResetAlert}
                 addTape={addTape}
                 resetTape={resetTape}
                 resetConsole={resetConsole}
-                {...this.state}
-                {...this.props}
+                code={code.rawCode}
+                compiledCode={code.compiledCode}
+                consoleMsg={consoleMsg}
+                tape={tape}
+                test={record.ques && record.ques.test}
               />
             </>
           ) : (
-              <div>
-                <h1>WRONG EXAM ROOM</h1>
-              </div>
-            )}
+            <div>
+              <h1>WRONG EXAM ROOM</h1>
+            </div>
+          )}
         </Spin>
       </div>
     );
@@ -232,6 +207,9 @@ class ExamPage extends Component {
 ExamPage.propTypes = {
   room: PropTypes.object,
   record: PropTypes.object,
+  code: PropTypes.object,
+  consoleMsg: PropTypes.array,
+  tape: PropTypes.array,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -240,12 +218,21 @@ const mapDispatchToProps = dispatch => ({
     updateRoomInfo: (id, password) => dispatch(updateRoomInfo(id, password)),
     updateRecordData: recordData => dispatch(updateRecordData(recordData)),
     setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
+    changeCode: code => dispatch(changeCode(code)),
+    resetCode: () => dispatch(resetCode()),
+    addConsole: (...args) => dispatch(addConsole(...args)),
+    resetConsole: () => dispatch(resetConsole()),
+    addTape: data => dispatch(addTape(data)),
+    resetTape: () => dispatch(resetTape()),
   },
 });
 
 const mapStateToProps = state => ({
   room: state.room,
   record: state.record,
+  code: state.code,
+  consoleMsg: state.consoleMsg,
+  tape: state.tape,
 });
 
 const withConnect = connect(

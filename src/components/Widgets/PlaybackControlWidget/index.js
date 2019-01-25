@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PageControlBar from 'components/PageControlBar';
 import RecordSelector from 'components/Selectors/RecordSelector';
 
 import { Button, Icon, Input } from 'antd';
@@ -36,7 +37,7 @@ const PlaybackControlWidget = ({
   hasNextHistory,
   historyAmount,
 }) => (
-  <div className={styles.control}>
+  <PageControlBar>
     <div className={styles.info}>
       <span className={styles.icon} id={styles.date}>
         <Icon className={styles.icon} type="calendar" />
@@ -47,41 +48,42 @@ const PlaybackControlWidget = ({
         {interviewee}
       </span>
     </div>
-    <div />
-    <InputGroup compact style={{ width: 'auto' }}>
-      <RecordSelector
-        onChange={onChangeRecord}
-        recordIndex={recordIndex}
-        list={recordList}
-      />
-      <Button.Group>
-        <Button
-          type="primary"
-          onClick={onBackward}
-          disabled={historyIndex === 0}
-        >
-          <Icon type="left" />
-          Backward
-        </Button>
-        <Button
-          type="primary"
-          onClick={onForward}
-          disabled={
-            historyAmount === 0 ||
-            (historyIndex === historyAmount - 1 && !hasNextHistory)
-          }
-        >
-          Forward
-          <Icon type="right" />
-        </Button>
-      </Button.Group>
-    </InputGroup>
-    <p style={{ margin: '0' }}>
-      {historyAmount === 0
-        ? 'No history'
-        : ` ${historyIndex + 1}/ ${historyAmount}`}
-    </p>
-  </div>
+    <div>
+      <InputGroup compact style={{ width: 'auto', display: 'inline-block' }}>
+        <RecordSelector
+          onChange={onChangeRecord}
+          recordIndex={recordIndex}
+          list={recordList}
+        />
+        <Button.Group>
+          <Button
+            type="primary"
+            onClick={onBackward}
+            disabled={historyIndex === 0}
+          >
+            <Icon type="left" />
+            Backward
+          </Button>
+          <Button
+            type="primary"
+            onClick={onForward}
+            disabled={
+              historyAmount === 0 ||
+              (historyIndex === historyAmount - 1 && !hasNextHistory)
+            }
+          >
+            Forward
+            <Icon type="right" />
+          </Button>
+        </Button.Group>
+      </InputGroup>
+      <span style={{ margin: '0', 'marginLeft': '15px', position: 'relative', top: 5 }}>
+        {historyAmount === 0
+          ? 'No history'
+          : ` ${historyIndex + 1}/ ${historyAmount}`}
+      </span>
+    </div>
+  </PageControlBar>
 );
 PlaybackControlWidget.propTypes = {
   testDate: PropTypes.string,

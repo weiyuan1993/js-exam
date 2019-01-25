@@ -15,7 +15,6 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
     }
     subjectId
     description
-    status
     host {
       id
       name
@@ -35,7 +34,7 @@ export const createRoom = `mutation CreateRoom($input: CreateRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -54,7 +53,6 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
     }
     subjectId
     description
-    status
     host {
       id
       name
@@ -74,7 +72,7 @@ export const updateRoom = `mutation UpdateRoom($input: UpdateRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -93,7 +91,6 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
     }
     subjectId
     description
-    status
     host {
       id
       name
@@ -113,7 +110,7 @@ export const deleteRoom = `mutation DeleteRoom($input: DeleteRoomInput!) {
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -126,7 +123,6 @@ export const createJeUser = `mutation CreateJeUser($input: CreateJEUserInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -164,7 +160,6 @@ export const updateJeUser = `mutation UpdateJeUser($input: UpdateJEUserInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -202,7 +197,6 @@ export const deleteJeUser = `mutation DeleteJeUser($input: DeleteJEUserInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -311,7 +305,6 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -342,7 +335,7 @@ export const createTest = `mutation CreateTest($input: CreateTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
       nextToken
     }
@@ -358,7 +351,6 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -389,7 +381,7 @@ export const updateTest = `mutation UpdateTest($input: UpdateTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
       nextToken
     }
@@ -405,7 +397,6 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -436,7 +427,7 @@ export const deleteTest = `mutation DeleteTest($input: DeleteTestInput!) {
         syncCode
         timeBegin
         timeEnd
-        videoUrl
+        status
       }
       nextToken
     }
@@ -456,6 +447,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     }
     timeBegin
     timeEnd
+    status
     comment {
       items {
         author
@@ -466,6 +458,7 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
     }
     history {
       items {
+        id
         time
         code
       }
@@ -477,7 +470,6 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       content
       test
     }
-    videoUrl
     question {
       id
       type
@@ -498,7 +490,6 @@ export const createRecord = `mutation CreateRecord($input: CreateRecordInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -516,6 +507,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     }
     timeBegin
     timeEnd
+    status
     comment {
       items {
         author
@@ -526,6 +518,7 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
     }
     history {
       items {
+        id
         time
         code
       }
@@ -537,7 +530,6 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       content
       test
     }
-    videoUrl
     question {
       id
       type
@@ -558,7 +550,6 @@ export const updateRecord = `mutation UpdateRecord($input: UpdateRecordInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -576,6 +567,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     }
     timeBegin
     timeEnd
+    status
     comment {
       items {
         author
@@ -586,6 +578,7 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
     }
     history {
       items {
+        id
         time
         code
       }
@@ -597,7 +590,6 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       content
       test
     }
-    videoUrl
     question {
       id
       type
@@ -618,7 +610,6 @@ export const deleteRecord = `mutation DeleteRecord($input: DeleteRecordInput!) {
       id
       subjectId
       description
-      status
       createTime
       password
     }
@@ -636,7 +627,7 @@ export const createComment = `mutation CreateComment($input: CreateCommentInput!
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -652,7 +643,7 @@ export const updateComment = `mutation UpdateComment($input: UpdateCommentInput!
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -668,13 +659,14 @@ export const deleteComment = `mutation DeleteComment($input: DeleteCommentInput!
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
 `;
 export const createHistory = `mutation CreateHistory($input: CreateHistoryInput!) {
   createHistory(input: $input) {
+    id
     time
     code
     record {
@@ -683,13 +675,23 @@ export const createHistory = `mutation CreateHistory($input: CreateHistoryInput!
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
+    }
+    snapComments {
+      items {
+        id
+        time
+        author
+        content
+      }
+      nextToken
     }
   }
 }
 `;
 export const updateHistory = `mutation UpdateHistory($input: UpdateHistoryInput!) {
   updateHistory(input: $input) {
+    id
     time
     code
     record {
@@ -698,13 +700,23 @@ export const updateHistory = `mutation UpdateHistory($input: UpdateHistoryInput!
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
+    }
+    snapComments {
+      items {
+        id
+        time
+        author
+        content
+      }
+      nextToken
     }
   }
 }
 `;
 export const deleteHistory = `mutation DeleteHistory($input: DeleteHistoryInput!) {
   deleteHistory(input: $input) {
+    id
     time
     code
     record {
@@ -713,7 +725,58 @@ export const deleteHistory = `mutation DeleteHistory($input: DeleteHistoryInput!
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
+    }
+    snapComments {
+      items {
+        id
+        time
+        author
+        content
+      }
+      nextToken
+    }
+  }
+}
+`;
+export const createSnapComment = `mutation CreateSnapComment($input: CreateSnapCommentInput!) {
+  createSnapComment(input: $input) {
+    id
+    time
+    author
+    content
+    history {
+      id
+      time
+      code
+    }
+  }
+}
+`;
+export const updateSnapComment = `mutation UpdateSnapComment($input: UpdateSnapCommentInput!) {
+  updateSnapComment(input: $input) {
+    id
+    time
+    author
+    content
+    history {
+      id
+      time
+      code
+    }
+  }
+}
+`;
+export const deleteSnapComment = `mutation DeleteSnapComment($input: DeleteSnapCommentInput!) {
+  deleteSnapComment(input: $input) {
+    id
+    time
+    author
+    content
+    history {
+      id
+      time
+      code
     }
   }
 }
@@ -731,7 +794,7 @@ export const createQuestionSnapshot = `mutation CreateQuestionSnapshot($input: C
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -749,7 +812,7 @@ export const updateQuestionSnapshot = `mutation UpdateQuestionSnapshot($input: U
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
@@ -767,7 +830,7 @@ export const deleteQuestionSnapshot = `mutation DeleteQuestionSnapshot($input: D
       syncCode
       timeBegin
       timeEnd
-      videoUrl
+      status
     }
   }
 }
