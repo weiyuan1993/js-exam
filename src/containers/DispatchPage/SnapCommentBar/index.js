@@ -115,6 +115,7 @@ SnapCommentBar.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   onChangeSnapComment: PropTypes.func,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 function mapDispatchToProps(dispatch) {
