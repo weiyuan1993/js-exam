@@ -1,13 +1,17 @@
 import React from 'react';
+import { Input, Button, Icon } from 'antd';
+
 import PageControlBar from 'components/PageControlBar';
 import CategorySelector from 'components/Selectors/CategorySelector';
 import QuestionSelector from 'components/Selectors/QuestionSelector';
 
-import { Input, Button, Icon } from 'antd';
+import styles from './ControlWidget.module.scss';
+
 
 const InputGroup = Input.Group;
 
 const ControlWidget = ({
+  intervieweeName,
   categoryIndex,
   questionIndex,
   onDispatchQuestion,
@@ -20,8 +24,12 @@ const ControlWidget = ({
 }) => (
   <PageControlBar>
     <div>
+      <div className={styles.roomInfoBar}>
+          <Icon type="user" />
+          {intervieweeName}
+      </div>
       {isHost ? (
-        <InputGroup compact style={{ width: 'auto' }}>
+        <InputGroup compact style={{ width: 'auto', display: 'inline-block' }}>
           <CategorySelector
             onChange={onChangeCategory}
             categoryIndex={categoryIndex}
