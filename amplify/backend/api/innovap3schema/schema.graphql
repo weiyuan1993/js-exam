@@ -1,15 +1,15 @@
-type Room @model { #not used anymore
+type Room @model {
   id: ID!
   test: Test @connection(name: "RoomTests")
-  subjectId: String #could be email
+  subjectId: String # could be email
   description: String
-  status: String #open/closed
   host: JEUser
   createTime: AWSDateTime
   password: String
   users: [JEUser] @connection(name: "RoomJEUsers") # host & observers
 	currentRecord: Record @connection(name: "RoomCurrentRecord") # ID for current Record
 }
+
 type JEUser @model {
   id: ID!
   name: String
@@ -18,6 +18,7 @@ type JEUser @model {
   test: Test @connection(name: "TestJEUsers")
   hostTest: Test @connection(name: "TestHost") # the test this JEUser host
 }
+
 type Team @model {
   id: ID!
   name: String
@@ -25,20 +26,22 @@ type Team @model {
   users: [JEUser] @connection(name: "TeamJEUsers")
   questionSet: [QuestionSet] @connection(name: "TeamQuestionSets") # currenly one team has one question set
 }
+
 type Test @model {
   id: ID!
   room: Room @connection(name: "RoomTests")
   team: Team
-  subjectId: String #could be email
+  subjectId: String # could be email
   users: [JEUser] @connection(name: "TestJEUsers") # host & observers
 	host: JEUser @connection(name: "TestHost") # ID for current JEUser
   description: String
   timeBegin: AWSDateTime
   timeEnd: AWSDateTime 
   records: [Record] @connection(name: "TestRecords")
-  status: String #open/inprogress/completed/closed
+  status: String! # open/closed
   tags: [String]
 }
+
 type Record @model {
   id: ID!
   subjectId: String #could be email
@@ -46,10 +49,10 @@ type Record @model {
   interviewer: JEUser
   timeBegin: AWSDateTime
   timeEnd: AWSDateTime
+  status: String # inprogress/closed
   comment:[Comment] @connection(name: "RecordComments")
   history: [History] @connection(name: "RecordHistories")
   ques: QuesSnapshot
-  videoUrl: String
   question: QuestionSnapshot @connection(name: "RecordQuestionSnapshot")
   test: Test @connection(name: "TestRecords"),
   room: Room @connection(name: "RoomCurrentRecord")
@@ -63,9 +66,19 @@ type Comment @model {
 }
 
 type History @model {
+  id: ID!
   time: AWSDateTime
-  code: String
+  code: String!
   record: Record @connection(name: "RecordHistories")
+  snapComments: [SnapComment] @connection(name: "HistorySnapComments")
+}
+
+type SnapComment @model {
+  id: ID!
+  time: AWSDateTime
+  author: String
+  content: String!
+  history: History @connection(name: "HistorySnapComments")
 }
 
 type QuesSnapshot {
@@ -74,6 +87,7 @@ type QuesSnapshot {
   content: String
   test: String
 }
+
 type QuestionSnapshot @model {
   id: ID!
   type: String # eg. javascript
@@ -82,6 +96,7 @@ type QuestionSnapshot @model {
   test: String
   record: Record @connection(name: "RecordQuestionSnapshot")
 }
+
 type QuestionSet @model { #question set for host to pick in a test
   id: ID! 
   team: Team @connection(name: "TeamQuestionSets")
@@ -90,6 +105,7 @@ type QuestionSet @model { #question set for host to pick in a test
   description: String
   tags: [String]
 }
+
 type Question @model {
   id: ID!
   type: String # eg. javascript
@@ -99,6 +115,7 @@ type Question @model {
   test: String
   tags: [String]
 }
+
 type Subscription {
   onUpdateJEUserByJEUserId(id: String): JEUser @aws_subscribe(mutations: ["updateJEUser"])
   onUpdateTeamByTeamId(id: String): Team @aws_subscribe(mutations: ["updateTeam"])
