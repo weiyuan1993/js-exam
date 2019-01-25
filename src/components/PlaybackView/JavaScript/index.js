@@ -13,6 +13,7 @@ import TestWidget from 'components/Widgets/TestWidget';
 import TapeWidget from 'components/Widgets/TapeWidget';
 
 import debouncedRunCode from 'utils/runCode';
+import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT } from 'utils/gridLabel';
 
 import styles from './JavaScriptPage.module.scss';
 import CommentArea from '../Comment';
@@ -87,7 +88,7 @@ class JavaScriptPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_JAVASCRIPT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
@@ -96,13 +97,13 @@ class JavaScriptPage extends Component {
                 readOnly
               />
             </GridItem>
-            <GridItem key="test">
+            <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
               <TestWidget data={test} readOnly />
             </GridItem>
-            <GridItem key="tape">
+            <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
               <TapeWidget data={tape} />
             </GridItem>
-            <GridItem key="comment">
+            <GridItem key="comment" label="comment">
               <CommentArea comments={comments} />
             </GridItem>
           </Grid>

@@ -14,7 +14,6 @@ const Text = ({ text }) => (
 
 const ConsoleWidget = ({ data, className }) => (
   <div className={`${styles['console-widget']} ${className || ''}`}>
-    Console:
     {data.map((text, index) => (
       <div className={styles.console} key={index}>
         <div className={styles.text}>

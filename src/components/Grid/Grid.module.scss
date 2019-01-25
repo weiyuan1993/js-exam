@@ -2,8 +2,20 @@
 	display: flex;
 }
 
+
 .item {
+	position: relative;
 	width: 100%;
 	height: 100%;
 	overflow: auto;
+}
+
+.label {
+	position: absolute;
+	top: 5px;
+	right: 17px;
+	z-index: 10;
+	padding: 2px 12px 2px 8px;
+	color: white;
+	background-color: rgba($color: #000000, $alpha: 0.5);
 }

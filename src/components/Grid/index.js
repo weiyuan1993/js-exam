@@ -7,7 +7,7 @@ export default class Grid extends React.Component {
     super(props);
     const { layout, borderSize } = this.props;
     this.ref = React.createRef();
-    this.borderSize = borderSize || 10;
+    this.borderSize = borderSize || 5;
     this.layout = layout;
     this.columns = layout
       .reduce((cal, item) => {

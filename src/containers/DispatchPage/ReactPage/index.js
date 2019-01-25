@@ -14,14 +14,16 @@ import ResultWidget from 'components/Widgets/ResultWidget';
 import AnswerWidget from 'components/Widgets/AnswerWidget';
 
 import debouncedRunCode from 'utils/runCode';
+import { REACT as GRID_LABEL_REACT  } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
-  componentDidMount() {
-    const { compiledCode } = this.props;
-    debouncedRunCode({ code: compiledCode });
+  controlHeight = 70;
+
+  async componentDidMount() {
+    const { compiledCode, addTape } = this.props;
+    debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
   }
 
   shouldComponentUpdate(nextProps) {
@@ -35,13 +37,11 @@ class ReactPage extends Component {
 
   render() {
     const {
-      isLoading,
-      test,
-      code,
-      tags,
       onTagUpdate,
       handleCodeChange,
-      handleTestChange,
+      test,
+      code,
+      isLoading,
     } = this.props;
     const layout = [
       {
@@ -52,7 +52,7 @@ class ReactPage extends Component {
         height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
-        maxWidth: 700,
+        maxWidth: window.innerWidth,
         maxHeight: 500,
       },
       {
@@ -62,14 +62,14 @@ class ReactPage extends Component {
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
         minWidth: 100,
-        maxWidth: 700,
+        maxWidth: window.innerWidth,
       },
       {
         key: 'result',
         x: 1,
         y: 0,
         width: window.innerWidth / 2,
-        height: window.innerHeight / 2 - 100,
+        height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
@@ -80,18 +80,7 @@ class ReactPage extends Component {
         x: 1,
         y: 1,
         width: window.innerWidth / 2,
-        height: window.innerHeight / 2 - 100,
-        minWidth: 100,
-        minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
-      },
-      {
-        key: 'tag',
-        x: 1,
-        y: 3,
-        width: window.innerWidth / 2,
-        height: 200,
+        height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
@@ -102,30 +91,23 @@ class ReactPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_REACT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
                 mode="jsx"
                 theme="monokai"
+                readOnly
               />
             </GridItem>
-            <GridItem key="test">
-              <CodeWidget
-                handleCodeChange={handleTestChange}
-                data={test}
-                mode="jsx"
-                theme="textmate"
-              />
+            <GridItem key="test" label={GRID_LABEL_REACT.test}>
+              <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
             </GridItem>
-            <GridItem key="answer">
+            <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
               <AnswerWidget />
             </GridItem>
-            <GridItem key="result">
+            <GridItem key="result" label={GRID_LABEL_REACT.result}>
               <ResultWidget />
-            </GridItem>
-            <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} />
             </GridItem>
           </Grid>
         </Spin>

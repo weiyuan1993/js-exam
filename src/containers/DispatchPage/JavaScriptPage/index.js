@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import 'brace';
-import 'brace/mode/jsx';
 import 'brace/mode/javascript';
 import 'brace/theme/textmate';
 import 'brace/theme/monokai';
@@ -10,27 +9,30 @@ import { Spin } from 'antd';
 import Grid from 'components/Grid';
 import GridItem from 'components/Grid/GridItem';
 import CodeWidget from 'components/Widgets/CodeWidget';
-import ResultWidget from 'components/Widgets/ResultWidget';
-import AnswerWidget from 'components/Widgets/AnswerWidget';
+import TestWidget from 'components/Widgets/TestWidget';
+import TapeWidget from 'components/Widgets/TapeWidget';
 
 import debouncedRunCode from 'utils/runCode';
+import { JAVASCRIPT as GRID_LABEL_JAVASCRIPT  } from 'utils/gridLabel';
 
-import TagWidget from '../../TagWidget';
-import styles from './ReactPage.module.scss';
+import styles from './JavaScriptPage.module.scss';
 
-class ReactPage extends Component {
-  controlHeight = 70;
-
-  async componentDidMount() {
+class JavaScriptPage extends Component {
+  componentDidMount() {
     const { compiledCode, addTape } = this.props;
     debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
   }
 
   shouldComponentUpdate(nextProps) {
-    const { compiledCode: previousCompiledCode } = this.props;
+    const {
+      compiledCode: previousCompiledCode,
+      addTape,
+      resetTape,
+    } = this.props;
     const { compiledCode } = nextProps;
     if (previousCompiledCode !== compiledCode) {
-      debouncedRunCode({ code: compiledCode });
+      resetTape();
+      debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
     }
     return true;
   }
@@ -39,9 +41,9 @@ class ReactPage extends Component {
     const {
       onTagUpdate,
       handleCodeChange,
-      test,
       code,
-      tags,
+      test,
+      tape,
       isLoading,
     } = this.props;
     const layout = [
@@ -50,49 +52,27 @@ class ReactPage extends Component {
         x: 0,
         y: 0,
         width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
+        height: window.innerHeight,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
-        maxHeight: 500,
+        maxHeight: window.innerHeight,
       },
       {
         key: 'test',
-        x: 0,
-        y: 1,
+        x: 1,
+        y: 0,
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
         minWidth: 100,
         maxWidth: 700,
       },
       {
-        key: 'result',
-        x: 1,
-        y: 0,
-        width: window.innerWidth / 2,
-        height: (window.innerHeight - this.controlHeight) / 2 - 100,
-        minWidth: 100,
-        minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
-      },
-      {
-        key: 'answer',
+        key: 'tape',
         x: 1,
         y: 1,
         width: window.innerWidth / 2,
-        height: (window.innerHeight - this.controlHeight) / 2 - 100,
-        minWidth: 100,
-        minHeight: 100,
-        maxWidth: 700,
-        maxHeight: 500,
-      },
-      {
-        key: 'tag',
-        x: 1,
-        y: 3,
-        width: window.innerWidth / 2,
-        height: 200,
+        height: window.innerHeight / 2,
         minWidth: 100,
         minHeight: 100,
         maxWidth: 700,
@@ -103,25 +83,20 @@ class ReactPage extends Component {
       <div className={styles.app}>
         <Spin spinning={isLoading} size="large">
           <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code">
+            <GridItem key="code" label={GRID_LABEL_JAVASCRIPT.code}>
               <CodeWidget
                 handleCodeChange={handleCodeChange}
                 data={code}
-                mode="jsx"
+                mode="javascript"
                 theme="monokai"
+                readOnly
               />
             </GridItem>
-            <GridItem key="test">
-              <CodeWidget data={test} mode="jsx" theme="textmate" />
+            <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
+              <TestWidget data={test} readOnly />
             </GridItem>
-            <GridItem key="answer">
-              <AnswerWidget />
-            </GridItem>
-            <GridItem key="result">
-              <ResultWidget />
-            </GridItem>
-            <GridItem key="tag">
-              <TagWidget data={tags} onTagUpdate={onTagUpdate} readOnly />
+            <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
+              <TapeWidget data={tape} />
             </GridItem>
           </Grid>
         </Spin>
@@ -130,4 +105,4 @@ class ReactPage extends Component {
   }
 }
 
-export default ReactPage;
+export default JavaScriptPage;
