@@ -5,8 +5,6 @@ import 'brace/mode/javascript';
 import 'brace/theme/textmate';
 import 'brace/theme/monokai';
 
-import { Spin } from 'antd';
-
 import Grid from 'components/Grid';
 import GridItem from 'components/Grid/GridItem';
 import CodeWidget from 'components/Widgets/CodeWidget';
@@ -19,8 +17,6 @@ import { REACT as GRID_LABEL_REACT } from 'utils/gridLabel';
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
-  controlHeight = 70;
-
   async componentDidMount() {
     const { compiledCode, addTape } = this.props;
     debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
@@ -36,7 +32,7 @@ class ReactPage extends Component {
   }
 
   render() {
-    const { onTagUpdate, handleCodeChange, test, code, isLoading } = this.props;
+    const { onTagUpdate, handleCodeChange, test, code } = this.props;
     const layout = [
       {
         key: 'code',
@@ -83,28 +79,26 @@ class ReactPage extends Component {
     ];
     return (
       <div className={styles.app}>
-        <Spin spinning={isLoading} size="large">
-          <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code" label={GRID_LABEL_REACT.code}>
-              <CodeWidget
-                handleCodeChange={handleCodeChange}
-                data={code}
-                mode="jsx"
-                theme="monokai"
-                readOnly
-              />
-            </GridItem>
-            <GridItem key="test" label={GRID_LABEL_REACT.test}>
-              <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
-            </GridItem>
-            <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
-              <AnswerWidget />
-            </GridItem>
-            <GridItem key="result" label={GRID_LABEL_REACT.result}>
-              <ResultWidget />
-            </GridItem>
-          </Grid>
-        </Spin>
+        <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
+          <GridItem key="code" label={GRID_LABEL_REACT.code}>
+            <CodeWidget
+              handleCodeChange={handleCodeChange}
+              data={code}
+              mode="jsx"
+              theme="monokai"
+              readOnly
+            />
+          </GridItem>
+          <GridItem key="test" label={GRID_LABEL_REACT.test}>
+            <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
+          </GridItem>
+          <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
+            <AnswerWidget />
+          </GridItem>
+          <GridItem key="result" label={GRID_LABEL_REACT.result}>
+            <ResultWidget />
+          </GridItem>
+        </Grid>
       </div>
     );
   }

@@ -5,9 +5,9 @@ import { graphqlOperation } from 'aws-amplify';
 import { listTests } from 'graphql/queries';
 import { onCreateTest } from 'graphql/subscriptions';
 
-import ResultBin from './ResultBin';
-
 import { Skeleton } from 'antd';
+
+import ResultBin from './ResultBin';
 
 const CandidateListPage = () => (
   <Connect

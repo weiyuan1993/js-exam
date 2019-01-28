@@ -68,7 +68,7 @@ class SnapCommentBar extends PureComponent {
               className={style.input}
               name="content"
               component={RfInput}
-              placeholder="Message..."
+              placeholder="Comment"
             />
             <Button
               className={style.submitButton}

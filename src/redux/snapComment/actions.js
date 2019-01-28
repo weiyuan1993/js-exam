@@ -19,10 +19,10 @@ export function createSnapComment(data) {
         await API.graphql(
           graphqlOperation(mutations.createSnapComment, params),
         );
-        message.success('SnapComment is created');
+        message.success('Add comment succeeded');
       } catch (error) {
         console.log(error);
-        message.error('Add snap-comment failed');
+        message.error('Add comment failed');
       }
     }
   };
