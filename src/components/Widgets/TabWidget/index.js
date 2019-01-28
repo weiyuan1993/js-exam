@@ -1,19 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
-import { Menu, Icon, message } from 'antd';
-
-import { deleteRoomAction } from 'redux/room/actions';
+import { Menu, Icon } from 'antd';
 
 const SubMenu = Menu.SubMenu;
 
 const TabWidget = ({
-  match,
   location: { pathname },
-  room,
-  history,
-  actions,
 }) => {
   const currentKey = pathname.split('/')[2] || 'room';
   return (
@@ -64,60 +57,8 @@ const TabWidget = ({
           Candidates
         </Link>
       </Menu.Item>
-      {room.subjectId && (
-        <Menu.Item style={{ float: 'right' }} key="subjectId">
-          <Icon type="user" />
-          {room.subjectId || 'UNSET'}
-        </Menu.Item>
-      )}
-      {room.id && (
-        <SubMenu
-          style={{ float: 'right' }}
-          key="dispatch"
-          title={
-            <Link to={`/admin/dispatch/${room.id}`}>
-              <Icon type="home" />
-              {room.description || 'UNSET'}
-            </Link>
-          }
-        >
-          <Menu.Item
-            key="link"
-            onClick={() => {
-              const link = `${document.location.host}/exam/${
-                match.params.roomId
-              }`;
-              navigator.clipboard.writeText(link).then(() => {
-                message.success(`Successfully copied the link!`);
-              });
-            }}
-          >
-            <Icon type="share-alt" /> Copy Exam Link
-          </Menu.Item>
-          <Menu.Item
-            key="delete"
-            onClick={async () => {
-              await actions.deleteRoomAction(room.id);
-              history.push('/');
-            }}
-          >
-            <Icon type="delete" style={{ color: 'red' }} /> Delete Room
-          </Menu.Item>
-        </SubMenu>
-      )}
     </Menu>
   );
 };
 
-export default withRouter(
-  connect(
-    state => ({
-      room: state.room,
-    }),
-    dispatch => ({
-      actions: {
-        deleteRoomAction: id => dispatch(deleteRoomAction(id)),
-      },
-    }),
-  )(TabWidget),
-);
+export default withRouter(TabWidget);
