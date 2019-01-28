@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PageControlBar from 'components/PageControlBar';
 import RecordSelector from 'components/Selectors/RecordSelector';
-
 import { Button, Icon, Input } from 'antd';
-import styles from './PlaybackControlWidget.module.scss';
+import styles from './ControlWidget.module.scss';
 
 const InputGroup = Input.Group;
 
@@ -25,7 +24,7 @@ function getDateOutput(dateTime) {
   )}:${addZeroOutput(date.getMinutes())}:${addZeroOutput(date.getSeconds())}`;
 }
 
-const PlaybackControlWidget = ({
+const ControlWidget = ({
   testDate,
   interviewee,
   recordIndex,
@@ -36,6 +35,7 @@ const PlaybackControlWidget = ({
   historyIndex,
   hasNextHistory,
   historyAmount,
+  onClickSummary,
 }) => (
   <PageControlBar>
     <div className={styles.info}>
@@ -50,6 +50,9 @@ const PlaybackControlWidget = ({
     </div>
     <div>
       <InputGroup compact style={{ width: 'auto', display: 'inline-block' }}>
+        <Button type="danger" onClick={onClickSummary}>
+          Summary
+        </Button>
         <RecordSelector
           onChange={onChangeRecord}
           recordIndex={recordIndex}
@@ -77,7 +80,14 @@ const PlaybackControlWidget = ({
           </Button>
         </Button.Group>
       </InputGroup>
-      <span style={{ margin: '0', 'marginLeft': '15px', position: 'relative', top: 5 }}>
+      <span
+        style={{
+          margin: '0',
+          marginLeft: '15px',
+          position: 'relative',
+          top: 5,
+        }}
+      >
         {historyAmount === 0
           ? 'No history'
           : ` ${historyIndex + 1}/ ${historyAmount}`}
@@ -85,16 +95,17 @@ const PlaybackControlWidget = ({
     </div>
   </PageControlBar>
 );
-PlaybackControlWidget.propTypes = {
+ControlWidget.propTypes = {
   testDate: PropTypes.string,
   interviewee: PropTypes.string,
   recordIndex: PropTypes.number,
   onChangeRecord: PropTypes.func,
   recordList: PropTypes.array,
-  onForward: PropTypes.array,
-  onBackward: PropTypes.array,
+  onForward: PropTypes.func,
+  onBackward: PropTypes.func,
   historyIndex: PropTypes.number,
   hasNextHistory: PropTypes.bool,
   historyAmount: PropTypes.number,
+  onClickSummary: PropTypes.func,
 };
-export default PlaybackControlWidget;
+export default ControlWidget;

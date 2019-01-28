@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { transform } from '@babel/standalone';
 
-import PlaybackControlWidget from 'components/Widgets/PlaybackControlWidget';
 import ReactPage from 'components/PlaybackView/React';
 import JavaScriptPage from 'components/PlaybackView/JavaScript';
-
 import { resetCurrentRecord } from 'redux/record/actions';
+import Summary from '../Summary';
+import ControlWidget from '../ControlWidget';
 import { fetchRecordWithHistory } from './actions';
 const PlaybackView = args => {
   switch (args.categoryIndex) {
@@ -27,6 +27,7 @@ class Playback extends React.Component {
     tape: [],
     isLoading: false,
     historyIndex: 0,
+    summaryVisible: false,
   };
 
   async componentDidMount() {
@@ -117,6 +118,14 @@ class Playback extends React.Component {
     this.setState({ tape: [] });
   };
 
+  onClickSummary = () => {
+    this.setState({ summaryVisible: true });
+  };
+
+  onCancelSummary = () => {
+    this.setState({ summaryVisible: false });
+  };
+
   render() {
     const {
       handleCodeChange,
@@ -125,12 +134,14 @@ class Playback extends React.Component {
       resetTape,
       onForward,
       onBackward,
+      onClickSummary,
+      onCancelSummary,
     } = this;
-    const { recordIndex, historyIndex } = this.state;
+    const { recordIndex, historyIndex, summaryVisible } = this.state;
     const { testData, records, record } = this.props;
     return (
       <>
-        <PlaybackControlWidget
+        <ControlWidget
           testDate={testData.timeBegin}
           interviewee={testData.subjectId}
           recordIndex={recordIndex}
@@ -141,6 +152,12 @@ class Playback extends React.Component {
           hasNextHistory={Boolean(record.nextToken)}
           historyAmount={record.history.items.length}
           historyIndex={historyIndex}
+          onClickSummary={onClickSummary}
+        />
+        <Summary
+          summaryList={record.comment.items}
+          visible={summaryVisible}
+          onCancel={onCancelSummary}
         />
         <PlaybackView
           handleCodeChange={handleCodeChange}

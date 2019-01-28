@@ -7,7 +7,7 @@ export const queryRecordWithHistory = `
     getRecord(id: $id) {
       id
       subjectId
-      comment {
+      comment(limit: $limit nextToken: $nextToken) {
         items {
           author
           time
