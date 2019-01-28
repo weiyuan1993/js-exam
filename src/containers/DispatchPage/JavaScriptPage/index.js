@@ -44,7 +44,6 @@ class JavaScriptPage extends Component {
       code,
       test,
       tape,
-      isLoading,
     } = this.props;
     const layout = [
       {
@@ -81,25 +80,23 @@ class JavaScriptPage extends Component {
     ];
     return (
       <div className={styles.app}>
-        <Spin spinning={isLoading} size="large">
-          <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code" label={GRID_LABEL_JAVASCRIPT.code}>
-              <CodeWidget
-                handleCodeChange={handleCodeChange}
-                data={code}
-                mode="javascript"
-                theme="monokai"
-                readOnly
-              />
-            </GridItem>
-            <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
-              <TestWidget data={test} readOnly />
-            </GridItem>
-            <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
-              <TapeWidget data={tape} />
-            </GridItem>
-          </Grid>
-        </Spin>
+        <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
+          <GridItem key="code" label={GRID_LABEL_JAVASCRIPT.code}>
+            <CodeWidget
+              handleCodeChange={handleCodeChange}
+              data={code}
+              mode="javascript"
+              theme="monokai"
+              readOnly
+            />
+          </GridItem>
+          <GridItem key="test" label={GRID_LABEL_JAVASCRIPT.test}>
+            <TestWidget data={test} readOnly />
+          </GridItem>
+          <GridItem key="tape" label={GRID_LABEL_JAVASCRIPT.tape}>
+            <TapeWidget data={tape} />
+          </GridItem>
+        </Grid>
       </div>
     );
   }

@@ -9,7 +9,7 @@ import style from './RoomForm.module.scss';
 
 const RoomForm = ({ onSubmit, handleSubmit, pristine, submitting }) => {
   return (
-    <form onSubmit={handleSubmit(data => onSubmit({ input: data }))}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Field
         name="subjectId"
         component={RfInput}
