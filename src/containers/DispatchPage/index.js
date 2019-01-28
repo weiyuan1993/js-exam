@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { transform } from '@babel/standalone';
-import { message } from 'antd';
+import { Spin, Empty, message } from 'antd';
 
 import {
   subscribeOnCreateRecord,
@@ -19,6 +19,8 @@ import CommentBox from 'components/CommentBox';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
+
+import styles from './DispatchPage.module.scss';
 
 const MainView = args => {
   switch (args.categoryIndex) {
@@ -237,7 +239,7 @@ class Page extends Component {
   };
 
   render() {
-    const { categoryIndex, questionIndex, commentBoxVisible } = this.state;
+    const { isLoading, categoryIndex, questionIndex, commentBoxVisible } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -250,38 +252,52 @@ class Page extends Component {
       setCommentBox,
     } = this;
     const { room, question, record } = this.props;
+
     return (
       <React.Fragment>
-        {!room.loading && room.id ? (
-          <>
-            <ControlWidget
-              enableComment={!record.id}
-              setCommentBox={setCommentBox}
-              isHost={room.isHost}
-              onDispatchQuestion={onDispatchQuestion}
-              onChangeCategory={onChangeCategory}
-              categoryIndex={categoryIndex}
-              questionIndex={questionIndex}
-              questionList={question.list}
-              onChangeQuestion={onChangeQuestion}
-              setIntervieweeModal={setIntervieweeModal}
-              intervieweeName={room.subjectId}
-              roomDescription={room.description}
+        <Spin
+          className={styles.spin}
+          spinning={isLoading}
+          size="large"
+        >
+          {!isLoading && !room.error &&
+            <React.Fragment>
+              <ControlWidget
+                enableComment={!record.id}
+                setCommentBox={setCommentBox}
+                isHost={room.isHost}
+                onDispatchQuestion={onDispatchQuestion}
+                onChangeCategory={onChangeCategory}
+                categoryIndex={categoryIndex}
+                questionIndex={questionIndex}
+                questionList={question.list}
+                onChangeQuestion={onChangeQuestion}
+                setIntervieweeModal={setIntervieweeModal}
+                intervieweeName={room.subjectId}
+                roomDescription={room.description}
+              />
+              <MainView
+                onDispatchQuestion={onDispatchQuestion}
+                onChangeCategory={onChangeCategory}
+                onChangeQuestion={onChangeQuestion}
+                handleCodeChange={handleCodeChange}
+                addTape={addTape}
+                resetTape={resetTape}
+                onTagUpdate={onTagUpdate}
+                {...this.state}
+              />
+            </React.Fragment>
+          }
+          
+          {!isLoading && room.error &&
+            <Empty
+              className={styles.empty}
+              image="http://chittagongit.com//images/found-icon/found-icon-0.jpg"
+              description={<span>Room Not Found</span>}
             />
-            <MainView
-              onDispatchQuestion={onDispatchQuestion}
-              onChangeCategory={onChangeCategory}
-              onChangeQuestion={onChangeQuestion}
-              handleCodeChange={handleCodeChange}
-              addTape={addTape}
-              resetTape={resetTape}
-              onTagUpdate={onTagUpdate}
-              {...this.state}
-            />
-          </>
-        ) : (
-          <span>{room.error ? <>Room Not Found</> : <>Loading...</>}</span>
-        )}
+          }
+        </Spin>
+     
         <CommentBox
           onSubmit={this.onCreateComment}
           visible={commentBoxVisible}

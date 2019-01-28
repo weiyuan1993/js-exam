@@ -41,7 +41,6 @@ class ReactPage extends Component {
       handleCodeChange,
       test,
       code,
-      isLoading,
     } = this.props;
     const layout = [
       {
@@ -89,28 +88,26 @@ class ReactPage extends Component {
     ];
     return (
       <div className={styles.app}>
-        <Spin spinning={isLoading} size="large">
-          <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
-            <GridItem key="code" label={GRID_LABEL_REACT.code}>
-              <CodeWidget
-                handleCodeChange={handleCodeChange}
-                data={code}
-                mode="jsx"
-                theme="monokai"
-                readOnly
-              />
-            </GridItem>
-            <GridItem key="test" label={GRID_LABEL_REACT.test}>
-              <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
-            </GridItem>
-            <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
-              <AnswerWidget />
-            </GridItem>
-            <GridItem key="result" label={GRID_LABEL_REACT.result}>
-              <ResultWidget />
-            </GridItem>
-          </Grid>
-        </Spin>
+        <Grid layout={layout} totalWidth="100%" totalHeight="100%" autoResize>
+          <GridItem key="code" label={GRID_LABEL_REACT.code}>
+            <CodeWidget
+              handleCodeChange={handleCodeChange}
+              data={code}
+              mode="jsx"
+              theme="monokai"
+              readOnly
+            />
+          </GridItem>
+          <GridItem key="test" label={GRID_LABEL_REACT.test}>
+            <CodeWidget data={test} mode="jsx" theme="textmate" readOnly />
+          </GridItem>
+          <GridItem key="answer" label={GRID_LABEL_REACT.answer}>
+            <AnswerWidget />
+          </GridItem>
+          <GridItem key="result" label={GRID_LABEL_REACT.result}>
+            <ResultWidget />
+          </GridItem>
+        </Grid>
       </div>
     );
   }
