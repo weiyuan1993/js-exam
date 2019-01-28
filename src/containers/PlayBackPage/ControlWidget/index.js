@@ -30,11 +30,6 @@ const ControlWidget = ({
   recordIndex,
   onChangeRecord,
   recordList,
-  onForward,
-  onBackward,
-  historyIndex,
-  hasNextHistory,
-  historyAmount,
   onClickSummary,
 }) => (
   <PageControlBar>
@@ -50,7 +45,7 @@ const ControlWidget = ({
     </div>
     <div>
       <InputGroup compact style={{ width: 'auto', display: 'inline-block' }}>
-        <Button type="danger" onClick={onClickSummary}>
+        <Button type="primary" onClick={onClickSummary}>
           Summary
         </Button>
         <RecordSelector
@@ -58,40 +53,7 @@ const ControlWidget = ({
           recordIndex={recordIndex}
           list={recordList}
         />
-        <Button.Group>
-          <Button
-            type="primary"
-            onClick={onBackward}
-            disabled={historyIndex === 0}
-          >
-            <Icon type="left" />
-            Backward
-          </Button>
-          <Button
-            type="primary"
-            onClick={onForward}
-            disabled={
-              historyAmount === 0 ||
-              (historyIndex === historyAmount - 1 && !hasNextHistory)
-            }
-          >
-            Forward
-            <Icon type="right" />
-          </Button>
-        </Button.Group>
       </InputGroup>
-      <span
-        style={{
-          margin: '0',
-          marginLeft: '15px',
-          position: 'relative',
-          top: 5,
-        }}
-      >
-        {historyAmount === 0
-          ? 'No history'
-          : ` ${historyIndex + 1}/ ${historyAmount}`}
-      </span>
     </div>
   </PageControlBar>
 );
@@ -101,11 +63,6 @@ ControlWidget.propTypes = {
   recordIndex: PropTypes.number,
   onChangeRecord: PropTypes.func,
   recordList: PropTypes.array,
-  onForward: PropTypes.func,
-  onBackward: PropTypes.func,
-  historyIndex: PropTypes.number,
-  hasNextHistory: PropTypes.bool,
-  historyAmount: PropTypes.number,
   onClickSummary: PropTypes.func,
 };
 export default ControlWidget;

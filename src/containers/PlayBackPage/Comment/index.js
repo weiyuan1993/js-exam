@@ -7,6 +7,8 @@ import JavaScriptPage from 'components/PlaybackView/JavaScript';
 import { resetCurrentRecord } from 'redux/record/actions';
 import Summary from '../Summary';
 import ControlWidget from '../ControlWidget';
+import HistorySlider from '../HistorySlider';
+
 import { fetchRecordWithHistory } from './actions';
 const PlaybackView = args => {
   switch (args.categoryIndex) {
@@ -103,7 +105,7 @@ class Playback extends React.Component {
     const { items } = this.props.record.history;
     if (historyIndex > 0) {
       this.setState({
-        code: items[historyIndex - 1].code || '',
+        code: items[historyIndex].code || '',
         historyIndex: historyIndex - 1,
       });
     }
@@ -126,6 +128,17 @@ class Playback extends React.Component {
     this.setState({ summaryVisible: false });
   };
 
+  onSliderChange = value => {
+    console.log(value);
+    const { code } = this.state;
+    const { items } = this.props.record.history;
+    console.log(items);
+    this.setState({
+      historyIndex: value,
+      code: items[value].code || code,
+    });
+  };
+
   render() {
     const {
       handleCodeChange,
@@ -136,6 +149,7 @@ class Playback extends React.Component {
       onBackward,
       onClickSummary,
       onCancelSummary,
+      onSliderChange,
     } = this;
     const { recordIndex, historyIndex, summaryVisible } = this.state;
     const { testData, records, record } = this.props;
@@ -146,12 +160,7 @@ class Playback extends React.Component {
           interviewee={testData.subjectId}
           recordIndex={recordIndex}
           onChangeRecord={onChangeRecord}
-          onForward={onForward}
-          onBackward={onBackward}
           recordList={records}
-          hasNextHistory={Boolean(record.nextToken)}
-          historyAmount={record.history.items.length}
-          historyIndex={historyIndex}
           onClickSummary={onClickSummary}
         />
         <Summary
@@ -166,6 +175,13 @@ class Playback extends React.Component {
           test={record.ques.test}
           comments={record.comment}
           {...this.state}
+        />
+        <HistorySlider
+          onForward={onForward}
+          onBackward={onBackward}
+          historyIndex={historyIndex}
+          historyList={record.history.items}
+          onChange={onSliderChange}
         />
       </>
     );

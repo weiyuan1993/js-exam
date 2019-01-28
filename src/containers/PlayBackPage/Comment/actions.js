@@ -22,7 +22,6 @@ export function fetchRecordWithHistory(id) {
         history: sortByTime(histories),
         ...data.getRecord,
       };
-      console.log(result)
       dispatch(setCurrentRecordWithHistory(result));
     } catch (e) {
       console.log(e);
