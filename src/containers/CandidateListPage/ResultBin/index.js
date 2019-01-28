@@ -22,16 +22,22 @@ const Months = [
   'Dec.',
 ];
 
-function compare(a, b) {
-  const A = new Date(a.timeBegin);
-  const B = new Date(b.timeBegin);
+const byTime = ascending => (a, b) => {
   let result;
-  if (A.getTime() < B.getTime()) result = -1;
-  if (A.getTime() > B.getTime()) result = 1;
-  else result = 0;
 
-  return result * -1;
-}
+  if (a === null || b === null) {
+    if (a === null) result = 1;
+    else if (b === null) result = -1;
+  } else {
+    const A = new Date(a.timeBegin);
+    const B = new Date(b.timeBegin);
+    if (A.getTime() < B.getTime()) result = -1;
+    else if (A.getTime() > B.getTime()) result = 1;
+    else result = 0;
+  }
+
+  return ascending ? result : result * -1;
+};
 
 function getFullDate(dateOb) {
   return `${Months[dateOb.getMonth()]} 
@@ -39,36 +45,46 @@ function getFullDate(dateOb) {
     ${dateOb.getFullYear()}`;
 }
 
+const isValid = variable => {
+  if (variable === undefined || variable === null) return false;
+  return true;
+};
+
 const ResultBin = ({ tests, isLoading }) => {
   let currentD;
   let currentT;
   let nextD;
-  let head = 0;
+  let head;
 
-  tests.sort(compare);
+  console.log('test: ', tests);
+  if (tests) tests.sort(byTime(false));
 
-  return (
+  return tests ? (
     <Collapse accordion>
       {tests.map((test, i) => {
-        currentT = new Date(test.timeBegin);
-        currentD = getFullDate(currentT);
+        if (test !== null) {
+          currentT = new Date(test.timeBegin);
+          currentD = getFullDate(currentT);
 
-        if (tests[i + 1] !== undefined) {
-          nextD = getFullDate(new Date(tests[i + 1].timeBegin));
-        }
+          if (head === undefined) head = i;
 
-        if (nextD !== currentD || tests[i + 1] === undefined) {
-          const dataOfDay = tests.slice(head, i + 1);
-          head = i + 1;
-          return (
-            <Panel header={currentD} key={test.id}>
-              <TestList data={dataOfDay} />
-            </Panel>
-          );
+          if (isValid(tests[i + 1])) {
+            nextD = getFullDate(new Date(tests[i + 1].timeBegin));
+          }
+
+          if (nextD !== currentD || !isValid(tests[i + 1])) {
+            const dataOfDay = tests.slice(head, i + 1);
+            head = i + 1;
+            return (
+              <Panel header={currentD} key={test.id}>
+                <TestList data={dataOfDay} />
+              </Panel>
+            );
+          }
         }
       })}
     </Collapse>
-  );
+  ) : null;
 };
 
 ResultBin.propTypes = {
