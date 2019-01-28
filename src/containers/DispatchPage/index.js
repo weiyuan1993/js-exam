@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { transform } from '@babel/standalone';
 import { message } from 'antd';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as subscriptions from 'graphql/subscriptions';
 
 import {
   subscribeOnCreateRecord,
@@ -14,6 +16,7 @@ import createComment from 'utils/comment';
 import { getRoomInfo, setRoomHost } from 'redux/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'redux/question/actions';
 import { createRecordData, setCurrentRecord } from 'redux/record/actions';
+import { setLatestHistory, getLatestHistory } from 'redux/history/actions';
 
 import CommentBox from 'components/CommentBox';
 import ReactPage from './ReactPage';
@@ -33,6 +36,8 @@ const MainView = args => {
 };
 
 class Page extends Component {
+  subscription = null;
+
   state = {
     commentBoxVisible: false,
     categoryIndex: 0,
@@ -50,7 +55,35 @@ class Page extends Component {
       this.props.actions.setRoomHost(true);
     }
     await this.getRoom(this.props.match.params.roomId);
+    await this.props.actions.getLatestHistory();
+    this.subscribeOnCreateHistory();
   }
+
+  componentWillUnmount() {
+    this.unsubscribeOnCreateHistory();
+  }
+
+  subscribeOnCreateHistory = () => {
+    if (!this.subscription) {
+      this.subscription = API.graphql(
+        graphqlOperation(subscriptions.onCreateHistory),
+      ).subscribe({
+        next: ({ value }) => {
+          const { record, actions } = this.props;
+          if (value.data.onCreateHistory.record.id === record.id) {
+            actions.setLatestHistory(value.data.onCreateHistory);
+          }
+        },
+        error: error => {
+          console.error(error);
+        },
+      });
+    }
+  };
+
+  unsubscribeOnCreateHistory = () => {
+    if (this.subscription) this.subscription.unsubscribe();
+  };
 
   // for observer
   getRoom = async id => {
@@ -310,6 +343,8 @@ export default withRouter(
         createRecordData: params => dispatch(createRecordData(params)),
         setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
         setRoomHost: isHost => dispatch(setRoomHost(isHost)),
+        setLatestHistory: data => dispatch(setLatestHistory(data)),
+        getLatestHistory: () => dispatch(getLatestHistory()),
       },
     }),
   )(Page),

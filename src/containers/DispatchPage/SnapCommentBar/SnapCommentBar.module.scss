@@ -1,6 +1,11 @@
 .root {
+  height: 66px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: white;
   display: flex;
-  position: relative;
   box-shadow: 0 -4px 5px -5px #333;
   z-index: 10;
 }
@@ -21,7 +26,7 @@
   margin: 4px;
 }
 
-.commentAction {
+.form {
   display: flex;
   margin: 4px;
 }

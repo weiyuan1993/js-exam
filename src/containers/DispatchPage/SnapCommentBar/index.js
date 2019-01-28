@@ -5,49 +5,18 @@ import { connect } from 'react-redux';
 import reduxForm from 'redux-form/es/reduxForm';
 import Field from 'redux-form/es/Field';
 import actions from 'redux-form/es/actions';
-import { API, graphqlOperation } from 'aws-amplify';
-import * as subscriptions from 'graphql/subscriptions';
 import Button from 'antd/lib/button';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import Tag from 'antd/lib/tag';
 import { RfInput } from 'components/RfInput';
 
+import { createSnapComment } from 'redux/snapComment/actions';
+
 import { cannedMessages } from './constants';
 import style from './SnapCommentBar.module.scss';
 
-let subscription = null;
 class SnapCommentBar extends PureComponent {
-  componentDidMount() {
-    this.subscribeOnCreateHistory();
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeOnCreateHistory();
-  }
-
-  subscribeOnCreateHistory = () => {
-    if (!subscription) {
-      console.log('subscribeOnCreateHistory');
-      subscription = API.graphql(
-        graphqlOperation(subscriptions.onCreateHistory),
-      ).subscribe({
-        next: ({ value }) => {
-          console.log(value.data.onCreateHistory);
-        },
-        error: error => {
-          console.error(error);
-        },
-      });
-    }
-  };
-
-  unsubscribeOnCreateHistory = () => {
-    console.log('unsubscribeOnCreateHistory');
-    subscription.unsubscribe();
-    subscription = null;
-  };
-
   handleClickTag = content => () => {
     if (content) this.props.onChangeSnapComment(content);
   };
@@ -68,12 +37,14 @@ class SnapCommentBar extends PureComponent {
   );
 
   render() {
-    const { handleSubmit, pristine, submitting } = this.props;
+    const {
+      handleSubmit,
+      pristine,
+      submitting,
+      onCreateSnapComment,
+    } = this.props;
     return (
-      <form
-        className={`${style.root} ${style.card}`}
-        onSubmit={handleSubmit(data => console.log(data))}
-      >
+      <div className={`${style.root} ${style.card}`}>
         <Dropdown overlay={this.renderCannedMessagesMenu()} placement="topLeft">
           <Button className={style.dropdownBtn}>Canned Messages</Button>
         </Dropdown>
@@ -89,7 +60,10 @@ class SnapCommentBar extends PureComponent {
               {cannedMessages[2].content}
             </Tag>
           </div>
-          <div className={style.commentAction}>
+          <form
+            className={style.form}
+            onSubmit={handleSubmit(onCreateSnapComment)}
+          >
             <Field
               className={style.input}
               name="content"
@@ -103,9 +77,9 @@ class SnapCommentBar extends PureComponent {
             >
               Send
             </Button>
-          </div>
+          </form>
         </div>
-      </form>
+      </div>
     );
   }
 }
@@ -115,13 +89,16 @@ SnapCommentBar.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   onChangeSnapComment: PropTypes.func,
-  onSubmit: PropTypes.func.isRequired,
+  onCreateSnapComment: PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {
   return {
     onChangeSnapComment: content =>
       dispatch(actions.change('SnapCommentBar', 'content', content)),
+    onCreateSnapComment: data => {
+      dispatch(createSnapComment(data));
+    },
   };
 }
 
