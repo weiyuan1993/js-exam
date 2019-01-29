@@ -16,7 +16,7 @@ import createComment from 'utils/comment';
 import { getRoomInfo, deleteRoomAction, setRoomHost } from 'redux/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'redux/question/actions';
 import { createRecordData, setCurrentRecord } from 'redux/record/actions';
-import { setLatestHistory, getLatestHistory } from 'redux/history/actions';
+import { setLatestHistory } from 'redux/history/actions';
 
 import CommentBox from 'components/CommentBox';
 import ReactPage from './ReactPage';
@@ -58,7 +58,6 @@ class Page extends Component {
       this.props.actions.setRoomHost(true);
     }
     await this.getRoom(this.props.match.params.roomId);
-    await this.props.actions.getLatestHistory();
     this.subscribeOnCreateHistory();
   }
 
@@ -414,7 +413,6 @@ export default withRouter(
         setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
         setRoomHost: isHost => dispatch(setRoomHost(isHost)),
         setLatestHistory: data => dispatch(setLatestHistory(data)),
-        getLatestHistory: () => dispatch(getLatestHistory()),
       },
     }),
   )(Page),
