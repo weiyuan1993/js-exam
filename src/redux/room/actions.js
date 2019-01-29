@@ -173,7 +173,6 @@ function deleteRoomAction(id) {
     
       dispatch(resetCurrentRecord());
     } catch (error) {
-      console.log('bbbbbb');
       dispatch(
         graphqlActionHelper({
           method: 'DELETE',
