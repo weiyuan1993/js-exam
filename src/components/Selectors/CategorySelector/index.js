@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const categories = [
@@ -11,12 +12,13 @@ const categories = [
 ];
 const { Option } = Select;
 
-const CategorySelector = ({ categoryIndex, onChange }) => (
+const CategorySelector = ({ categoryIndex, onChange, disabled }) => (
   <Select
     onChange={onChange}
     defaultValue={categoryIndex}
     value={categoryIndex}
     style={{ minWidth: 200 }}
+    disabled={disabled}
   >
     {categories.map((q, i) => (
       <Option key={q.name} value={i}>
@@ -25,5 +27,11 @@ const CategorySelector = ({ categoryIndex, onChange }) => (
     ))}
   </Select>
 );
+
+CategorySelector.propTypes = {
+  categoryIndex: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
+};
 
 export default CategorySelector;

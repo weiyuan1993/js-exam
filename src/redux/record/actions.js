@@ -1,6 +1,6 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
-import { createRecord, updateRecord } from 'utils/record';
+import { createRecord, updateRecord, endRecord } from 'utils/record';
 import graphqlActionHelper, { ACTION_STATE } from 'utils/graphqlActionHelper';
 
 function createRecordData({ recordTestId, subjectId, roomId, ques }) {
@@ -83,6 +83,40 @@ function updateRecordData(id, newCode) {
   };
 }
 
+function endRecordData(id) {
+  return async dispatch => {
+    dispatch(
+      graphqlActionHelper({
+        method: 'UPDATE',
+        dataName: 'RECORD',
+        actionState: ACTION_STATE.STARTED,
+      }),
+    );
+    try {
+      const result = await endRecord(id);
+      dispatch(
+        graphqlActionHelper({
+          method: 'UPDATE',
+          dataName: 'RECORD',
+          actionState: ACTION_STATE.SUCCESS,
+          result,
+        }),
+      );
+    } catch (error) {
+      dispatch(
+        graphqlActionHelper({
+          method: 'UPDATE',
+          dataName: 'RECORD',
+          actionState: ACTION_STATE.FAILURE,
+          result: error,
+        }),
+      );
+      console.log(error);
+    }
+  };
+}
+
+
 // for subscribe
 function setCurrentRecord(result) {
   return {
@@ -99,6 +133,7 @@ function resetCurrentRecord() {
 export {
   createRecordData,
   setCurrentRecord,
+  endRecordData,
   resetCurrentRecord,
   updateRecordData,
 };
