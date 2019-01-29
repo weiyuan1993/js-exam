@@ -20,6 +20,7 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 
+import notFoundIcon from 'asset/image/not-found.jpg';
 import styles from './DispatchPage.module.scss';
 
 const MainView = args => {
@@ -358,7 +359,7 @@ class Page extends Component {
           {!isLoading && room.error &&
             <Empty
               className={styles.empty}
-              image="http://chittagongit.com//images/found-icon/found-icon-0.jpg"
+              image={notFoundIcon}
               description={<span>Room Not Found</span>}
             />
           }
