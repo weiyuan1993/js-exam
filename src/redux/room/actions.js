@@ -153,21 +153,24 @@ function deleteRoomAction(id) {
           },
         }),
       );
-      await API.graphql(
+      const delResult = await API.graphql(
         graphqlOperation(mutations.deleteRoom, {
           input: {
             id,
           },
         }),
       );
+
+      const action = delResult.data.deleteRoom ? ACTION_STATE.SUCCESS : ACTION_STATE.FAILURE;
+
       dispatch(
         graphqlActionHelper({
           method: 'DELETE',
           dataName: 'ROOM',
-          actionState: ACTION_STATE.SUCCESS,
+          actionState: action,
         }),
       );
-
+    
       dispatch(resetCurrentRecord());
     } catch (error) {
       dispatch(

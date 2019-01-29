@@ -8,12 +8,14 @@ const initialState = {
   password: '',
   isHost: false,
   test: {},
+  del: false,
+  delSuc: false,
+  delErr: false,
 };
 
 const room = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_ROOM_STARTED':
-    case 'DELETE_ROOM_STARTED':
     case 'UPDATE_ROOM_STARTED':
       return {
         ...state,
@@ -33,8 +35,7 @@ const room = (state = initialState, action) => {
         loading: false,
         error: action.payload.error,
       };
-    case 'DELETE_ROOM_SUCCESS':
-      return initialState;
+
     case 'UPDATE_ROOM_SUCCESS':
       return {
         ...state,
@@ -47,6 +48,31 @@ const room = (state = initialState, action) => {
         ...state,
         isHost: action.isHost,
       };
+
+    case 'DELETE_ROOM_STARTED':
+      return {
+        ...state,
+        del: true,
+        delSuc: false,
+        delErr: false,
+      };
+
+    case 'DELETE_ROOM_SUCCESS':
+      return {
+        ...initialState,
+        del: false,
+        delSuc: true,
+        delErr: false,
+      };
+
+    case 'DELETE_ROOM_FAILURE':
+      return {
+        ...state,
+        del: false,
+        delSuc: false,
+        delErr: true,
+      };
+
     default:
       return state;
   }

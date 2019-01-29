@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { transform } from '@babel/standalone';
-import { Spin, Empty, message } from 'antd';
+import { Spin, Empty, Modal, message } from 'antd';
 
 import {
   subscribeOnCreateRecord,
@@ -11,7 +11,7 @@ import {
 } from 'utils/record';
 import createComment from 'utils/comment';
 
-import { getRoomInfo, setRoomHost } from 'redux/room/actions';
+import { getRoomInfo, deleteRoomAction, setRoomHost } from 'redux/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'redux/question/actions';
 import { createRecordData, setCurrentRecord } from 'redux/record/actions';
 
@@ -20,6 +20,7 @@ import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
 
+import notFoundIcon from 'asset/image/not-found.jpg';
 import styles from './DispatchPage.module.scss';
 
 const MainView = args => {
@@ -44,6 +45,7 @@ class Page extends Component {
     tape: [],
     tags: [],
     isLoading: false,
+    delConfirmModalVisible: false,
   };
 
   async componentDidMount() {
@@ -51,6 +53,22 @@ class Page extends Component {
       this.props.actions.setRoomHost(true);
     }
     await this.getRoom(this.props.match.params.roomId);
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    const { room, history } = this.props;
+    const { room: nextRoom } = nextProps;
+
+    if (!room.delSuc && nextRoom.delSuc) {
+      message.success('delete room successful');
+
+      setTimeout(() => {
+        history.push('/');
+      }, 1000);
+
+    } else if (!room.delErr && nextRoom.delErr) {
+      message.error('delete room failed');
+    }
   }
 
   // for observer
@@ -238,8 +256,28 @@ class Page extends Component {
     });
   };
 
+  showDelConfirmModal = () => {
+    this.setState({
+      delConfirmModalVisible: true,
+    });
+  };
+
+  hideDelConfirmModal = () => {
+    this.setState({
+      delConfirmModalVisible: false,
+    });
+  };
+
+  handleOnOkDelConfirmModal = async () => {
+    const { room, actions } = this.props;
+
+    await actions.deleteRoomAction(room.id);
+
+    this.hideDelConfirmModal();
+  };
+
   render() {
-    const { isLoading, categoryIndex, questionIndex, commentBoxVisible } = this.state;
+    const { isLoading, categoryIndex, questionIndex, commentBoxVisible, delConfirmModalVisible } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -250,8 +288,11 @@ class Page extends Component {
       onTagUpdate,
       setIntervieweeModal,
       setCommentBox,
+      showDelConfirmModal,
+      hideDelConfirmModal,
+      handleOnOkDelConfirmModal,
     } = this;
-    const { room, question, record } = this.props;
+    const { room, question, record, actions } = this.props;
 
     return (
       <React.Fragment>
@@ -274,7 +315,10 @@ class Page extends Component {
                 onChangeQuestion={onChangeQuestion}
                 setIntervieweeModal={setIntervieweeModal}
                 intervieweeName={room.subjectId}
+                roomId={room.id}
                 roomDescription={room.description}
+                showDelConfirmModal={showDelConfirmModal}
+                hideDelConfirmModal={hideDelConfirmModal}
               />
               <MainView
                 onDispatchQuestion={onDispatchQuestion}
@@ -292,7 +336,7 @@ class Page extends Component {
           {!isLoading && room.error &&
             <Empty
               className={styles.empty}
-              image="http://chittagongit.com//images/found-icon/found-icon-0.jpg"
+              image={notFoundIcon}
               description={<span>Room Not Found</span>}
             />
           }
@@ -303,6 +347,18 @@ class Page extends Component {
           visible={commentBoxVisible}
           setVisible={setCommentBox}
         />
+
+        <Modal 
+          title=""
+          visible={delConfirmModalVisible}
+          okType="danger"
+          okText="Delete"
+          confirmLoading={room.del}
+          onOk={handleOnOkDelConfirmModal}
+          onCancel={hideDelConfirmModal}
+        >
+          Are you sure you want to delete room <b>{room.description}</b> ?
+        </Modal>
       </React.Fragment>
     );
   }
@@ -319,6 +375,7 @@ export default withRouter(
     dispatch => ({
       actions: {
         getRoomInfo: id => dispatch(getRoomInfo(id)),
+        deleteRoomAction: id => dispatch(deleteRoomAction(id)),
         fetchQuestionList: type => dispatch(fetchQuestionList(type)),
         fetchQuestion: id => dispatch(fetchQuestion(id)),
         createRecordData: params => dispatch(createRecordData(params)),
