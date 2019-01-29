@@ -1,15 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { transform } from '@babel/standalone';
-
+import { findLastIndex } from 'lodash';
 import ReactPage from 'components/PlaybackView/React';
 import JavaScriptPage from 'components/PlaybackView/JavaScript';
 import { resetCurrentRecord } from 'redux/record/actions';
+import injectReducer from 'utils/injectReducer';
 import Summary from '../Summary';
 import ControlWidget from '../ControlWidget';
 import HistorySlider from '../HistorySlider';
 
-import { fetchRecordWithHistory } from './actions';
+import { fetchRecordWithHistory, setCurrentSnapComment } from './actions';
+import snapComment from './reducer';
 const PlaybackView = args => {
   switch (args.categoryIndex) {
     case 1: {
@@ -62,7 +65,8 @@ class Playback extends React.Component {
     const { id } = this.props.records[index];
     await this.props.actions.fetchRecordWithHistory(id);
     const { record } = this.props;
-    if (record.history.items.length > 0) {
+    const { items } = record.history;
+    if (items.length > 0) {
       this.setState({
         historyIndex: 0,
         categoryIndex: record.ques.type === 'javascript' ? 0 : 1,
@@ -111,6 +115,40 @@ class Playback extends React.Component {
     }
   };
 
+  onForwardSnapComment = () => {
+    const { snapComments } = this.props.snapComment;
+    const { items } = this.props.record.history;
+    const { historyIndex } = this.state;
+    const nextSnapCommentIndex = snapComments.findIndex(
+      item => item.historyIndex > historyIndex,
+    );
+    if (nextSnapCommentIndex > -1) {
+      const newHistoryIndex = snapComments[nextSnapCommentIndex].historyIndex;
+      this.setState({
+        code: items[newHistoryIndex].code || '',
+        historyIndex: newHistoryIndex,
+      });
+    }
+  };
+
+  onBackwardSnapComment = () => {
+    const { snapComments } = this.props.snapComment;
+    const { items } = this.props.record.history;
+    const { historyIndex } = this.state;
+    const previousSnapCommentIndex = findLastIndex(
+      snapComments,
+      item => item.historyIndex < historyIndex,
+    );
+    if (previousSnapCommentIndex > -1) {
+      const newHistoryIndex =
+        snapComments[previousSnapCommentIndex].historyIndex;
+      this.setState({
+        code: items[newHistoryIndex].code || '',
+        historyIndex: newHistoryIndex,
+      });
+    }
+  };
+
   addTape = newTape => {
     const { tape } = this.state;
     this.setState({ tape: [...tape, newTape] });
@@ -147,12 +185,14 @@ class Playback extends React.Component {
       resetTape,
       onForward,
       onBackward,
+      onForwardSnapComment,
+      onBackwardSnapComment,
       onClickSummary,
       onCancelSummary,
       onSliderChange,
     } = this;
     const { recordIndex, historyIndex, summaryVisible } = this.state;
-    const { testData, records, record } = this.props;
+    const { testData, records, record, snapComment } = this.props;
     return (
       <>
         <ControlWidget
@@ -179,8 +219,11 @@ class Playback extends React.Component {
         <HistorySlider
           onForward={onForward}
           onBackward={onBackward}
+          onForwardSnapComment={onForwardSnapComment}
+          onBackwardSnapComment={onBackwardSnapComment}
           historyIndex={historyIndex}
           historyList={record.history.items}
+          snapComments={snapComment.snapComments}
           onChange={onSliderChange}
         />
       </>
@@ -188,14 +231,25 @@ class Playback extends React.Component {
   }
 }
 
-export default connect(
-  state => ({
-    record: state.record,
-  }),
-  dispatch => ({
-    actions: {
-      fetchRecordWithHistory: id => dispatch(fetchRecordWithHistory(id)),
-      resetCurrentRecord: () => dispatch(resetCurrentRecord()),
-    },
-  }),
+const mapDispatchToProps = dispatch => ({
+  actions: {
+    fetchRecordWithHistory: id => dispatch(fetchRecordWithHistory(id)),
+    resetCurrentRecord: () => dispatch(resetCurrentRecord()),
+    setCurrentSnapComment: index => dispatch(setCurrentSnapComment(index)),
+  },
+});
+const mapStateToProps = state => ({
+  record: state.record,
+  snapComment: state.snapComment,
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+const withReducer = injectReducer({ key: 'snapComment', reducer: snapComment });
+export default compose(
+  withReducer,
+  withConnect,
 )(Playback);

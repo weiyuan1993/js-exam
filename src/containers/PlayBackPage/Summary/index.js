@@ -21,7 +21,7 @@ const SummaryList = ({ data }) => (
       <Comment
         author={item.author}
         content={item.content}
-        avatar={<Avatar icon="user" />}
+        avatar={<Avatar>{item.author[0].toUpperCase()}</Avatar>}
       />
     )}
   />

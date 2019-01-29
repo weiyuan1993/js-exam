@@ -22,7 +22,9 @@ export function fetchRecordWithHistory(id) {
         history: sortByTime(histories),
         ...data.getRecord,
       };
+      console.log(result);
       dispatch(setCurrentRecordWithHistory(result));
+      dispatch(setSnapComments(getSnapComments(result.history.items)));
     } catch (e) {
       console.log(e);
     }
@@ -36,8 +38,35 @@ function setCurrentRecordWithHistory(result) {
   };
 }
 
+function setSnapComments(snapComments) {
+  return {
+    type: 'SET_SNAP_COMMENTS',
+    snapComments,
+  };
+}
+
+export function setCurrentSnapComment(index) {
+  return {
+    type: 'SET_SNAP_COMMENTS',
+    index,
+  };
+}
+
 function sortByTime(data) {
   return data.sort(
     (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
   );
+}
+
+function getSnapComments(histories) {
+  const snapComments = [];
+  histories.forEach((history, i) => {
+    if (history.snapComments.items.length > 0) {
+      snapComments.push({
+        historyIndex: i,
+        data: history.snapComments.items,
+      });
+    }
+  });
+  return snapComments;
 }

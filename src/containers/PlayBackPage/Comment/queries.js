@@ -19,6 +19,13 @@ export const queryRecordWithHistory = `
         items {
           time
           code
+          snapComments(limit: $limit nextToken: $nextToken) {
+            items {
+              time
+              author
+              content
+            }
+          }
         }
         nextToken
       }

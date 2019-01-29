@@ -60,7 +60,7 @@ const record = (state = initialState, action) => {
         history: {
           items: [...state.history.items, ...action.payload.history.items],
           nextToken: action.payload.history.nextToken,
-        }
+        },
       };
     default:
       return state;
