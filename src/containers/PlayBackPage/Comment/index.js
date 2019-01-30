@@ -61,24 +61,12 @@ class Playback extends React.Component {
   };
 
   onChangeRecord = async index => {
-    const { actions, record } = this.props;
+    const { actions } = this.props;
     this.setState({ isLoading: true });
     actions.resetCurrentRecord();
-    actions.setHistoryIndex(0);
-
     const { id } = this.props.records[index];
-    await actions.fetchRecordWithHistory(id);
-    const { items } = record.history;
-    console.log("onChangeRecord",items)
-    if (items.length > 0) {
-      actions.setCategoryIndex(record.ques.type === 'javascript' ? 0 : 1);
-      actions.setRecordIndex(index);
-      this.handleCodeChange(record.history.items[0].code);
-      this.setState({ isLoading: false });
-    } else {
-      this.handleCodeChange(record.ques.content || '');
-      this.setState({ isLoading: false });
-    }
+    await actions.fetchRecordWithHistory(id, index);
+    this.setState({ isLoading: false });
   };
 
   getNextSetHistory = async () => {
@@ -110,7 +98,7 @@ class Playback extends React.Component {
   };
 
   onForwardSnapComment = () => {
-    const { snapComments } = this.props.snapComment;
+    const { snapComments } = this.props;
     const { items } = this.props.record.history;
     const { historyIndex, actions } = this.props;
     const nextSnapCommentIndex = snapComments.findIndex(
@@ -124,7 +112,7 @@ class Playback extends React.Component {
   };
 
   onBackwardSnapComment = () => {
-    const { snapComments } = this.props.snapComment;
+    const { snapComments } = this.props;
     const { items } = this.props.record.history;
     const { historyIndex, actions } = this.props;
     const previousSnapCommentIndex = findLastIndex(
@@ -140,14 +128,12 @@ class Playback extends React.Component {
   };
 
   onSliderChange = value => {
-    console.log(value);
     if (value >= 0) {
       const {
         code: { rawCode },
         actions,
       } = this.props;
       const { items } = this.props.record.history;
-      console.log(items)
       actions.setHistoryIndex(value);
       actions.changeCode({
         rawCode: (items[value] && items[value].code) || rawCode || '',
@@ -226,7 +212,8 @@ class Playback extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   actions: {
-    fetchRecordWithHistory: id => dispatch(fetchRecordWithHistory(id)),
+    fetchRecordWithHistory: (id, index) =>
+      dispatch(fetchRecordWithHistory(id, index)),
     resetCurrentRecord: () => dispatch(resetCurrentRecord()),
     changeCode: code => dispatch(changeCode(code)),
     setCategoryIndex: index => dispatch(setCategoryIndex(index)),

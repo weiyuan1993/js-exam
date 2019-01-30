@@ -1,7 +1,7 @@
 import { API, graphqlOperation } from 'aws-amplify';
+import { changeCode } from 'redux/code/actions';
 import { queryRecordWithHistory } from './queries';
-
-export function fetchRecordWithHistory(id) {
+export function fetchRecordWithHistory(id, index) {
   return async (dispatch, getState) => {
     try {
       const {
@@ -22,9 +22,17 @@ export function fetchRecordWithHistory(id) {
         history: sortByTime(histories),
         ...data.getRecord,
       };
+      dispatch(setHistoryIndex(0));
       dispatch(setCurrentRecordWithHistory(result));
-      dispatch(setSnapComments(getSnapComments(result.history.items)));
-
+      dispatch(setCategoryIndex(result.ques.type === 'javascript' ? 0 : 1));
+      dispatch(setRecordIndex(index));
+      if (result.history.items.length > 0) {
+        dispatch(changeCode({ rawCode: result.history.items[0].code }));
+        dispatch(setSnapComments(getSnapComments(result.history.items)));
+      } else {
+        dispatch(changeCode({ rawCode: result.ques.content }));
+      }
+      console.log(result);
     } catch (e) {
       console.log(e);
     }
