@@ -2,12 +2,18 @@ import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from 'graphql/mutations';
 import * as subscriptions from 'graphql/subscriptions';
 
+const RECORD_STATUS = {
+  inprogress: 'inprogress',
+  closed: 'closed',
+};
+
 const createRecord = async ({ recordTestId, subjectId, roomId, ques }) => {
   const params = {
     input: {
       recordTestId,
       subjectId,
       syncCode: ques.content,
+      status: RECORD_STATUS.inprogress,
       timeBegin: new Date(),
       ques,
       recordRoomId: roomId,
@@ -25,6 +31,19 @@ const updateRecord = async (id, newCode) => {
       id,
       syncCode: newCode,
       timeEnd: new Date(),
+    },
+  };
+  const result = await API.graphql(
+    graphqlOperation(mutations.updateRecord, params),
+  );
+  return result;
+}
+
+const endRecord = async (id) => {
+  const params = {
+    input: {
+      id,
+      status: RECORD_STATUS.closed,
     },
   };
   const result = await API.graphql(
@@ -58,8 +77,10 @@ const subscribeOnUpdateRecordByRecordId = (id, callback) => {
 };
 
 export {
+  RECORD_STATUS,
   createRecord,
   updateRecord,
+  endRecord,
   subscribeOnCreateRecord,
   subscribeOnUpdateRecordByRecordId,
 };
