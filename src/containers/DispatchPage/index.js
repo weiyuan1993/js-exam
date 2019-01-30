@@ -11,6 +11,8 @@ import {
 } from 'utils/record';
 import createComment from 'utils/comment';
 
+import { RECORD_STATUS } from 'utils/record';
+
 import { getRoomInfo, deleteRoomAction, setRoomHost } from 'redux/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'redux/question/actions';
 import { createRecordData, setCurrentRecord, endRecordData } from 'redux/record/actions';
@@ -231,7 +233,7 @@ class Page extends Component {
       data => {
         const { room, syncCode } = data;
         if (room.id === this.props.room.id) {
-          if (data.status === 'closed' && this.props.record.status !== 'closed') {
+          if (data.status === RECORD_STATUS.closed && this.props.record.status !== RECORD_STATUS.closed) {
             this.setCommentBox();
           }
 
