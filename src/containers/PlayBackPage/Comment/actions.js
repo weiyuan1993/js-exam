@@ -22,9 +22,10 @@ export function fetchRecordWithHistory(id) {
         history: sortByTime(histories),
         ...data.getRecord,
       };
-      console.log(result);
       dispatch(setCurrentRecordWithHistory(result));
       dispatch(setSnapComments(getSnapComments(result.history.items)));
+      console.log("fetchRecordWithHistory",result);
+
     } catch (e) {
       console.log(e);
     }
@@ -44,10 +45,22 @@ function setSnapComments(snapComments) {
     snapComments,
   };
 }
-
-export function setCurrentSnapComment(index) {
+export function setCategoryIndex(index) {
   return {
-    type: 'SET_SNAP_COMMENTS',
+    type: 'SET_CATEGORY_INDEX',
+    index,
+  };
+}
+export function setRecordIndex(index) {
+  return {
+    type: 'SET_RECORD_INDEX',
+    index,
+  };
+}
+
+export function setHistoryIndex(index) {
+  return {
+    type: 'SET_HISTORY_INDEX',
     index,
   };
 }

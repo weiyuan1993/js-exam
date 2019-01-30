@@ -47,7 +47,7 @@ const HistorySlider = ({
     <Slider
       className={styles.sliderBar}
       disabled={historyList.length === 0}
-      marks={getSliderMarks(historyList,snapComments)}
+      marks={getSliderMarks(historyList, snapComments)}
       max={historyList.length - 1}
       min={0}
       step={1}
