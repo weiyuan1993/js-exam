@@ -1,0 +1,32 @@
+.root {
+  height: 66px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: white;
+  display: flex;
+  box-shadow: 0 -4px 5px -5px #333;
+  z-index: 10;
+}
+
+.dropdownBtn {
+  margin: auto 0;
+}
+
+.rightSide {
+  width: 100%;
+}
+
+.tags {
+  margin: 4px;
+}
+
+.form {
+  display: flex;
+  margin: 4px;
+}
+
+.input {
+  flex: 1;
+}

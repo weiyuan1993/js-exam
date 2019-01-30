@@ -17,7 +17,7 @@ export function fetchRecordWithHistory(id) {
         graphqlOperation(queryRecordWithHistory, query),
       );
 
-      const histories = data.getRecord.history.items;
+      const histories = data.history.items;
       const result = {
         history: sortByTime(histories),
         ...data.getRecord,
