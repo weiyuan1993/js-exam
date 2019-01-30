@@ -5,8 +5,6 @@ import 'brace/mode/javascript';
 import 'brace/theme/textmate';
 import 'brace/theme/monokai';
 
-import { Spin } from 'antd';
-
 import Grid from 'components/Grid';
 import GridItem from 'components/Grid/GridItem';
 import CodeWidget from 'components/Widgets/CodeWidget';
@@ -14,13 +12,11 @@ import ResultWidget from 'components/Widgets/ResultWidget';
 import AnswerWidget from 'components/Widgets/AnswerWidget';
 
 import debouncedRunCode from 'utils/runCode';
-import { REACT as GRID_LABEL_REACT  } from 'utils/gridLabel';
+import { REACT as GRID_LABEL_REACT } from 'utils/gridLabel';
 
 import styles from './ReactPage.module.scss';
 
 class ReactPage extends Component {
-  controlHeight = 70;
-
   async componentDidMount() {
     const { compiledCode, addTape } = this.props;
     debouncedRunCode({ code: compiledCode, onTapeUpdate: addTape });
@@ -36,12 +32,7 @@ class ReactPage extends Component {
   }
 
   render() {
-    const {
-      onTagUpdate,
-      handleCodeChange,
-      test,
-      code,
-    } = this.props;
+    const { onTagUpdate, handleCodeChange, test, code } = this.props;
     const layout = [
       {
         key: 'code',

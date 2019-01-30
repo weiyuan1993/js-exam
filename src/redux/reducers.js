@@ -12,6 +12,8 @@ import question from 'redux/question/reducer';
 import code from 'redux/code/reducer';
 import consoleMsg from 'redux/consoleMsg/reducer';
 import tape from 'redux/tape/reducer';
+import history from 'redux/history/reducer';
+
 /**
  * Merges the dynamically injected reducers
  */
@@ -24,6 +26,7 @@ export default function createReducer(injectedReducers = {}) {
     code,
     consoleMsg,
     tape,
+    history,
     form: formReducer,
     ...injectedReducers,
   });

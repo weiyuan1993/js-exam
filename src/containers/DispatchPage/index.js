@@ -3,26 +3,33 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { transform } from '@babel/standalone';
+import { API, graphqlOperation } from 'aws-amplify';
+import * as subscriptions from 'graphql/subscriptions';
 import { Spin, Empty, Modal, message } from 'antd';
 
 import {
   subscribeOnCreateRecord,
   subscribeOnUpdateRecordByRecordId,
+  RECORD_STATUS,
 } from 'utils/record';
 import createComment from 'utils/comment';
 
-import { RECORD_STATUS } from 'utils/record';
-
 import { getRoomInfo, deleteRoomAction, setRoomHost } from 'redux/room/actions';
 import { fetchQuestionList, fetchQuestion } from 'redux/question/actions';
-import { createRecordData, setCurrentRecord, endRecordData } from 'redux/record/actions';
+import { setLatestHistory } from 'redux/history/actions';
+import {
+  createRecordData,
+  setCurrentRecord,
+  endRecordData,
+} from 'redux/record/actions';
 
 import CommentBox from 'components/CommentBox';
+import notFoundIcon from 'asset/image/not-found.jpg';
 import ReactPage from './ReactPage';
 import JavaScriptPage from './JavaScriptPage';
 import ControlWidget from './ControlWidget';
+import SnapCommentBar from './SnapCommentBar';
 
-import notFoundIcon from 'asset/image/not-found.jpg';
 import styles from './DispatchPage.module.scss';
 
 const MainView = args => {
@@ -37,6 +44,8 @@ const MainView = args => {
 };
 
 class Page extends Component {
+  subscription = null;
+
   state = {
     commentBoxVisible: false,
     categoryIndex: 0,
@@ -55,6 +64,11 @@ class Page extends Component {
       this.props.actions.setRoomHost(true);
     }
     await this.getRoom(this.props.match.params.roomId);
+    this.subscribeOnCreateHistory();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeOnCreateHistory();
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -67,11 +81,32 @@ class Page extends Component {
       setTimeout(() => {
         history.push('/');
       }, 1000);
-
     } else if (!room.delErr && nextRoom.delErr) {
       message.error('delete room failed');
     }
   }
+
+  subscribeOnCreateHistory = () => {
+    if (!this.subscription) {
+      this.subscription = API.graphql(
+        graphqlOperation(subscriptions.onCreateHistory),
+      ).subscribe({
+        next: ({ value }) => {
+          const { record, actions } = this.props;
+          if (value.data.onCreateHistory.record.id === record.id) {
+            actions.setLatestHistory(value.data.onCreateHistory);
+          }
+        },
+        error: error => {
+          console.error(error);
+        },
+      });
+    }
+  };
+
+  unsubscribeOnCreateHistory = () => {
+    if (this.subscription) this.subscription.unsubscribe();
+  };
 
   // for observer
   getRoom = async id => {
@@ -233,7 +268,10 @@ class Page extends Component {
       data => {
         const { room, syncCode } = data;
         if (room.id === this.props.room.id) {
-          if (data.status === RECORD_STATUS.closed && this.props.record.status !== RECORD_STATUS.closed) {
+          if (
+            data.status === RECORD_STATUS.closed &&
+            this.props.record.status !== RECORD_STATUS.closed
+          ) {
             this.setCommentBox();
           }
 
@@ -300,7 +338,13 @@ class Page extends Component {
   };
 
   render() {
-    const { isLoading, categoryIndex, questionIndex, commentBoxVisible, delConfirmModalVisible } = this.state;
+    const {
+      isLoading,
+      categoryIndex,
+      questionIndex,
+      commentBoxVisible,
+      delConfirmModalVisible,
+    } = this.state;
     const {
       onChangeCategory,
       onChangeQuestion,
@@ -317,15 +361,10 @@ class Page extends Component {
       handleOnOkDelConfirmModal,
     } = this;
     const { room, question, record } = this.props;
-    
     return (
       <React.Fragment>
-        <Spin
-          className={styles.spin}
-          spinning={isLoading}
-          size="large"
-        >
-          {!isLoading && !room.error &&
+        <Spin className={styles.spin} spinning={isLoading} size="large">
+          {!isLoading && !room.error && (
             <React.Fragment>
               <ControlWidget
                 isHost={room.isHost}
@@ -355,25 +394,23 @@ class Page extends Component {
                 onTagUpdate={onTagUpdate}
                 {...this.state}
               />
+              <SnapCommentBar />
             </React.Fragment>
-          }
-          
-          {!isLoading && room.error &&
+          )}
+          {!isLoading && room.error && (
             <Empty
               className={styles.empty}
               image={notFoundIcon}
               description={<span>Room Not Found</span>}
             />
-          }
+          )}
         </Spin>
-     
         <CommentBox
           onSubmit={this.onCreateComment}
           visible={commentBoxVisible}
           setVisible={setCommentBox}
         />
-
-        <Modal 
+        <Modal
           title=""
           visible={delConfirmModalVisible}
           okType="danger"
@@ -407,6 +444,7 @@ export default withRouter(
         endRecordData: id => dispatch(endRecordData(id)),
         setCurrentRecord: recordData => dispatch(setCurrentRecord(recordData)),
         setRoomHost: isHost => dispatch(setRoomHost(isHost)),
+        setLatestHistory: data => dispatch(setLatestHistory(data)),
       },
     }),
   )(Page),
