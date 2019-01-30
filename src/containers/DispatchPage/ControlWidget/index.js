@@ -36,8 +36,6 @@ const ControlWidget = ({
 }) => {
   const recordStatus = getRecordStatus(question, record);
   const isInRecording = recordStatus === RECORD_STATUS.inprogress;
-  const isExamEnd = recordStatus === RECORD_STATUS.closed;
-  const isShowEndExamBtn = isInRecording || isExamEnd;
   const menu = (
     <Menu>
       <Menu.Item key="link"
@@ -90,13 +88,13 @@ const ControlWidget = ({
               questionIndex={questionIndex}
               list={questionList}
             />
-            {isShowEndExamBtn &&
-              <Button type="primary" onClick={onEndExam} disabled={isExamEnd}>
+            {isInRecording &&
+              <Button type="primary" onClick={onEndExam}>
                 End Exam
                 <Icon type="right" />
               </Button>
             }
-            {!isShowEndExamBtn &&
+            {!isInRecording &&
               <Button type="primary" onClick={onDispatchQuestion}>
                 Dispatch
                 <Icon type="right" />
