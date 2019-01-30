@@ -17,14 +17,13 @@ export function fetchRecordWithHistory(id) {
         graphqlOperation(queryRecordWithHistory, query),
       );
 
-      const histories = data.history.items;
+      const histories = data.getRecord.history.items;
       const result = {
         history: sortByTime(histories),
         ...data.getRecord,
       };
       dispatch(setCurrentRecordWithHistory(result));
       dispatch(setSnapComments(getSnapComments(result.history.items)));
-      console.log("fetchRecordWithHistory",result);
 
     } catch (e) {
       console.log(e);

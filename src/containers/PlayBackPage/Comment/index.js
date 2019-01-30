@@ -76,7 +76,6 @@ class Playback extends React.Component {
       this.handleCodeChange(record.history.items[0].code);
       this.setState({ isLoading: false });
     } else {
-      actions.setHistoryIndex(0);
       this.handleCodeChange(record.ques.content || '');
       this.setState({ isLoading: false });
     }
