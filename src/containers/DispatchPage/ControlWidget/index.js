@@ -35,6 +35,9 @@ const ControlWidget = ({
   showDelConfirmModal,
 }) => {
   const recordStatus = getRecordStatus(question, record);
+  const isInRecording = recordStatus === RECORD_STATUS.inprogress;
+  const isExamEnd = recordStatus === RECORD_STATUS.closed;
+  const isShowEndExamBtn = isInRecording || isExamEnd;
   const menu = (
     <Menu>
       <Menu.Item key="link"
@@ -77,25 +80,27 @@ const ControlWidget = ({
         {isHost &&
           <InputGroup compact style={{ width: 'auto', display: 'inline-block' }}>
             <CategorySelector
-              disabled={recordStatus === RECORD_STATUS.inprogress}
+              disabled={isInRecording}
               onChange={onChangeCategory}
               categoryIndex={categoryIndex}
             />
             <QuestionSelector
-              disabled={recordStatus === RECORD_STATUS.inprogress}
+              disabled={isInRecording}
               onChange={onChangeQuestion}
               questionIndex={questionIndex}
               list={questionList}
             />
-            {recordStatus === RECORD_STATUS.inprogress || recordStatus === RECORD_STATUS.closed ?
-            <Button type="primary" onClick={onEndExam} disabled={recordStatus === RECORD_STATUS.closed}>
-              End Exam
-              <Icon type="right" />
-            </Button>:
-            <Button type="primary" onClick={onDispatchQuestion}>
-              Dispatch
-              <Icon type="right" />
-            </Button>
+            {isShowEndExamBtn &&
+              <Button type="primary" onClick={onEndExam} disabled={isExamEnd}>
+                End Exam
+                <Icon type="right" />
+              </Button>
+            }
+            {!isShowEndExamBtn &&
+              <Button type="primary" onClick={onDispatchQuestion}>
+                Dispatch
+                <Icon type="right" />
+              </Button>
             }
           </InputGroup>
         }
