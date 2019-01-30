@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
@@ -20,12 +21,13 @@ const { Option } = Select;
 //   );
 // };
 
-const QuestionSelector = ({ questionIndex, onChange, list }) => (
+const QuestionSelector = ({ questionIndex, onChange, list, disabled }) => (
   <Select
     onChange={onChange}
     defaultValue={questionIndex}
     value={questionIndex}
     style={{ minWidth: 200 }}
+    disabled={disabled}
   >
     {list.map((q, i) => (
       <Option key={q.id} value={i}>
@@ -34,5 +36,12 @@ const QuestionSelector = ({ questionIndex, onChange, list }) => (
     ))}
   </Select>
 );
+
+QuestionSelector.propTypes = {
+  questionIndex: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  list: PropTypes.arrayOf(PropTypes.object).isRequired,
+  disabled: PropTypes.bool.isRequired,
+};
 
 export default QuestionSelector;

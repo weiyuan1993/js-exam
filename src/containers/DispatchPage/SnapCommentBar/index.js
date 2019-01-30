@@ -14,7 +14,7 @@ import { RfInput } from 'components/RfInput';
 import { createSnapComment } from 'redux/snapComment/actions';
 
 import { cannedMessages } from './constants';
-import style from './SnapCommentBar.module.scss';
+import styles from './SnapCommentBar.module.scss';
 
 class SnapCommentBar extends PureComponent {
   handleClickTag = content => () => {
@@ -44,12 +44,12 @@ class SnapCommentBar extends PureComponent {
       onCreateSnapComment,
     } = this.props;
     return (
-      <div className={`${style.root} ${style.card}`}>
+      <div className={styles.root}>
         <Dropdown overlay={this.renderCannedMessagesMenu()} placement="topLeft">
-          <Button className={style.dropdownBtn}>Canned Messages</Button>
+          <Button className={styles.dropdownBtn}>Canned Messages</Button>
         </Dropdown>
-        <div className={style.actions}>
-          <div className={style.tags}>
+        <div className={styles.rightSide}>
+          <div className={styles.tags}>
             <Tag onClick={this.handleClickTag(cannedMessages[0].content)}>
               {cannedMessages[0].content}
             </Tag>
@@ -61,20 +61,16 @@ class SnapCommentBar extends PureComponent {
             </Tag>
           </div>
           <form
-            className={style.form}
+            className={styles.form}
             onSubmit={handleSubmit(onCreateSnapComment)}
           >
             <Field
-              className={style.input}
+              className={styles.input}
               name="content"
               component={RfInput}
               placeholder="Comment"
             />
-            <Button
-              className={style.submitButton}
-              htmlType="submit"
-              disabled={pristine || submitting}
-            >
+            <Button htmlType="submit" disabled={pristine || submitting}>
               Send
             </Button>
           </form>

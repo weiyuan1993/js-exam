@@ -10,15 +10,11 @@
   z-index: 10;
 }
 
-.input {
-  flex: 1;
-}
-
 .dropdownBtn {
   margin: auto 0;
 }
 
-.actions {
+.rightSide {
   width: 100%;
 }
 
@@ -29,4 +25,8 @@
 .form {
   display: flex;
   margin: 4px;
+}
+
+.input {
+  flex: 1;
 }
