@@ -1,3 +1,5 @@
+import { ACTION_TYPES } from './constants';
+
 const initialState = {
   snapComments: [],
   categoryIndex: 0,
@@ -7,22 +9,22 @@ const initialState = {
 
 function playback(state = initialState, action) {
   switch (action.type) {
-    case 'SET_SNAP_COMMENTS':
+    case ACTION_TYPES.SET_SNAP_COMMENTS:
       return {
         ...state,
         snapComments: [...action.snapComments],
       };
-    case 'SET_CATEGORY_INDEX':
+    case ACTION_TYPES.SET_CATEGORY_INDEX:
       return {
         ...state,
         categoryIndex: action.index,
       };
-    case 'SET_RECORD_INDEX':
+    case ACTION_TYPES.SET_RECORD_INDEX:
       return {
         ...state,
         recordIndex: action.index,
       };
-    case 'SET_HISTORY_INDEX':
+    case ACTION_TYPES.SET_HISTORY_INDEX:
       return {
         ...state,
         historyIndex: action.index,
