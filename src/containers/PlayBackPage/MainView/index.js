@@ -172,6 +172,7 @@ class Playback extends React.Component {
           recordIndex={recordIndex}
           onChangeRecord={onChangeRecord}
           recordList={records}
+          summaryDisabled={record.comment.items.length === 0}
           onClickSummary={() => {
             this.setState({ summaryVisible: true });
           }}

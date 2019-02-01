@@ -31,6 +31,7 @@ const ControlWidget = ({
   onChangeRecord,
   recordList,
   onClickSummary,
+  summaryDisabled,
 }) => (
   <PageControlBar>
     <div className={styles.info}>
@@ -45,7 +46,11 @@ const ControlWidget = ({
     </div>
     <div>
       <InputGroup compact style={{ width: 'auto', display: 'inline-block' }}>
-        <Button type="primary" onClick={onClickSummary}>
+        <Button
+          type="primary"
+          disabled={summaryDisabled}
+          onClick={onClickSummary}
+        >
           Summary
         </Button>
         <RecordSelector
@@ -64,5 +69,6 @@ ControlWidget.propTypes = {
   onChangeRecord: PropTypes.func,
   recordList: PropTypes.array,
   onClickSummary: PropTypes.func,
+  summaryDisabled: PropTypes.bool,
 };
 export default ControlWidget;
