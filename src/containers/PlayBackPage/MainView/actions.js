@@ -1,7 +1,14 @@
 import { API, graphqlOperation } from 'aws-amplify';
 import { changeCode } from 'redux/code/actions';
 import { queryRecordWithHistory } from './queries';
-import { ACTION_TYPES } from './constants';
+import {
+  SET_CURRENT_RECORD_WITH_HISTORY,
+  SET_SNAP_COMMENTS,
+  SET_CATEGORY_INDEX,
+  SET_RECORD_INDEX,
+  SET_HISTORY_INDEX,
+} from './constants';
+
 export function fetchRecordWithHistory(id, index) {
   return async (dispatch, getState) => {
     try {
@@ -42,33 +49,33 @@ export function fetchRecordWithHistory(id, index) {
 
 function setCurrentRecordWithHistory(result) {
   return {
-    type: ACTION_TYPES.SET_CURRENT_RECORD_WITH_HISTORY,
+    type: SET_CURRENT_RECORD_WITH_HISTORY,
     payload: result,
   };
 }
 
 function setSnapComments(snapComments) {
   return {
-    type: ACTION_TYPES.SET_SNAP_COMMENTS,
+    type: SET_SNAP_COMMENTS,
     snapComments,
   };
 }
 export function setCategoryIndex(index) {
   return {
-    type: ACTION_TYPES.SET_CATEGORY_INDEX,
+    type: SET_CATEGORY_INDEX,
     index,
   };
 }
 export function setRecordIndex(index) {
   return {
-    type: ACTION_TYPES.SET_RECORD_INDEX,
+    type: SET_RECORD_INDEX,
     index,
   };
 }
 
 export function setHistoryIndex(index) {
   return {
-    type: ACTION_TYPES.SET_HISTORY_INDEX,
+    type: SET_HISTORY_INDEX,
     index,
   };
 }
