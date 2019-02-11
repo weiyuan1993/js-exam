@@ -1,5 +1,8 @@
 import { API, graphqlOperation } from 'aws-amplify';
-import { changeCode } from 'redux/code/actions';
+import { changeCode, resetCode } from 'redux/code/actions';
+import { resetCurrentRecord } from 'redux/record/actions';
+import { resetTape } from 'redux/tape/actions';
+
 import { queryRecordWithHistory } from './queries';
 import {
   SET_CURRENT_RECORD_WITH_HISTORY,
@@ -7,6 +10,7 @@ import {
   SET_CATEGORY_INDEX,
   SET_RECORD_INDEX,
   SET_HISTORY_INDEX,
+  RESET_PLAYBACK,
 } from './constants';
 
 export function fetchRecordWithHistory(id, index) {
@@ -77,6 +81,15 @@ export function setHistoryIndex(index) {
   return {
     type: SET_HISTORY_INDEX,
     index,
+  };
+}
+
+export function resetPlayback() {
+  return dispatch => {
+    dispatch({ type: RESET_PLAYBACK });
+    dispatch(resetCurrentRecord());
+    dispatch(resetCode());
+    dispatch(resetTape());
   };
 }
 
