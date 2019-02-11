@@ -11,10 +11,7 @@ const code = (state = initialState, action) => {
         compiledCode: action.compiledCode || state.compiledCode,
       };
     case 'CODE_RESET':
-      return {
-        ...state,
-        rawCode: '',
-      };
+      return initialState;
     default:
       return state;
   }

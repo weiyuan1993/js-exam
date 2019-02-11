@@ -3,6 +3,7 @@ import {
   SET_CATEGORY_INDEX,
   SET_RECORD_INDEX,
   SET_HISTORY_INDEX,
+  RESET_PLAYBACK,
 } from './constants';
 
 const initialState = {
@@ -34,7 +35,8 @@ function playback(state = initialState, action) {
         ...state,
         historyIndex: action.index,
       };
-
+    case RESET_PLAYBACK:
+      return initialState;
     default:
       return state;
   }

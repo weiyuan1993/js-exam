@@ -18,6 +18,7 @@ import {
   setCategoryIndex,
   setRecordIndex,
   setHistoryIndex,
+  resetPlayback,
 } from './actions';
 import playbackReducer from './reducer';
 import { REDUCER_KEY } from './constants';
@@ -36,6 +37,11 @@ class Playback extends React.Component {
     isLoading: false,
     summaryVisible: false,
   };
+
+  componentWillUnmount() {
+    // to prevent old data state still exist
+    this.props.resetPlayback();
+  }
 
   async componentDidMount() {
     if (this.props.records.length > 0) {
@@ -222,6 +228,7 @@ const mapDispatchToProps = dispatch =>
       setCategoryIndex,
       setRecordIndex,
       setHistoryIndex,
+      resetPlayback,
     },
     dispatch,
   );
@@ -250,7 +257,10 @@ Playback.propTypes = {
   code: PropTypes.object,
   tape: PropTypes.array,
   record: PropTypes.object,
-  snapComments: PropTypes.object,
+  categoryIndex: PropTypes.number,
+  recordIndex: PropTypes.number,
+  historyIndex: PropTypes.number,
+  snapComments: PropTypes.array,
 };
 export default compose(
   withReducer,
